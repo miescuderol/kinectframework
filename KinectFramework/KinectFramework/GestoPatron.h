@@ -2,11 +2,11 @@
 #include <vector>
 #include "ReconocedorBasico.h"
 
-class GestureTemplate
+class GestoPatron
 {
 public:
-	GestureTemplate(void);
-	~GestureTemplate(void);
+	GestoPatron(void);
+	~GestoPatron(void);
 	void addMovement(Movimiento m);
 	void insertAt(int i, Movimiento m);
 	Movimiento getMovement(int i);

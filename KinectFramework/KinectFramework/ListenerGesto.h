@@ -2,6 +2,6 @@
 class ListenerGesto
 {
 public:
-	virtual void update(Gesture m) = 0;
+	virtual void update(Gesto m) = 0;
 };
 

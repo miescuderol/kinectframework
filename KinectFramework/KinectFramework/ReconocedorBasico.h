@@ -3,7 +3,7 @@
 #include <vector>
 //#include "ListenerDirecciones.h"
 
-class ListenerDirecciones; // forward declaration por referencia cruzada
+class ListenerMovimiento; // forward declaration por referencia cruzada
 
 typedef enum Direccion {SIN_DIRECCION,a,b,c};
 
@@ -22,18 +22,20 @@ public:
 
 	void setNewPosition(float x, float y, float z);
 	Movimiento lastMove();
-	void addListener(ListenerDirecciones * listener);
+	void addListener(ListenerMovimiento * listener);
 
 	
 private:
 
 	Movimiento ultimoMovimiento;
-	std::vector<ListenerDirecciones*> listeners;
+	std::vector<ListenerMovimiento*> listeners;
 	float prevX, prevY, prevZ;
 	float deadZone;
 	int divisions;
 	float amplitude;
 	float displacement;
+
+	Direccion intADireccion(int i);
 
 };
 

@@ -1,8 +1,9 @@
 #include "Reconocedor.h"
 
 
-Reconocedor::Reconocedor(GestureTemplate gestureTemplate) {
-	gestoTemplate = gestureTemplate;
+Reconocedor::Reconocedor(GestoPatron * gestoPatron, XnSkeletonJointTransformation * articulacion, vector<ReconocedorBasico*> * recBasicos) {
+	this->recBasicos = recBasicos;
+	gestoTemplate = GestoPatron;
 	ultimoMovimiento = 0;
 	movimientoEsperado = gestoTemplate.getMovement(ultimoMovimiento);
 }
@@ -21,7 +22,7 @@ void Reconocedor::addListener(ListenerGesto * listener) {
 	listeners.push_back(listener);
 }
 
-void Reconocedor::update(Movimiento m) {
+void Reconocedor::update(Movimiento * m) {
 	
 	if (movimientoEsperado == m) {
 		ultimoMovimiento++;
