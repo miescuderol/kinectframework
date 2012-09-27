@@ -1,5 +1,5 @@
 #include "ReconocedorBasico.h"
-#include "ListenerDirecciones.h"
+#include "ListenerMovimiento.h"
 #include "math.h"
 
 #define PI 3.14159
@@ -38,8 +38,8 @@ void ReconocedorBasico::setNewPosition(float x, float y, float z) {
 	if (alpha-displacement < 0) alpha += 2*PI;
 	if (beta-displacement < 0) beta += 2*PI;
 
-	movimiento.vertical = (alpha-displacement)/amplitude;
-	movimiento.horizontal = (beta-displacement)/amplitude;
+	movimiento.vertical = intADireccion((int)((alpha-displacement)/amplitude));
+	movimiento.horizontal = intADireccion((int)((beta-displacement)/amplitude));
 
 	if (movimiento.horizontal != SIN_DIRECCION || movimiento.vertical != SIN_DIRECCION) {
 		for (unsigned int i = 0; i < listeners.size(); i++)
@@ -48,10 +48,14 @@ void ReconocedorBasico::setNewPosition(float x, float y, float z) {
 	}
 }
 
-ReconocedorBasico::Movimiento ReconocedorBasico::lastMove() {
+Movimiento ReconocedorBasico::lastMove() {
 	return ultimoMovimiento;
 }
 
-void ReconocedorBasico::addListener(ListenerDirecciones * listener) {
+void ReconocedorBasico::addListener(ListenerMovimiento * listener) {
 	listeners.push_back(listener);
+}
+
+Direccion ReconocedorBasico::intADireccion(int i) {
+	return SIN_DIRECCION;
 }

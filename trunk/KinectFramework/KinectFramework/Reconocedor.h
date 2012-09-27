@@ -1,30 +1,31 @@
 #pragma once
-#include "Gesture.h"
+#include "Gesto.h"
 #include "ReconocedorBasico.h"
-#include "GestureTemplate.h"
+#include "GestoPatron.h"
 #include "ListenerMovimiento.h"
 #include "ListenerGesto.h"
+#include "XnCppWrapper.h"
 
 #include <vector>
 
 class Reconocedor : public ListenerMovimiento
 {
 public:
-	Reconocedor(GestureTemplate gestureTemplate);
+	Reconocedor(GestoPatron * gestoPatron, XnSkeletonJointTransformation * articulacion, vector<ReconocedorBasico*> * recBasicos);
 	~Reconocedor(void);
 
 	Gesture * lastGesture();
-	void addListener(ListenerGesto listener);
-	void update(Movimiento m);
+	void addListener(ListenerGesto * listener);
+	void update(Movimiento * m);
 
 private:
 
 	void notifyObservers();
 	std::vector<ListenerGesto*> listeners;
 
-	std::vector<ReconocedorBasico*> recBasicos;
+	std::vector<ReconocedorBasico*> * recBasicos;
 	Gesture * ultimoGesto;
-	GestureTemplate * gestoTemplate;
+	GestoPatron * gestoTemplate;
 	Movimiento * movimientoEsperado;
 	int ultimoMovimiento;
 

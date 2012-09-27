@@ -12,19 +12,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
-    <ClInclude Include="Gesture.h" />
-    <ClInclude Include="GestureTemplate.h" />
+    <ClInclude Include="Gesto.h" />
+    <ClInclude Include="GestoPatron.h" />
     <ClInclude Include="Grafo.h" />
     <ClInclude Include="Kinect.h" />
     <ClInclude Include="ListenerGesto.h" />
     <ClInclude Include="ListenerMovimiento.h" />
+    <ClInclude Include="Nivel.h" />
     <ClInclude Include="Reconocedor.h" />
     <ClInclude Include="ReconocedorBasico.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
-    <ClCompile Include="Gesture.cpp" />
-    <ClCompile Include="GestureTemplate.cpp" />
+    <ClCompile Include="Gesto.cpp" />
+    <ClCompile Include="GestoPatron.cpp" />
     <ClCompile Include="Grafo.cpp" />
     <ClCompile Include="Kinect.cpp" />
     <ClCompile Include="Reconocedor.cpp" />
