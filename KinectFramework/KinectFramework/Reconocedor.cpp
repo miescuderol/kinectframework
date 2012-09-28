@@ -1,19 +1,19 @@
 #include "Reconocedor.h"
 
 
-Reconocedor::Reconocedor(GestoPatron * gestoPatron, XnSkeletonJointTransformation * articulacion, vector<ReconocedorBasico*> * recBasicos) {
+Reconocedor::Reconocedor(GestoPatron * gestoPatron, XnSkeletonJointTransformation * articulacion, std::vector<ReconocedorBasico*> * recBasicos) {
 	this->recBasicos = recBasicos;
-	gestoTemplate = GestoPatron;
+	gestoTemplate = gestoPatron;
 	ultimoMovimiento = 0;
-	movimientoEsperado = gestoTemplate.getMovement(ultimoMovimiento);
+	movimientoEsperado = gestoTemplate->getMovement(ultimoMovimiento);
 }
 
 Reconocedor::~Reconocedor(void) {
 
 }
 
-Gesture * Reconocedor::lastGesture() {
-	Gesture * aux = ultimoGesto;
+Gesto * Reconocedor::lastGesture() {
+	Gesto * aux = ultimoGesto;
 	ultimoGesto = NULL;
 	return aux;
 }
@@ -26,8 +26,8 @@ void Reconocedor::update(Movimiento * m) {
 	
 	if (movimientoEsperado == m) {
 		ultimoMovimiento++;
-		if (ultimoMovimiento == gestoTemplate.length()) {
-			ultimoGesto = new Gesture(); // falta setearlo
+		if (ultimoMovimiento == gestoTemplate->length()) {
+			ultimoGesto = new Gesto(); // falta setearlo
 			notifyObservers();
 		}
 	}

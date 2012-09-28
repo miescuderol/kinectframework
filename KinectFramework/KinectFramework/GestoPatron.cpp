@@ -18,8 +18,8 @@ void GestoPatron::insertAt(int i, Movimiento m) {
 	movimientos.insert(movimientos.begin()+i, m);
 }
 
-Movimiento GestoPatron::getMovement(int i) {
-	return movimientos[i];
+Movimiento * GestoPatron::getMovement(int i) {
+	return &movimientos[i];
 }
 
 int GestoPatron::length() {

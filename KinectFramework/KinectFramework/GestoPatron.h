@@ -9,7 +9,7 @@ public:
 	~GestoPatron(void);
 	void addMovement(Movimiento m);
 	void insertAt(int i, Movimiento m);
-	Movimiento getMovement(int i);
+	Movimiento * getMovement(int i);
 	int length();
 
 private:

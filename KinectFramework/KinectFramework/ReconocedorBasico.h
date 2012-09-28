@@ -21,13 +21,13 @@ public:
 	~ReconocedorBasico(void);
 
 	void setNewPosition(float x, float y, float z);
-	Movimiento lastMove();
+	Movimiento * lastMove();
 	void addListener(ListenerMovimiento * listener);
 
 	
 private:
 
-	Movimiento ultimoMovimiento;
+	Movimiento * ultimoMovimiento;
 	std::vector<ListenerMovimiento*> listeners;
 	float prevX, prevY, prevZ;
 	float deadZone;
