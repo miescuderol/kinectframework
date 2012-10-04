@@ -1,5 +1,6 @@
 #pragma once
 #include "XnCppWrapper.h"
+#include "XnTypes.h"
 
 class Gesto
 {
@@ -17,7 +18,7 @@ public:
 	Gesto * setPosInicial(XnPoint3D pos);
 	Gesto * setPosFinal(XnPoint3D pos);
 	Gesto * setTimeInMillis(long int time);
-	Gesto * setArticulacion(const XnSkelentonJointTransformation * articulacion);
+	Gesto * setArticulacion(const XnSkeletonJointTransformation * articulacion);
 
 private:
 

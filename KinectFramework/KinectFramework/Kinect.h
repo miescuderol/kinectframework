@@ -2,38 +2,22 @@
 
 #include "XnCppWrapper.h"
 #include <iostream>
-#include "ofMain.h"
-#include "CLNUIDevice.h"
+#include <map>
+#include <list>
+#include "Reconocedor.h"
+#include "XnTypes.h"
+#include "ListenerJugadorCalibrado.h"
+#include "ListenerJugadorPerdido.h"
+#include "ListenerMovimiento.h"
+#include "ListenerNuevoJugador.h"
+#include "ListenerReconocedor.h"
 
 using namespace xn;
 
 class Kinect
 {
-
-private:
-	XnStatus status;
-	Context context;
-
-	const XnDepthPixel * depthMap;
-	const XnUInt8 * imageMap;
-	DepthMetaData depthMD;
-	SceneMetaData * escena;
-	CLNUIMotor motor;
-	
-	bool checkStatusOK(const XnStatus status, char * entorno);
-
-
 public:
-
-	enum GeneratorType {
-		IMAGE_GENERATOR, 
-		DEPTH_GENERATOR, 
-		USER_GENERATOR, 
-		HAND_GENERATOR,
-		GESTURE_GENERATOR,
-		ALL_GENERATORS
-	};
-
+	
 	enum Joint{
 		HEAD			= 1,
 		NECK			= 2,
@@ -65,6 +49,38 @@ public:
 		RIGHT_FOOT		=24	
 	};
 
+private:
+	XnStatus estado;
+	Context contexto;
+
+	const XnDepthPixel * mapaProfundidad;
+	const XnUInt8 * mapaImagen;
+	DepthMetaData metaDataProfundidad;
+	SceneMetaData * escena;
+	
+	//Lista de reconocedores
+	std::map<int, Reconocedor *> reconocedores;
+	std::map<Joint, ReconocedorBasico *> reconocedoresBasicos;
+	std::list<ListenerJugadorCalibrado *> listenersJugadorCalibrado;
+	std::list<ListenerJugadorPerdido *> listenersJugadorPerdido;
+	std::list<ListenerNuevoJugador *> listenersNuevoJugador;
+	std::list<ListenerReconocedor *> listenersReconocedor;
+
+	bool checkStatusOK(const XnStatus estado, char * entorno);
+
+
+public:
+
+	enum GeneratorType {
+		IMAGE_GENERATOR, 
+		DEPTH_GENERATOR, 
+		USER_GENERATOR, 
+		HAND_GENERATOR,
+		GESTURE_GENERATOR,
+		ALL_GENERATORS
+	};
+
+
 	Kinect(void);
 	~Kinect(void);
 
@@ -75,17 +91,35 @@ public:
 	bool setMotorPosition(short position);
 	XnChar * getActiveGenerators();
 
-	inline const XnDepthPixel * getDepthMap() { return depthMap; }
-	inline const XnUInt8 * getImageMap() { return imageMap; }
+	inline const XnDepthPixel * getMapaProfundidad() { return mapaProfundidad; }
+	inline const XnUInt8 * getMapaImagen() { return mapaImagen; }
 	const int getXRes();
 	const int getYRes();
-	const XnPoint3D * getHand();
-	bool getJoints(Joint * joints, XnSkeletonJointTransformation * jPositions, XnUInt8 nJoints);
-	bool isTrackingPlayer(XnUserID player);
+	const XnPoint3D * getMano();
+	bool getArticulaciones(Joint * articulaciones, XnSkeletonJointTransformation * jPosiciones, XnUInt8 nArticulaciones);
+	bool isTrackingPlayer(XnUserID jugador);
 	bool isTracking();
 	void setID(XnUserID nId);
-	XnUserID getActiveID();
+	XnUserID getIDActivo();
 	const XnLabel * getPixelesUsuario();
-	DepthGenerator * getDepthG();
+	DepthGenerator * getGenProfundidad();
+
+	//Métodos nuevos
+	int startReconocedor(XnUserID jugador, Joint articulacion, GestoPatron patron); //devuelve el identificador del reconocedor
+	Gesto *isGesto(int idRec); //si cada reconocedor tiene un unico gesto, SI NO deberia devolver el gesto encontrado
+	void addListenerReconocedor(ListenerReconocedor *lr, int idRec); 
+	void addListenerNuevoJugador(ListenerNuevoJugador *lnj); 
+	void addListenerJugadorPerdido(ListenerJugadorPerdido *ljp);
+	void addListenerJugadorCalibrado(ListenerJugadorCalibrado *ljc);
+
+	//ver de hacer listeners en jerarquia y que se notifiquen todos y se agreguen todos con el mismo metodo
+
+	Gesto * getUltimoGesto(XnUserID player);
+
+
+
+
+
+
 };
 

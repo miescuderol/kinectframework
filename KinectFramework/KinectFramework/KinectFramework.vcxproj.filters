@@ -30,9 +30,6 @@
     <ClInclude Include="ListenerGesto.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="App.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Kinect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -43,6 +40,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Gesto.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Aplicacion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ListenerReconocedor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ListenerNuevoJugador.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ListenerJugadorPerdido.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ListenerJugadorCalibrado.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -56,9 +68,6 @@
     <ClCompile Include="Reconocedor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="App.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Kinect.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -66,6 +75,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Gesto.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Aplicacion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
