@@ -128,19 +128,18 @@ Kinect::~Kinect(void){
 
 void Kinect::setup(){
 
-	bool sin_error = checkStatusOK(context.Init(), "Init context") &&
+	bool sin_error = checkStatusOK(contexto.Init(), "Init context") &&
 
-	checkStatusOK(depthG.Create(context), "Crear depthG") &&
+	checkStatusOK(depthG.Create(contexto), "Crear depthG") &&
 
-	checkStatusOK(imageG.Create(context), "Crear imageG") &&
+	checkStatusOK(imageG.Create(contexto), "Crear imageG") &&
 	
-	checkStatusOK(gestureG.Create(context), "Crear gestureG") &&
+	checkStatusOK(gestureG.Create(contexto), "Crear gestureG") &&
 	
-	checkStatusOK(handG.Create(context), "Crear handG") &&
+	checkStatusOK(handG.Create(contexto), "Crear handG") &&
 
-	checkStatusOK(userG.Create(context), "Crear userG");
+	checkStatusOK(userG.Create(contexto), "Crear userG");
 
-	motor = CreateNUIMotor(GetNUIDeviceSerial(0));
 
 	escena = new SceneMetaData();
 
@@ -148,7 +147,6 @@ void Kinect::setup(){
 		int i;
 	std::cin >> i;
 		
-		OF_EXIT_APP(0);
 	}
 }
 
@@ -197,11 +195,15 @@ XnChar * getActiveGenerators(){
 }
 
 void Kinect::update(){
-	if (!checkStatusOK(context.WaitAnyUpdateAll(), "Wait and Update all"))
+	if (!checkStatusOK(contexto.WaitAnyUpdateAll(), "Wait and Update all"))
 		return;
 
 	depthMap = depthG.GetDepthMap();
 	imageMap = imageG.GetImageMap();
+
+	//TODO setear posiciones nuevas a los reconocedores basicos
+
+	//TODO agregar updates de los gestos
 
 }
 
@@ -225,11 +227,11 @@ const int Kinect::getYRes(){
 	return m.YRes();
 }
 
-const XnPoint3D * Kinect::getHand(){
+const XnPoint3D * Kinect::getMano(){
 	return hand;
 }
 
-bool Kinect::getJoints(Joint * joints, XnSkeletonJointTransformation * jTransformations, XnUInt8 nJoints){
+bool Kinect::getArticulaciones(Joint * joints, XnSkeletonJointTransformation * jTransformations, XnUInt8 nJoints){
 	if (!isTrackingPlayer(activeID)) return false;	
 
 	for (int i = 0; i < nJoints; i++)
@@ -246,19 +248,59 @@ bool Kinect::isTracking() {
 	return userG.IsGenerating() && userG.IsCapabilitySupported(XN_CAPABILITY_SKELETON) && userG.GetSkeletonCap().IsTracking(activeID);
 }
 
-bool Kinect::setMotorPosition(short position) {
+/*bool Kinect::setMotorPosition(short position) {
 	return SetNUIMotorPosition(motor, position);
-}
+}*/
 
 const XnLabel * Kinect::getPixelesUsuario() {
 	userG.GetUserPixels(activeID, *escena);
 	return escena->Data();
 }
 
-DepthGenerator * Kinect::getDepthG() {
+DepthGenerator * Kinect::getGenProfundidad() {
 	return &depthG;
 }
 
-XnUserID Kinect::getActiveID(){
+XnUserID Kinect::getIDActivo(){
 	return activeID;
+}
+
+int Kinect::startReconocedor(XnUserID jugador, Joint articulacion, GestoPatron *patron){
+
+	//TODO verificar si ya existe un reconocedor basico asociado a la articulacion y pasar ese
+
+	int i = 0;
+	for(i = 0; i < reconocedores.size(); i++){
+		Reconocedor *r = reconocedores.at(i);
+		if(r->getJugador() == jugador && r->getArticulacion() == articulacion && r->getPatron() == patron)
+			return i;
+	}
+	if(i == reconocedores.size()){
+		//seleccionar el reconocedor basico asociado a la articulacion
+		XnSkeletonJointTransformation *art;
+		userG.GetSkeletonCap().GetSkeletonJoint(jugador, (XnSkeletonJoint)articulacion, *art);
+		Reconocedor *nuevo = new Reconocedor(patron, art, recBasicos);
+		reconocedores[i] = nuevo;
+	}
+	return i;
+}
+
+Gesto *Kinect::isGesto(int idRec){
+	return reconocedores.at(idRec)->lastGesture();
+}
+
+void Kinect::addListenerReconocedor(ListenerReconocedor *lr, int idRec){
+
+}
+
+void Kinect::addListenerNuevoJugador(ListenerNuevoJugador *lnj){
+
+}
+
+void Kinect::addListenerJugadorPerdido(ListenerJugadorPerdido *ljp){
+
+}
+
+void Kinect::addListenerJugadorCalibrado(ListenerJugadorCalibrado *ljc){
+
 }

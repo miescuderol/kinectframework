@@ -11,19 +11,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="App.h" />
+    <ClInclude Include="Aplicacion.h" />
     <ClInclude Include="Gesto.h" />
     <ClInclude Include="GestoPatron.h" />
     <ClInclude Include="Grafo.h" />
     <ClInclude Include="Kinect.h" />
     <ClInclude Include="ListenerGesto.h" />
+    <ClInclude Include="ListenerJugadorCalibrado.h" />
+    <ClInclude Include="ListenerJugadorPerdido.h" />
     <ClInclude Include="ListenerMovimiento.h" />
+    <ClInclude Include="ListenerNuevoJugador.h" />
+    <ClInclude Include="ListenerReconocedor.h" />
     <ClInclude Include="Nivel.h" />
     <ClInclude Include="Reconocedor.h" />
     <ClInclude Include="ReconocedorBasico.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="App.cpp" />
+    <ClCompile Include="Aplicacion.cpp" />
     <ClCompile Include="Gesto.cpp" />
     <ClCompile Include="GestoPatron.cpp" />
     <ClCompile Include="Grafo.cpp" />
@@ -62,9 +66,12 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(OPEN_NI_INCLUDE)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(OPEN_NI_LIB)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;OpenNI.lib%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -73,11 +80,14 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>$(OPEN_NI_INCLUDE)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(OPEN_NI_LIB)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;OpenNI.lib%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

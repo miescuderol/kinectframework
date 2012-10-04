@@ -1,9 +1,11 @@
 #pragma once
-class App
+#include "Grafo.h"
+
+class Aplicacion
 {
 public:
-	App(void);
-	~App(void);
+	Aplicacion(void);
+	~Aplicacion(void);
 	void setup();
 	void update();
 	void draw();
