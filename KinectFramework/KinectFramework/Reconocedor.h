@@ -11,10 +11,14 @@
 class Reconocedor : public ListenerMovimiento
 {
 public:
-	Reconocedor(GestoPatron * gestoPatron, XnSkeletonJointTransformation * articulacion, std::vector<ReconocedorBasico*> * recBasicos);
+	Reconocedor(GestoPatron * gestoPatron, XnUserID * idJugador, XnSkeletonJointTransformation * articulacion, ReconocedorBasico * recBasicos);
 	~Reconocedor(void);
 
-	Gesto * lastGesture();
+	Gesto * getUltimoGesto();
+	Kinect::Joint * getArticulacion();
+	GestoPatron * getGestoPatron();
+	XnUserID * getIDJugador();
+
 	void addListener(ListenerGesto * listener);
 	void update(Movimiento * m);
 
@@ -23,11 +27,13 @@ private:
 	void notifyObservers();
 	std::vector<ListenerGesto*> listeners;
 
-	std::vector<ReconocedorBasico*> * recBasicos;
+	ReconocedorBasico * recBasicos;
 	Gesto * ultimoGesto;
-	GestoPatron * gestoTemplate;
+	GestoPatron * gestoPatron;
 	Movimiento * movimientoEsperado;
 	int ultimoMovimiento;
+	XnSkeletonJointTransformation * articulacion;
+	XnUserID * idJugador;
 
 };
 
