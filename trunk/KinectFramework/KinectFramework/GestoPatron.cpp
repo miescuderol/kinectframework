@@ -22,6 +22,20 @@ Movimiento * GestoPatron::getMovement(int i) {
 	return &movimientos[i];
 }
 
-int GestoPatron::length() {
+const int GestoPatron::length() {
 	return movimientos.size();
+}
+
+bool GestoPatron::operator==(const GestoPatron & otroGesto) {
+	
+	if (length() != otroGesto->length())
+		return false;
+
+	for (int i = 0; i < length(); i++) {
+		if (*getMovement(i) != *otroGesto->getMovement(i))
+			return false;
+	}
+
+	return true;
+
 }

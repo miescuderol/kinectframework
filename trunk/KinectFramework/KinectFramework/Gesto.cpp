@@ -40,7 +40,7 @@ Gesto * Gesto::setTimeInMillis(long int time) {
 	return this;
 }
 
-Gesto * Gesto::setArticulacion(const XnSkelentonJointTransformation * articulacion) {
+Gesto * Gesto::setArticulacion(const XnSkeletonJointTransformation * articulacion) {
 	this->articulacion = articulacion;
 	return this;
 }

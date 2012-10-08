@@ -286,7 +286,7 @@ int Kinect::startReconocedor(XnUserID jugador, Joint articulacion, GestoPatron *
 }
 
 Gesto *Kinect::isGesto(int idRec){
-	return reconocedores.at(idRec)->lastGesture();
+	return reconocedores.at(idRec)->getUltimoGesto();
 }
 
 void Kinect::addListenerReconocedor(ListenerReconocedor *lr, int idRec){

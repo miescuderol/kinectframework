@@ -10,7 +10,9 @@ public:
 	void addMovement(Movimiento m);
 	void insertAt(int i, Movimiento m);
 	Movimiento * getMovement(int i);
-	int length();
+	const int length();
+
+	bool operator==(const GestoPatron *otroGesto);
 
 private:
 
