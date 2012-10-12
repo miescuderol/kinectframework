@@ -101,7 +101,7 @@
 		{ 
 			printf("User calibrated\n"); 
 			activeID = nId;
-			cout << "-----------------------------------------> " << activeID << endl;
+			std::cout << "-----------------------------------------> " << activeID << std::endl;
 			userG.GetSkeletonCap().StartTracking(nId); 
 		} 
 		else 
@@ -198,8 +198,8 @@ void Kinect::update(){
 	if (!checkStatusOK(contexto.WaitAnyUpdateAll(), "Wait and Update all"))
 		return;
 
-	depthMap = depthG.GetDepthMap();
-	imageMap = imageG.GetImageMap();
+	mapaProfundidad = depthG.GetDepthMap();
+	mapaImagen = imageG.GetImageMap();
 
 	//TODO setear posiciones nuevas a los reconocedores basicos
 
@@ -266,20 +266,19 @@ XnUserID Kinect::getIDActivo(){
 }
 
 int Kinect::startReconocedor(XnUserID jugador, Joint articulacion, GestoPatron *patron){
-
-	//TODO verificar si ya existe un reconocedor basico asociado a la articulacion y pasar ese
+	char* idRecBasico = new char(jugador + '_' + articulacion);
+	ReconocedorBasico *recBasico = buscarReconocedorBasico(idRecBasico);
 
 	int i = 0;
-	for(i = 0; i < reconocedores.size(); i++){
+	for(i; i < reconocedores.size(); i++){
 		Reconocedor *r = reconocedores.at(i);
-		if(r->getJugador() == jugador && r->getArticulacion() == articulacion && r->getPatron() == patron)
+		if(r->getIDJugadorArt() == idRecBasico && r->getGestoPatron() == patron)
 			return i;
 	}
 	if(i == reconocedores.size()){
-		//seleccionar el reconocedor basico asociado a la articulacion
 		XnSkeletonJointTransformation *art;
 		userG.GetSkeletonCap().GetSkeletonJoint(jugador, (XnSkeletonJoint)articulacion, *art);
-		Reconocedor *nuevo = new Reconocedor(patron, art, recBasicos);
+		Reconocedor *nuevo = new Reconocedor(patron, idRecBasico, art, recBasico);
 		reconocedores[i] = nuevo;
 	}
 	return i;
@@ -303,4 +302,12 @@ void Kinect::addListenerJugadorPerdido(ListenerJugadorPerdido *ljp){
 
 void Kinect::addListenerJugadorCalibrado(ListenerJugadorCalibrado *ljc){
 
+}
+
+ReconocedorBasico * Kinect::buscarReconocedorBasico(char * idRecBasico) {
+	
+	if(reconocedoresBasicos.find(idRecBasico) == reconocedoresBasicos.end()){
+		reconocedoresBasicos[idRecBasico] = new ReconocedorBasico(8, 70); //cambiar los parámetros por constantes
+	}
+	return reconocedoresBasicos[idRecBasico];
 }
