@@ -48,6 +48,14 @@ public:
 		RIGHT_ANKLE		=23,
 		RIGHT_FOOT		=24	
 	};
+	enum GeneratorType {
+		IMAGE_GENERATOR, 
+		DEPTH_GENERATOR, 
+		USER_GENERATOR, 
+		HAND_GENERATOR,
+		GESTURE_GENERATOR,
+		ALL_GENERATORS
+	};
 
 private:
 	XnStatus estado;
@@ -59,26 +67,20 @@ private:
 	SceneMetaData * escena;
 	
 	//Lista de reconocedores
-	std::map<int, Reconocedor *> reconocedores;
-	std::map<Joint, ReconocedorBasico *> reconocedoresBasicos;
+	std::map<int, Reconocedor* > reconocedores;
+	//Map de reconocedores básicos asociados a una articulación
+	std::map<char*, ReconocedorBasico *> reconocedoresBasicos;
 	std::list<ListenerJugadorCalibrado *> listenersJugadorCalibrado;
 	std::list<ListenerJugadorPerdido *> listenersJugadorPerdido;
 	std::list<ListenerNuevoJugador *> listenersNuevoJugador;
 	std::list<ListenerReconocedor *> listenersReconocedor;
 
-	bool checkStatusOK(const XnStatus estado, char * entorno);
+	bool checkStatusOK(const XnStatus estado, char* entorno);
 
 
 public:
 
-	enum GeneratorType {
-		IMAGE_GENERATOR, 
-		DEPTH_GENERATOR, 
-		USER_GENERATOR, 
-		HAND_GENERATOR,
-		GESTURE_GENERATOR,
-		ALL_GENERATORS
-	};
+	
 
 
 	Kinect(void);
@@ -104,15 +106,20 @@ public:
 	const XnLabel * getPixelesUsuario();
 	DepthGenerator * getGenProfundidad();
 
-	//Métodos nuevos
-	int startReconocedor(XnUserID jugador, Joint articulacion, GestoPatron patron); //devuelve el identificador del reconocedor
+	//startReconocedor crea un nuevo reconocedor con las características pasadas por parámetro y devuelve el id del mismo.
+	//en caso de haber un reconocedor similar devuelve el id correspondiente en lugar de crear uno nuevo
+	int startReconocedor(XnUserID jugador, Joint articulacion, GestoPatron *patron); 
+
+	ReconocedorBasico *buscarReconocedorBasico(char * idRecBasico);
+
 	Gesto *isGesto(int idRec); //si cada reconocedor tiene un unico gesto, SI NO deberia devolver el gesto encontrado
+	
+	//métodos para agregar listeners
 	void addListenerReconocedor(ListenerReconocedor *lr, int idRec); 
 	void addListenerNuevoJugador(ListenerNuevoJugador *lnj); 
 	void addListenerJugadorPerdido(ListenerJugadorPerdido *ljp);
 	void addListenerJugadorCalibrado(ListenerJugadorCalibrado *ljc);
 
-	//ver de hacer listeners en jerarquia y que se notifiquen todos y se agreguen todos con el mismo metodo
 
 	Gesto * getUltimoGesto(XnUserID player);
 

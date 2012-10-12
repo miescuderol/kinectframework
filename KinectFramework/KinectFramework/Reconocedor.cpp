@@ -1,10 +1,12 @@
 #include "Reconocedor.h"
 
 
-Reconocedor::Reconocedor(GestoPatron * gestoPatron, XnUserID * idJugador, XnSkeletonJointTransformation * articulacion, ReconocedorBasico * recBasicos) {
+Reconocedor::Reconocedor(GestoPatron * gestoPatron, char* idJugadorArt, XnSkeletonJointTransformation * articulacion, ReconocedorBasico * recBasicos) {
 	this->recBasicos = recBasicos;
 	this->articulacion = articulacion;
-	this->idJugador = idJugador;
+	//this->idJugador = idJugador;
+	//this->joint = joint;
+	this->idJugadorArt = idJugadorArt;
 	this->gestoPatron = gestoPatron;
 	ultimoMovimiento = 0;
 	movimientoEsperado = gestoPatron->getMovement(ultimoMovimiento);
@@ -20,17 +22,21 @@ Gesto * Reconocedor::getUltimoGesto()
 	ultimoGesto = NULL;
 	return aux;
 }
-
-Kinect::Joint * Reconocedor::getArticulacion() {
-	return articulacion;
+/*
+Kinect::Joint Reconocedor::getArticulacion() {
+	return joint;
 }
-
+*/
 GestoPatron * Reconocedor::getGestoPatron() {
 	return gestoPatron;
 }
-
-XnUserID * Reconocedor::getIDJugador() {
+/*
+XnUserID Reconocedor::getIDJugador() {
 	return idJugador;
+}
+*/
+char * Reconocedor::getIDJugadorArt(){
+	return idJugadorArt;
 }
 
 void Reconocedor::addListener(ListenerGesto * listener) {
