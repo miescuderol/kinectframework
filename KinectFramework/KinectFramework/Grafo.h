@@ -1,5 +1,5 @@
 #pragma once
-#include <vector>
+#include <map>
 #include "Nivel.h"
 
 class Grafo
@@ -12,13 +12,15 @@ public:
 
 	void addNivel(Nivel * n);
 	void addArco(Nivel * origen, Estado * e, Nivel * destino);
+	bool setInicio(Nivel * n);
+
 	Nivel * getSigNivel(Nivel * n, Estado * e);
 	Nivel * getInicio();
 
 private:
 
-	std::vector<Nivel *> estados;
-	std::vector<Estado *> arcos;
+	Nivel * inicio;
+	std::map<Nivel *, std::map<Estado *, Nivel *>> grafo;
 
 };
 

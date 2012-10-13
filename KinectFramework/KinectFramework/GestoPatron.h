@@ -12,7 +12,8 @@ public:
 	Movimiento * getMovement(int i);
 	const int length();
 
-	bool operator==(const GestoPatron *otroGesto);
+	bool operator==(GestoPatron & otroGesto);
+	bool operator!=(GestoPatron & otroGesto);
 
 private:
 

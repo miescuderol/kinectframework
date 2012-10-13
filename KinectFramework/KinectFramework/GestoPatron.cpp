@@ -26,16 +26,21 @@ const int GestoPatron::length() {
 	return movimientos.size();
 }
 
-bool GestoPatron::operator==(const GestoPatron & otroGesto) {
+bool GestoPatron::operator==(GestoPatron & otroGesto) {
+// TODO: Ver por que no anda poniendo const GestoPatron en el encabezado
 	
-	if (length() != otroGesto->length())
+	if (length() != otroGesto.length())
 		return false;
 
 	for (int i = 0; i < length(); i++) {
-		if (*getMovement(i) != *otroGesto->getMovement(i))
+		if (getMovement(i) != otroGesto.getMovement(i))
 			return false;
 	}
 
 	return true;
 
+}
+
+bool GestoPatron::operator!=(GestoPatron & otroGesto) {
+	return !(*this == otroGesto);
 }
