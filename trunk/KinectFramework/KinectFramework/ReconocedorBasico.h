@@ -1,16 +1,10 @@
 #pragma once
 
 #include <vector>
+#include "Movimiento.h"
 //#include "ListenerDirecciones.h"
 
 class ListenerMovimiento; // forward declaration por referencia cruzada
-
-typedef enum Direccion {SIN_DIRECCION,a,b,c};
-
-typedef struct Movimiento { // capaz que hay que hacerlo clase y hacer el operador ==
-	Direccion vertical, horizontal;
-};
-
 
 class ReconocedorBasico
 {
@@ -35,7 +29,7 @@ private:
 	float amplitude;
 	float displacement;
 
-	Direccion intADireccion(int i);
+	Movimiento::Direccion intADireccion(int i);
 
 };
 

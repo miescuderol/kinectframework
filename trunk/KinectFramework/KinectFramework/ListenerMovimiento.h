@@ -1,5 +1,5 @@
 #pragma once
-#include "ReconocedorBasico.h"
+#include "Movimiento.h"
 
 class ListenerMovimiento
 {

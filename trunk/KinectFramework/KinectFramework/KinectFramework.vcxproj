@@ -22,6 +22,7 @@
     <ClInclude Include="ListenerMovimiento.h" />
     <ClInclude Include="ListenerNuevoJugador.h" />
     <ClInclude Include="ListenerReconocedor.h" />
+    <ClInclude Include="Movimiento.h" />
     <ClInclude Include="Nivel.h" />
     <ClInclude Include="Reconocedor.h" />
     <ClInclude Include="ReconocedorBasico.h" />
@@ -32,6 +33,7 @@
     <ClCompile Include="GestoPatron.cpp" />
     <ClCompile Include="Grafo.cpp" />
     <ClCompile Include="Kinect.cpp" />
+    <ClCompile Include="Movimiento.cpp" />
     <ClCompile Include="Reconocedor.cpp" />
     <ClCompile Include="ReconocedorBasico.cpp" />
   </ItemGroup>

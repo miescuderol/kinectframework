@@ -17,8 +17,8 @@ ReconocedorBasico::~ReconocedorBasico(void) {
 
 void ReconocedorBasico::setNewPosition(float x, float y, float z) {
 	Movimiento * movimiento = new Movimiento();
-	movimiento->horizontal = SIN_DIRECCION;
-	movimiento->vertical = SIN_DIRECCION;
+	movimiento->setDireccionHorizontal(Movimiento::Direccion::SIN_DIRECCION);
+	movimiento->setDireccionVertical(Movimiento::Direccion::SIN_DIRECCION);
 
 	float dx = x - prevX;
 	float dy = y - prevY;
@@ -38,10 +38,11 @@ void ReconocedorBasico::setNewPosition(float x, float y, float z) {
 	if (alpha-displacement < 0) alpha += 2*PI;
 	if (beta-displacement < 0) beta += 2*PI;
 
-	movimiento->vertical = intADireccion((int)((alpha-displacement)/amplitude));
-	movimiento->horizontal = intADireccion((int)((beta-displacement)/amplitude));
+	movimiento->setDireccionVertical(intADireccion((int)((alpha-displacement)/amplitude)));
+	movimiento->setDireccionHorizontal(intADireccion((int)((beta-displacement)/amplitude)));
 
-	if (movimiento->horizontal != SIN_DIRECCION || movimiento->vertical != SIN_DIRECCION) {
+	if (movimiento->getDireccionHorizontal() != Movimiento::Direccion::SIN_DIRECCION || 
+		movimiento->getDireccionVertical() != Movimiento::Direccion::SIN_DIRECCION) {
 		for (unsigned int i = 0; i < listeners.size(); i++)
 			listeners.at(i)->update(movimiento);
 		ultimoMovimiento = movimiento;
@@ -56,6 +57,6 @@ void ReconocedorBasico::addListener(ListenerMovimiento * listener) {
 	listeners.push_back(listener);
 }
 
-Direccion ReconocedorBasico::intADireccion(int i) {
-	return SIN_DIRECCION;
+Movimiento::Direccion ReconocedorBasico::intADireccion(int i) {
+	return Movimiento::Direccion::SIN_DIRECCION;
 }
