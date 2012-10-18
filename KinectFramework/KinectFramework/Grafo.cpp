@@ -33,6 +33,18 @@ bool Grafo::setInicio(Nivel * n) {
 
 }
 
+bool Grafo::setFinal(Nivel * n) {
+	std::map<Nivel*,std::map<Estado *, Nivel *>>::iterator it = grafo.find(n);
+
+	if (it != grafo.end()) {
+		return false;
+	} else {
+		ultimo = n;
+		return true;
+	}
+
+}
+
 Nivel * Grafo::getSigNivel(Nivel * n, Estado * e) {
 	std::map<Nivel*,std::map<Estado *, Nivel *>>::iterator it = grafo.find(n);
 
@@ -46,4 +58,10 @@ Nivel * Grafo::getSigNivel(Nivel * n, Estado * e) {
 
 Nivel * Grafo::getInicio() {
 	return inicio;
+}
+
+bool Grafo::isFinal(Nivel * n) {
+	if (n == ultimo)
+		return true;
+	return false;
 }
