@@ -26,6 +26,7 @@
     <ClInclude Include="Nivel.h" />
     <ClInclude Include="Reconocedor.h" />
     <ClInclude Include="ReconocedorBasico.h" />
+    <ClInclude Include="Subsistema.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Aplicacion.cpp" />

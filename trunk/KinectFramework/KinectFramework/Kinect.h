@@ -4,6 +4,7 @@
 #include <iostream>
 #include <map>
 #include <list>
+#include "Subsistema.h"
 #include "Reconocedor.h"
 #include "XnTypes.h"
 #include "ListenerJugadorCalibrado.h"
@@ -14,7 +15,7 @@
 
 using namespace xn;
 
-class Kinect
+class Kinect : Subsistema
 {
 public:
 	
