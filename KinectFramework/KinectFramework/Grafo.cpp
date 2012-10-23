@@ -12,8 +12,8 @@ void Grafo::addNivel(Nivel * n) {
 	grafo[n];
 }
 
-void Grafo::addArco(Nivel * origen, Estado * e, Nivel * destino) {
-	std::map<Nivel*,std::map<Estado *, Nivel *>>::iterator it;
+void Grafo::addArco(Nivel * origen, Estado e, Nivel * destino) {
+	std::map<Nivel*,std::map<Estado, Nivel *>>::iterator it;
 
 	it = grafo.find(origen); // busca que origen exista
 	if (it != grafo.end()) {
@@ -22,7 +22,7 @@ void Grafo::addArco(Nivel * origen, Estado * e, Nivel * destino) {
 }
 
 bool Grafo::setInicio(Nivel * n) {
-	std::map<Nivel*,std::map<Estado *, Nivel *>>::iterator it = grafo.find(n);
+	std::map<Nivel*,std::map<Estado, Nivel *>>::iterator it = grafo.find(n);
 
 	if (it != grafo.end()) {
 		return false;
@@ -34,7 +34,7 @@ bool Grafo::setInicio(Nivel * n) {
 }
 
 bool Grafo::setFinal(Nivel * n) {
-	std::map<Nivel*,std::map<Estado *, Nivel *>>::iterator it = grafo.find(n);
+	std::map<Nivel*,std::map<Estado, Nivel *>>::iterator it = grafo.find(n);
 
 	if (it != grafo.end()) {
 		return false;
@@ -45,8 +45,8 @@ bool Grafo::setFinal(Nivel * n) {
 
 }
 
-Nivel * Grafo::getSigNivel(Nivel * n, Estado * e) {
-	std::map<Nivel*,std::map<Estado *, Nivel *>>::iterator it = grafo.find(n);
+Nivel * Grafo::getSigNivel(Nivel * n, Estado e) {
+	std::map<Nivel*,std::map<Estado, Nivel *>>::iterator it = grafo.find(n);
 
 	if (it != grafo.end()) {
 		return grafo[n][e];

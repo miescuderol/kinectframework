@@ -26,7 +26,7 @@ private:
 	XnPoint3D posInicial;
 	XnPoint3D posFinal;
 	long int timeInMillis;
-	XnSkeletonJointTransformation * articulacion;
+	const XnSkeletonJointTransformation * articulacion;
 
 };
 

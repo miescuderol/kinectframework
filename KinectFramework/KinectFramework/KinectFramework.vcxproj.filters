@@ -63,6 +63,12 @@
     <ClInclude Include="Subsistema.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="NivelPrueba.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NivelPrueba2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Grafo.cpp">
@@ -87,6 +93,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Movimiento.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NivelPrueba.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NivelPrueba2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

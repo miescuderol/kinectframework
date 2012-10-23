@@ -1,4 +1,5 @@
 #include "Aplicacion.h"
+#include <iostream>
 
 
 Aplicacion::Aplicacion(void) {
@@ -33,11 +34,11 @@ void Aplicacion::update() {
 	}
 
 	for (int i = 0; i < subsistemasPreNivel.size(); i++) {
-		subsistemasPreNivel[i]->setup();
+		subsistemasPreNivel[i]->update();
 	}
 	nivelActivo->update();
 	for (int i = 0; i < subsistemasPostNivel.size(); i++) {
-		subsistemasPostNivel[i]->setup();
+		subsistemasPostNivel[i]->update();
 	}
 
 }
@@ -58,8 +59,11 @@ void Aplicacion::run() {
 
 	if (grafoNiveles == NULL) return;
 
+	std::cout << "Iniciando setup... ";
 	setup();
-	while (!grafoNiveles->isFinal(nivelActivo)) {
+	std::cout << "hecho." << std::endl;
+	std::cout << "Iniciando Game Loop... " << std::endl;
+	while (!grafoNiveles->isFinal(nivelActivo) || !nivelActivo->isTerminado()) {
 		update();
 		draw();
 	}
