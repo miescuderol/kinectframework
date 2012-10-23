@@ -11,11 +11,11 @@ public:
 	~Grafo(void);
 
 	void addNivel(Nivel * n);
-	void addArco(Nivel * origen, Estado * e, Nivel * destino);
+	void addArco(Nivel * origen, Estado e, Nivel * destino);
 	bool setInicio(Nivel * n);
 	bool setFinal(Nivel * n);
 
-	Nivel * getSigNivel(Nivel * n, Estado * e);
+	Nivel * getSigNivel(Nivel * n, Estado e);
 	Nivel * getInicio();
 
 	bool isFinal(Nivel * n);
@@ -23,7 +23,7 @@ public:
 private:
 
 	Nivel * inicio, * ultimo;
-	std::map<Nivel *, std::map<Estado *, Nivel *>> grafo;
+	std::map<Nivel *, std::map<Estado, Nivel *>> grafo;
 
 };
 

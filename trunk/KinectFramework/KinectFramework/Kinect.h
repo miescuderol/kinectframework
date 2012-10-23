@@ -15,7 +15,7 @@
 
 using namespace xn;
 
-class Kinect : Subsistema
+class Kinect : public Subsistema
 {
 public:
 	
