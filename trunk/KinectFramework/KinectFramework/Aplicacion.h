@@ -2,6 +2,7 @@
 #include "Grafo.h"
 #include "Subsistema.h"
 #include "Nivel.h"
+#include "Kinect.h"
 #include <vector>
 
 class Aplicacion

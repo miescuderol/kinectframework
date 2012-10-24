@@ -42,6 +42,7 @@ int main(int argc, char **argv) {
 		aplicacion->addSubsistemaPreNivel(kinect);
 		cout << "agregado." << endl;
 
+
 	// Llamar al run de aplicacion
 	cout << "Ejecutando aplicacion..." << endl;
 	aplicacion->run();

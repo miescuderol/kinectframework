@@ -24,7 +24,7 @@ void Grafo::addArco(Nivel * origen, Estado e, Nivel * destino) {
 bool Grafo::setInicio(Nivel * n) {
 	std::map<Nivel*,std::map<Estado, Nivel *>>::iterator it = grafo.find(n);
 
-	if (it != grafo.end()) {
+	if (it == grafo.end()) {
 		return false;
 	} else {
 		inicio = n;
@@ -36,7 +36,7 @@ bool Grafo::setInicio(Nivel * n) {
 bool Grafo::setFinal(Nivel * n) {
 	std::map<Nivel*,std::map<Estado, Nivel *>>::iterator it = grafo.find(n);
 
-	if (it != grafo.end()) {
+	if (it == grafo.end()) {
 		return false;
 	} else {
 		ultimo = n;

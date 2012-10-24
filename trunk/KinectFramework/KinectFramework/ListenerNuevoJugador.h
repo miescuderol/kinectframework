@@ -4,5 +4,5 @@
 class ListenerNuevoJugador
 {
 public:
-	virtual void update(XnUserID * user) = 0;
+	virtual void update(XnUserID user) = 0;
 };
