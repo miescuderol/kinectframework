@@ -23,7 +23,12 @@ bool NivelPrueba2::isTerminado() {
 
 void NivelPrueba2::update() {
 	ciclos++;
-	std::cout << "ID Activo: " << kinect->getIDActivo() << " ciclos: " << ciclos << std::endl;
+	std::cout << "ID Activo: " << jugadorActivo << " ciclos: " << ciclos << std::endl;
+}
+
+void NivelPrueba2::update( XnUserID user ){
+	jugadorActivo = user;
+	std::cout << "jugador encontrado en el nivel " << user << std::endl;
 }
 
 Estado NivelPrueba2::getEstadoFinal() {

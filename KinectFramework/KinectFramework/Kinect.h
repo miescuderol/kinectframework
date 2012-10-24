@@ -3,7 +3,7 @@
 #include "XnCppWrapper.h"
 #include <iostream>
 #include <map>
-#include <list>
+#include <vector>
 #include "Subsistema.h"
 #include "Reconocedor.h"
 #include "XnTypes.h"
@@ -67,14 +67,15 @@ private:
 	DepthMetaData metaDataProfundidad;
 	SceneMetaData * escena;
 	
+	std::map<XnUserID, XnSkeletonJointTransformation*> users;
 	//Lista de reconocedores
 	std::map<int, Reconocedor* > reconocedores;
 	//Map de reconocedores básicos asociados a una articulación
 	std::map<char*, ReconocedorBasico *> reconocedoresBasicos;
-	std::list<ListenerJugadorCalibrado *> listenersJugadorCalibrado;
-	std::list<ListenerJugadorPerdido *> listenersJugadorPerdido;
-	std::list<ListenerNuevoJugador *> listenersNuevoJugador;
-	std::list<ListenerReconocedor *> listenersReconocedor;
+	std::vector<ListenerJugadorCalibrado *> listenersJugadorCalibrado;
+	std::vector<ListenerJugadorPerdido *> listenersJugadorPerdido;
+	std::vector<ListenerNuevoJugador *> listenersNuevoJugador;
+	std::vector<ListenerReconocedor *> listenersReconocedor;
 
 	bool checkStatusOK(const XnStatus estado, char* entorno);
 
@@ -114,13 +115,17 @@ public:
 	ReconocedorBasico *buscarReconocedorBasico(char * idRecBasico);
 
 	Gesto *isGesto(int idRec); //si cada reconocedor tiene un unico gesto, SI NO deberia devolver el gesto encontrado
-	
+	bool isNewPlayer(XnUserID& player); 
 	//métodos para agregar listeners
 	void addListenerReconocedor(ListenerReconocedor *lr, int idRec); 
 	void addListenerNuevoJugador(ListenerNuevoJugador *lnj); 
 	void addListenerJugadorPerdido(ListenerJugadorPerdido *ljp);
 	void addListenerJugadorCalibrado(ListenerJugadorCalibrado *ljc);
 
+	void notifyAllNuevoJugador(XnUserID jugadorNuevo);
+	void notifyAllJugadorPerdido(XnUserID jugadorPerdido);
+	void notifyAllJugadorCalibrado(XnUserID jugadorCalibrado);
+	void notifyAllReconocedor(Reconocedor * rec);
 
 	Gesto * getUltimoGesto(XnUserID player);
 

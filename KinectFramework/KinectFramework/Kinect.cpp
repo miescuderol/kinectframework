@@ -76,6 +76,7 @@
 	void XN_CALLBACK_TYPE User_NewUser(xn::UserGenerator& generator, 
 				 XnUserID nId, void* pCookie){ 
 		printf("New User: %d\n", nId); 
+		activeID = nId;
 		userG.GetPoseDetectionCap().StartPoseDetection("Psi", nId); 
 	} 
 
@@ -148,6 +149,9 @@ void Kinect::setup(){
 	std::cin >> i;
 		
 	}
+
+	enableGenerator(Kinect::DEPTH_GENERATOR);
+	enableGenerator(Kinect::USER_GENERATOR);
 }
 
 bool Kinect::enableGenerator(GeneratorType generator){
@@ -190,17 +194,32 @@ bool Kinect::disableGenerator(GeneratorType generator){
 	return false;
 }
 
+void Kinect::notifyAllNuevoJugador( XnUserID jugadorNuevo ){
+	if (listenersNuevoJugador.empty())	{
+		std::cout << "no hay listeners jugador nuevo" << std::endl;
+	}
+	for(int i = 0; i < listenersNuevoJugador.size(); i++){
+		listenersNuevoJugador[i]->update(jugadorNuevo);
+	}
+}
+
+
+
 XnChar * getActiveGenerators(){
 	return NULL;
 }
 
 void Kinect::update(){
-	if (!checkStatusOK(contexto.WaitAnyUpdateAll(), "Wait and Update all"))
+	if (!checkStatusOK(contexto.WaitAnyUpdateAll(), "Wait and Update all lala"))
 		return;
 
 	mapaProfundidad = depthG.GetDepthMap();
 	mapaImagen = imageG.GetImageMap();
-
+	XnUserID newPlayer;
+	if(isNewPlayer(newPlayer)) {
+		std::cout << "nuevo jugador encontrado"<< newPlayer << std::endl;
+		notifyAllNuevoJugador(newPlayer);
+	}
 	//TODO setear posiciones nuevas a los reconocedores basicos
 
 	//TODO agregar updates de los gestos
@@ -265,6 +284,17 @@ XnUserID Kinect::getIDActivo(){
 	return activeID;
 }
 
+bool Kinect::isNewPlayer(XnUserID& player) {
+	if(activeID != -1) {
+		player = activeID;
+		activeID = -1;
+		users[player] = new XnSkeletonJointTransformation[25]; // el [0] no se usa
+		//cout << "---------------------------------posicion &: " << &usuarios[player][Kinect::LEFT_HAND].position.position.X << endl;
+		return true;
+	}
+	return false;
+}
+
 int Kinect::startReconocedor(XnUserID jugador, Joint articulacion, GestoPatron *patron){
 	char* idRecBasico = new char(jugador + '_' + articulacion);
 	ReconocedorBasico *recBasico = buscarReconocedorBasico(idRecBasico);
@@ -293,7 +323,7 @@ void Kinect::addListenerReconocedor(ListenerReconocedor *lr, int idRec){
 }
 
 void Kinect::addListenerNuevoJugador(ListenerNuevoJugador *lnj){
-
+	listenersNuevoJugador.push_back(lnj);
 }
 
 void Kinect::addListenerJugadorPerdido(ListenerJugadorPerdido *ljp){

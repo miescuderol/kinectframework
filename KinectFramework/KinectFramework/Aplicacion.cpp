@@ -19,7 +19,7 @@ void Aplicacion::setup() {
 	for (int i = 0; i < subsistemasPreNivel.size(); i++) {
 		subsistemasPreNivel[i]->setup();
 	}
-
+	nivelActivo->cargar(NULL);
 	for (int i = 0; i < subsistemasPostNivel.size(); i++) {
 		subsistemasPostNivel[i]->setup();
 	}
@@ -30,7 +30,10 @@ void Aplicacion::update() {
 
 	//Hace el cambio de nivel si es necesario
 	if (nivelActivo->isTerminado()) {
+		Nivel * nivelAnt = nivelActivo;
 		nivelActivo = grafoNiveles->getSigNivel(nivelActivo, nivelActivo->getEstadoFinal());
+		nivelActivo->cargar(nivelAnt);
+
 	}
 
 	for (int i = 0; i < subsistemasPreNivel.size(); i++) {
@@ -62,6 +65,7 @@ void Aplicacion::run() {
 	std::cout << "Iniciando setup... ";
 	setup();
 	std::cout << "hecho." << std::endl;
+	if(nivelActivo == NULL) std::cout << "nivel activo es null" << std::endl;
 	std::cout << "Iniciando Game Loop... " << std::endl;
 	while (!grafoNiveles->isFinal(nivelActivo) || !nivelActivo->isTerminado()) {
 		update();
