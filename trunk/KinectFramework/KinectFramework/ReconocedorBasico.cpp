@@ -44,7 +44,7 @@ void ReconocedorBasico::setNewPosition(float x, float y, float z) {
 	if (movimiento->getDireccionHorizontal() != Movimiento::Direccion::SIN_DIRECCION || 
 		movimiento->getDireccionVertical() != Movimiento::Direccion::SIN_DIRECCION) {
 		for (unsigned int i = 0; i < listeners.size(); i++)
-			listeners.at(i)->update(movimiento);
+			listeners.at(i)->updateMovimiento(movimiento);
 		ultimoMovimiento = movimiento;
 	}
 }

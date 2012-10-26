@@ -10,6 +10,7 @@ Reconocedor::Reconocedor(GestoPatron * gestoPatron, char* idJugadorArt, XnSkelet
 	this->gestoPatron = gestoPatron;
 	ultimoMovimiento = 0;
 	movimientoEsperado = gestoPatron->getMovement(ultimoMovimiento);
+	this->recBasicos->addListener(this);
 }
 
 Reconocedor::~Reconocedor(void) {
@@ -43,7 +44,7 @@ void Reconocedor::addListener(ListenerGesto * listener) {
 	listeners.push_back(listener);
 }
 
-void Reconocedor::update(Movimiento * m) {
+void Reconocedor::updateMovimiento(Movimiento * m) {
 	
 	if (movimientoEsperado == m) {
 		ultimoMovimiento++;
@@ -57,5 +58,5 @@ void Reconocedor::update(Movimiento * m) {
 
 void Reconocedor::notifyObservers() {
 	for (int i = 0; i < listeners.size(); i++)
-		listeners.at(i)->update(ultimoGesto);
+		listeners.at(i)->updateGesto(ultimoGesto);
 }

@@ -2,5 +2,5 @@
 
 class ListenerReconocedor {
 public:
-	virtual void update(Reconocedor * r) = 0;
+	virtual void updateReconocedor(Reconocedor * r) = 0;
 };

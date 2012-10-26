@@ -6,7 +6,9 @@
 	xn::ImageGenerator imageG;
 	xn::UserGenerator userG;
 	
-	XnUserID activeID = -1;
+	XnUserID nuevoJugadorID = -1;
+	XnUserID jugadorPerdidoID = -1;
+	XnUserID jugadorCalibradoID = -1;
 	XnBoundingBox3D* boundingBox; 
 	const XnChar * recognizedGesture;
 	XnPoint3D * hand;
@@ -76,13 +78,13 @@
 	void XN_CALLBACK_TYPE User_NewUser(xn::UserGenerator& generator, 
 				 XnUserID nId, void* pCookie){ 
 		printf("New User: %d\n", nId); 
-		activeID = nId;
+		nuevoJugadorID = nId;
 		userG.GetPoseDetectionCap().StartPoseDetection("Psi", nId); 
 	} 
 
 	void XN_CALLBACK_TYPE User_LostUser(xn::UserGenerator& generator, 
 					XnUserID nId, void* pCookie){
-
+		jugadorPerdidoID = nId;
 	} 
 
 	void XN_CALLBACK_TYPE Pose_Detected(xn::PoseDetectionCapability& pose, 
@@ -101,8 +103,8 @@
 		if (bSuccess) 
 		{ 
 			printf("User calibrated\n"); 
-			activeID = nId;
-			std::cout << "-----------------------------------------> " << activeID << std::endl;
+			jugadorCalibradoID = nId;
+			std::cout << "-----------------------------------------> " << jugadorCalibradoID << std::endl;
 			userG.GetSkeletonCap().StartTracking(nId); 
 		} 
 		else 
@@ -194,20 +196,10 @@ bool Kinect::disableGenerator(GeneratorType generator){
 	return false;
 }
 
-void Kinect::notifyAllNuevoJugador( XnUserID jugadorNuevo ){
-	if (listenersNuevoJugador.empty())	{
-		std::cout << "no hay listeners jugador nuevo" << std::endl;
-	}
-	for(int i = 0; i < listenersNuevoJugador.size(); i++){
-		listenersNuevoJugador[i]->update(jugadorNuevo);
-	}
-}
-
-
-
 XnChar * getActiveGenerators(){
 	return NULL;
 }
+
 
 void Kinect::update(){
 	if (!checkStatusOK(contexto.WaitAnyUpdateAll(), "Wait and Update all lala"))
@@ -215,14 +207,41 @@ void Kinect::update(){
 
 	mapaProfundidad = depthG.GetDepthMap();
 	mapaImagen = imageG.GetImageMap();
-	XnUserID newPlayer;
-	if(isNewPlayer(newPlayer)) {
-		std::cout << "nuevo jugador encontrado"<< newPlayer << std::endl;
-		notifyAllNuevoJugador(newPlayer);
+
+	XnUserID jugadorNuevo;
+	if(isNuevoJugador(jugadorNuevo)) {
+		std::cout << "nuevo jugador encontrado"<< jugadorNuevo << std::endl;
+		notifyAllNuevoJugador(jugadorNuevo);
+	}
+
+	XnUserID jugadorCalibrado;
+	if(isJugadorCalibrado(jugadorCalibrado)) {
+		std::cout << "nuevo jugador calibrado"<< jugadorCalibrado << std::endl;
+		notifyAllJugadorCalibrado(jugadorCalibrado);
+	}
+	
+	XnUserID jugadorPerdido;
+	if(isJugadorPerdido(jugadorPerdido)) {
+		std::cout << "jugador perdido"<< jugadorPerdido << std::endl;
+		notifyAllJugadorPerdido(jugadorPerdido);
+	}
+
+	std::map<XnUserID, XnSkeletonJointTransformation* >::iterator it = jugadores.begin();
+	for(it; it != jugadores.end(); it++) {
+		if (isTrackingPlayer(it->first))
+			for (int i = 1; i <= 24; i++) { // 24 = cantidad de Kinect::Joint 
+				XnSkeletonJointTransformation j;
+				userG.GetSkeletonCap().GetSkeletonJoint(it->first, (XnSkeletonJoint)i, j);
+		//		if(j.position.fConfidence > minConfidence)
+					(it->second[i]) = j;
+			}
 	}
 	//TODO setear posiciones nuevas a los reconocedores basicos
+	updateReconocedoresBasicos();
 
-	//TODO agregar updates de los gestos
+	//notifico a todos los listeners de reconocedores
+	
+
 
 }
 
@@ -259,6 +278,12 @@ bool Kinect::getArticulaciones(Joint * joints, XnSkeletonJointTransformation * j
 	return true;
 }
 
+XnSkeletonJointTransformation * Kinect::getArticulaciones(XnUserID jugador) {
+	if (jugadores.find(jugador) != jugadores.end())
+		return jugadores[jugador];
+	return NULL;
+}
+
 bool Kinect::isTrackingPlayer(XnUserID player){
 	return userG.IsGenerating() && userG.IsCapabilitySupported(XN_CAPABILITY_SKELETON) && userG.GetSkeletonCap().IsTracking(player);
 }
@@ -271,8 +296,8 @@ bool Kinect::isTracking() {
 	return SetNUIMotorPosition(motor, position);
 }*/
 
-const XnLabel * Kinect::getPixelesUsuario() {
-	userG.GetUserPixels(activeID, *escena);
+const XnLabel * Kinect::getPixelesUsuario(XnUserID usuario) {
+	userG.GetUserPixels(usuario, *escena);
 	return escena->Data();
 }
 
@@ -284,16 +309,7 @@ XnUserID Kinect::getIDActivo(){
 	return activeID;
 }
 
-bool Kinect::isNewPlayer(XnUserID& player) {
-	if(activeID != -1) {
-		player = activeID;
-		activeID = -1;
-		users[player] = new XnSkeletonJointTransformation[25]; // el [0] no se usa
-		//cout << "---------------------------------posicion &: " << &usuarios[player][Kinect::LEFT_HAND].position.position.X << endl;
-		return true;
-	}
-	return false;
-}
+
 
 int Kinect::startReconocedor(XnUserID jugador, Joint articulacion, GestoPatron *patron){
 	char* idRecBasico = new char(jugador + '_' + articulacion);
@@ -314,12 +330,65 @@ int Kinect::startReconocedor(XnUserID jugador, Joint articulacion, GestoPatron *
 	return i;
 }
 
+ReconocedorBasico * Kinect::buscarReconocedorBasico(char * idRecBasico) {
+
+	if(reconocedoresBasicos.find(idRecBasico) == reconocedoresBasicos.end()){
+		reconocedoresBasicos[idRecBasico] = new ReconocedorBasico(8, 70); //cambiar los parámetros por constantes
+	}
+	return reconocedoresBasicos[idRecBasico];
+}
+
+void Kinect::updateReconocedoresBasicos(){
+	std::map<char*, ReconocedorBasico*>::iterator it = reconocedoresBasicos.begin();
+	for(it; it != reconocedoresBasicos.end(); it++){
+		std::string clave = it->first;
+		XnUserID us = atoi(clave.substr(0, clave.find_first_of('_')).data());
+		Joint joint = (Joint)atoi(clave.substr(clave.find_first_of('_')+1).data());
+		XnSkeletonJointTransformation * joints = jugadores[us];
+		it->second->setNewPosition(joints[joint].position.position.X, joints[joint].position.position.Y, joints[joint].position.position.Z);
+	}
+}
+
 Gesto *Kinect::isGesto(int idRec){
 	return reconocedores.at(idRec)->getUltimoGesto();
 }
 
-void Kinect::addListenerReconocedor(ListenerReconocedor *lr, int idRec){
 
+
+bool Kinect::isNuevoJugador(XnUserID &player) {
+	if(nuevoJugadorID != -1) {
+		player = nuevoJugadorID;
+		nuevoJugadorID = -1;
+		return true;
+	}
+	return false;
+}
+
+bool Kinect::isJugadorCalibrado(XnUserID &player) {
+	if(jugadorCalibradoID != -1) {
+		player = jugadorCalibradoID;
+		jugadorCalibradoID = -1;
+		jugadores[player] = new XnSkeletonJointTransformation[25]; // el [0] no se usa
+		return true;
+	}
+	return false;
+}
+
+bool Kinect::isJugadorPerdido(XnUserID &player) {
+	if(jugadorPerdidoID != -1) {
+		player = jugadorPerdidoID;
+		jugadorPerdidoID = -1;
+		jugadores.erase(player);
+		return true;
+	}
+	return false;
+}
+
+
+//Agregar Listeners//
+
+void Kinect::addListenerReconocedor(ListenerReconocedor *lr, int idRec){
+	listenersReconocedor[idRec].push_back(lr);
 }
 
 void Kinect::addListenerNuevoJugador(ListenerNuevoJugador *lnj){
@@ -327,17 +396,40 @@ void Kinect::addListenerNuevoJugador(ListenerNuevoJugador *lnj){
 }
 
 void Kinect::addListenerJugadorPerdido(ListenerJugadorPerdido *ljp){
-
+	listenersJugadorPerdido.push_back(ljp);
 }
 
 void Kinect::addListenerJugadorCalibrado(ListenerJugadorCalibrado *ljc){
-
+	listenersJugadorCalibrado.push_back(ljc);
 }
 
-ReconocedorBasico * Kinect::buscarReconocedorBasico(char * idRecBasico) {
-	
-	if(reconocedoresBasicos.find(idRecBasico) == reconocedoresBasicos.end()){
-		reconocedoresBasicos[idRecBasico] = new ReconocedorBasico(8, 70); //cambiar los parámetros por constantes
+
+//Notificadores//
+
+void Kinect::notifyAllReconocedor(int idRec){
+	std::vector<ListenerReconocedor*> listeners = listenersReconocedor[idRec];
+	for (int i = 0; i < listeners.size(); i++){
+		listeners[i]->updateReconocedor(reconocedores[idRec]);
 	}
-	return reconocedoresBasicos[idRecBasico];
 }
+
+void Kinect::notifyAllNuevoJugador( XnUserID jugadorNuevo ){
+	if (listenersNuevoJugador.empty())	{
+		std::cout << "no hay listeners jugador nuevo" << std::endl;
+	}
+	for(int i = 0; i < listenersNuevoJugador.size(); i++){
+		listenersNuevoJugador[i]->updateNuevoJugador(jugadorNuevo);
+	}
+}
+
+void Kinect::notifyAllJugadorPerdido(XnUserID jugadorPerdido){
+	for (int i = 0; i < listenersJugadorPerdido.size(); i++)
+		listenersJugadorPerdido[i]->updateJugadorPerdido(jugadorPerdido);
+}
+
+void Kinect::notifyAllJugadorCalibrado( XnUserID jugadorCalibrado ){
+	for (int i = 0; i < listenersJugadorCalibrado.size(); i++)
+		listenersJugadorCalibrado[i]->updateJugadorCalibrado(jugadorCalibrado);
+}
+
+

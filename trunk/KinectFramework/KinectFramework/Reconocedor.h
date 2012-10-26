@@ -21,7 +21,7 @@ public:
 	char * getIDJugadorArt();
 
 	void addListener(ListenerGesto * listener);
-	void update(Movimiento * m);
+	void updateMovimiento(Movimiento * m);
 
 private:
 
