@@ -4,5 +4,5 @@
 class ListenerJugadorCalibrado
 {
 public:
-	virtual void update(XnUserID * user) = 0;
+	virtual void updateJugadorCalibrado(XnUserID user) = 0;
 };

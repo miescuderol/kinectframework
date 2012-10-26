@@ -1,12 +1,13 @@
 #pragma once
 
 #include "XnCppWrapper.h"
+#include "XnTypes.h"
 #include <iostream>
 #include <map>
+#include <string>
 #include <vector>
 #include "Subsistema.h"
 #include "Reconocedor.h"
-#include "XnTypes.h"
 #include "ListenerJugadorCalibrado.h"
 #include "ListenerJugadorPerdido.h"
 #include "ListenerMovimiento.h"
@@ -67,29 +68,33 @@ private:
 	DepthMetaData metaDataProfundidad;
 	SceneMetaData * escena;
 	
-	std::map<XnUserID, XnSkeletonJointTransformation*> users;
-	//Lista de reconocedores
+	//Map que asocia un arreglo de articulaciones (XnSkeletonJointTransformation[25]) a un id de jugador
+	std::map<XnUserID, XnSkeletonJointTransformation*> jugadores;
+
+	//Map de reconocedores asociados a un idRec
 	std::map<int, Reconocedor* > reconocedores;
+
 	//Map de reconocedores básicos asociados a una articulación
-	std::map<char*, ReconocedorBasico *> reconocedoresBasicos;
+	std::map<char *, ReconocedorBasico *> reconocedoresBasicos;
+
+	//Vectores de listeners
 	std::vector<ListenerJugadorCalibrado *> listenersJugadorCalibrado;
 	std::vector<ListenerJugadorPerdido *> listenersJugadorPerdido;
 	std::vector<ListenerNuevoJugador *> listenersNuevoJugador;
-	std::vector<ListenerReconocedor *> listenersReconocedor;
+
+	//Map que asocia un vector de listeners al idRec correspondiente 
+	std::map<int, std::vector<ListenerReconocedor *> > listenersReconocedor;
 
 	bool checkStatusOK(const XnStatus estado, char* entorno);
 
 
 public:
-
-	
-
-
 	Kinect(void);
 	~Kinect(void);
 
 	void setup();
 	void update();
+
 	bool enableGenerator(GeneratorType generator);
 	bool disableGenerator(GeneratorType generator);
 	bool setMotorPosition(short position);
@@ -101,11 +106,12 @@ public:
 	const int getYRes();
 	const XnPoint3D * getMano();
 	bool getArticulaciones(Joint * articulaciones, XnSkeletonJointTransformation * jPosiciones, XnUInt8 nArticulaciones);
+	XnSkeletonJointTransformation * getArticulaciones(XnUserID jugador);
 	bool isTrackingPlayer(XnUserID jugador);
 	bool isTracking();
 	void setID(XnUserID nId);
 	XnUserID getIDActivo();
-	const XnLabel * getPixelesUsuario();
+	const XnLabel * getPixelesUsuario(XnUserID usuario);
 	DepthGenerator * getGenProfundidad();
 
 	//startReconocedor crea un nuevo reconocedor con las características pasadas por parámetro y devuelve el id del mismo.
@@ -114,25 +120,27 @@ public:
 
 	ReconocedorBasico *buscarReconocedorBasico(char * idRecBasico);
 
+	void updateReconocedoresBasicos();
+
+
 	Gesto *isGesto(int idRec); //si cada reconocedor tiene un unico gesto, SI NO deberia devolver el gesto encontrado
-	bool isNewPlayer(XnUserID& player); 
+	bool isNuevoJugador(XnUserID &jugador); 
+	bool isJugadorCalibrado(XnUserID &jugador);
+	bool isJugadorPerdido(XnUserID &jugador);
+
 	//métodos para agregar listeners
 	void addListenerReconocedor(ListenerReconocedor *lr, int idRec); 
 	void addListenerNuevoJugador(ListenerNuevoJugador *lnj); 
 	void addListenerJugadorPerdido(ListenerJugadorPerdido *ljp);
 	void addListenerJugadorCalibrado(ListenerJugadorCalibrado *ljc);
 
+	void notifyAllReconocedor(int idRec);
 	void notifyAllNuevoJugador(XnUserID jugadorNuevo);
 	void notifyAllJugadorPerdido(XnUserID jugadorPerdido);
 	void notifyAllJugadorCalibrado(XnUserID jugadorCalibrado);
-	void notifyAllReconocedor(Reconocedor * rec);
+
 
 	Gesto * getUltimoGesto(XnUserID player);
-
-
-
-
-
 
 };
 

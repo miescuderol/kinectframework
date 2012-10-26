@@ -4,6 +4,6 @@
 class ListenerMovimiento
 {
 public:
-	virtual void update(Movimiento * m) = 0;
+	virtual void updateMovimiento(Movimiento * m) = 0;
 };
 
