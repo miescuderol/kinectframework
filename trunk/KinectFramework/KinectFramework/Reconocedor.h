@@ -15,10 +15,8 @@ public:
 	~Reconocedor(void);
 
 	Gesto * getUltimoGesto();
-	//Kinect::Joint getArticulacion();
 	GestoPatron * getGestoPatron();
-	//XnUserID getIDJugador();
-	char * getIDJugadorArt();
+	char * getIDJugador_Art();
 
 	void addListener(ListenerGesto * listener);
 	void updateMovimiento(Movimiento * m);
@@ -36,7 +34,7 @@ private:
 	XnSkeletonJointTransformation * articulacion;
 //	Kinect::Joint joint;
 //	XnUserID idJugador;
-	char * idJugadorArt;
+	char * idJugador_Art;
 
 };
 
