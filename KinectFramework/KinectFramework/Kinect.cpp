@@ -236,13 +236,11 @@ void Kinect::update(){
 					(it->second[i]) = j;
 			}
 	}
-	//TODO setear posiciones nuevas a los reconocedores basicos
+	//setea posiciones nuevas a los reconocedores basicos
 	updateReconocedoresBasicos();
 
 	//notifico a todos los listeners de reconocedores
 	
-
-
 }
 
 bool Kinect::checkStatusOK(const XnStatus status, char* entorno){
@@ -318,7 +316,7 @@ int Kinect::startReconocedor(XnUserID jugador, Joint articulacion, GestoPatron *
 	int i = 0;
 	for(i; i < reconocedores.size(); i++){
 		Reconocedor *r = reconocedores.at(i);
-		if(r->getIDJugadorArt() == idRecBasico && r->getGestoPatron() == patron)
+		if(r->getIDJugador_Art() == idRecBasico && r->getGestoPatron() == patron)
 			return i;
 	}
 	if(i == reconocedores.size()){
@@ -387,8 +385,8 @@ bool Kinect::isJugadorPerdido(XnUserID &player) {
 
 //Agregar Listeners//
 
-void Kinect::addListenerReconocedor(ListenerReconocedor *lr, int idRec){
-	listenersReconocedor[idRec].push_back(lr);
+void Kinect::addListenerGesto(ListenerGesto *lg, int idRec){
+	reconocedores[idRec]->addListener(lg);
 }
 
 void Kinect::addListenerNuevoJugador(ListenerNuevoJugador *lnj){
@@ -405,13 +403,6 @@ void Kinect::addListenerJugadorCalibrado(ListenerJugadorCalibrado *ljc){
 
 
 //Notificadores//
-
-void Kinect::notifyAllReconocedor(int idRec){
-	std::vector<ListenerReconocedor*> listeners = listenersReconocedor[idRec];
-	for (int i = 0; i < listeners.size(); i++){
-		listeners[i]->updateReconocedor(reconocedores[idRec]);
-	}
-}
 
 void Kinect::notifyAllNuevoJugador( XnUserID jugadorNuevo ){
 	if (listenersNuevoJugador.empty())	{
@@ -430,6 +421,20 @@ void Kinect::notifyAllJugadorPerdido(XnUserID jugadorPerdido){
 void Kinect::notifyAllJugadorCalibrado( XnUserID jugadorCalibrado ){
 	for (int i = 0; i < listenersJugadorCalibrado.size(); i++)
 		listenersJugadorCalibrado[i]->updateJugadorCalibrado(jugadorCalibrado);
+}
+
+Gesto * Kinect::getUltimoGesto(XnUserID player){/*
+	std::map<int, Reconocedor *>::iterator it = reconocedores.begin();
+	for(it; it != reconocedores.end(); it++){
+		std::string clave = it->second->getIDJugador_Art();
+		XnUserID us = atoi(clave.substr(0, clave.find_first_of('_')).data());
+		if(us == player)
+			return it->second->getUltimoGesto();
+	}*/
+}
+
+Gesto * Kinect::getUltimoGesto(int idRec){
+	return reconocedores[idRec]->getUltimoGesto();
 }
 
 

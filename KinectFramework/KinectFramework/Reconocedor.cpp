@@ -1,12 +1,10 @@
 #include "Reconocedor.h"
 
 
-Reconocedor::Reconocedor(GestoPatron * gestoPatron, char* idJugadorArt, XnSkeletonJointTransformation * articulacion, ReconocedorBasico * recBasicos) {
+Reconocedor::Reconocedor(GestoPatron * gestoPatron, char* idJugador_Art, XnSkeletonJointTransformation * articulacion, ReconocedorBasico * recBasicos) {
 	this->recBasicos = recBasicos;
 	this->articulacion = articulacion;
-	//this->idJugador = idJugador;
-	//this->joint = joint;
-	this->idJugadorArt = idJugadorArt;
+	this->idJugadorArt = idJugador_Art;
 	this->gestoPatron = gestoPatron;
 	ultimoMovimiento = 0;
 	movimientoEsperado = gestoPatron->getMovement(ultimoMovimiento);
@@ -23,21 +21,13 @@ Gesto * Reconocedor::getUltimoGesto()
 	ultimoGesto = NULL;
 	return aux;
 }
-/*
-Kinect::Joint Reconocedor::getArticulacion() {
-	return joint;
-}
-*/
+
 GestoPatron * Reconocedor::getGestoPatron() {
 	return gestoPatron;
 }
-/*
-XnUserID Reconocedor::getIDJugador() {
-	return idJugador;
-}
-*/
-char * Reconocedor::getIDJugadorArt(){
-	return idJugadorArt;
+
+char * Reconocedor::getIDJugador_Art(){
+	return idJugador_Art;
 }
 
 void Reconocedor::addListener(ListenerGesto * listener) {
@@ -49,7 +39,7 @@ void Reconocedor::updateMovimiento(Movimiento * m) {
 	if (movimientoEsperado == m) {
 		ultimoMovimiento++;
 		if (ultimoMovimiento == gestoPatron->length()) {
-			ultimoGesto = new Gesto(); // falta setearlo
+			ultimoGesto = new Gesto(); // falta setearlo (acordarse de pasarel el idJugador_art)
 			notifyObservers();
 		}
 	}

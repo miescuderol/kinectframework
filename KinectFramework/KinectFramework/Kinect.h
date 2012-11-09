@@ -82,11 +82,11 @@ private:
 	std::vector<ListenerJugadorPerdido *> listenersJugadorPerdido;
 	std::vector<ListenerNuevoJugador *> listenersNuevoJugador;
 
-	//Map que asocia un vector de listeners al idRec correspondiente 
-	std::map<int, std::vector<ListenerReconocedor *> > listenersReconocedor;
-
 	bool checkStatusOK(const XnStatus estado, char* entorno);
 
+	void notifyAllNuevoJugador(XnUserID jugadorNuevo);
+	void notifyAllJugadorPerdido(XnUserID jugadorPerdido);
+	void notifyAllJugadorCalibrado(XnUserID jugadorCalibrado);
 
 public:
 	Kinect(void);
@@ -116,31 +116,24 @@ public:
 
 	//startReconocedor crea un nuevo reconocedor con las características pasadas por parámetro y devuelve el id del mismo.
 	//en caso de haber un reconocedor similar devuelve el id correspondiente en lugar de crear uno nuevo
-	int startReconocedor(XnUserID jugador, Joint articulacion, GestoPatron *patron); 
+	int startReconocedor(XnUserID jugador, Joint articulacion, GestoPatron *patron);
 
 	ReconocedorBasico *buscarReconocedorBasico(char * idRecBasico);
 
 	void updateReconocedoresBasicos();
 
-
-	Gesto *isGesto(int idRec); //si cada reconocedor tiene un unico gesto, SI NO deberia devolver el gesto encontrado
-	bool isNuevoJugador(XnUserID &jugador); 
+	bool isNuevoJugador(XnUserID &jugador);
 	bool isJugadorCalibrado(XnUserID &jugador);
 	bool isJugadorPerdido(XnUserID &jugador);
 
 	//métodos para agregar listeners
-	void addListenerReconocedor(ListenerReconocedor *lr, int idRec); 
-	void addListenerNuevoJugador(ListenerNuevoJugador *lnj); 
+	void addListenerGesto(ListenerGesto *lg, int idRec);
+	void addListenerNuevoJugador(ListenerNuevoJugador *lnj);
 	void addListenerJugadorPerdido(ListenerJugadorPerdido *ljp);
 	void addListenerJugadorCalibrado(ListenerJugadorCalibrado *ljc);
 
-	void notifyAllReconocedor(int idRec);
-	void notifyAllNuevoJugador(XnUserID jugadorNuevo);
-	void notifyAllJugadorPerdido(XnUserID jugadorPerdido);
-	void notifyAllJugadorCalibrado(XnUserID jugadorCalibrado);
-
-
 	Gesto * getUltimoGesto(XnUserID player);
+	Gesto * getUltimoGesto(int idRec);
+
 
 };
-
