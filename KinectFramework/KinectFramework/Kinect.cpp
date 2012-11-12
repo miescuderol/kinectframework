@@ -1,3 +1,5 @@
+#define DEBUG 0
+
 #include "Kinect.h"
 
 	xn::GestureGenerator gestureG; 
@@ -11,7 +13,10 @@
 	XnUserID jugadorCalibradoID = -1;
 	XnBoundingBox3D* boundingBox; 
 	const XnChar * recognizedGesture;
-	XnPoint3D * hand;
+	XnUserID nuevaManoID = -1;
+	XnUserID manoPerdidaID = -1;
+	XnUserID manoActualizada;
+	XnPoint3D * mano, * nuevaMano;
 	XnSkeletonJointPosition * Head = new XnSkeletonJointPosition; 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -47,28 +52,29 @@
 				XnFloat fTime, void* pCookie){ 
 	  printf("New Hand: %d @ (%f,%f,%f)\n", nId, 
 			 pPosition->X, pPosition->Y, pPosition->Z); 
-		hand = new XnPoint3D;
-		hand->X = pPosition->X;
-		hand->Y = pPosition->Y;
-		hand->Z = pPosition->Z;
+		nuevaManoID = nId;
+		nuevaMano = new XnPoint3D;
+		nuevaMano->X = pPosition->X;
+		nuevaMano->Y = pPosition->Y;
+		nuevaMano->Z = pPosition->Z;
 	} 
 	void XN_CALLBACK_TYPE Hand_Update(xn::HandsGenerator& generator, 
 				XnUserID nId, const XnPoint3D* pPosition, 
-				XnFloat fTime, void* pCookie){ 
-		if (hand) {
-			hand->X = pPosition->X;
-			hand->Y = pPosition->Y;
-			hand->Z = pPosition->Z;
-		}
+				XnFloat fTime, void* pCookie){
+		if (!mano) 
+			mano = new XnPoint3D;
+		manoActualizada = nId;
+		mano->X = pPosition->X;
+		mano->Y = pPosition->Y;
+		mano->Z = pPosition->Z;
 	}
 
 	void XN_CALLBACK_TYPE Hand_Destroy(xn::HandsGenerator& generator, 
 				 XnUserID nId, XnFloat fTime, 
 				 void* pCookie){ 
+
 	  printf("Lost Hand: %d\n", nId); 
-	  recognizedGesture = NULL;
-	  delete hand;
-	  hand = NULL;
+	  manoPerdidaID = nId;
 	}
 
 	//
@@ -211,7 +217,7 @@ void Kinect::update(){
 	XnUserID jugadorNuevo;
 	if(isNuevoJugador(jugadorNuevo)) {
 		std::cout << "nuevo jugador encontrado"<< jugadorNuevo << std::endl;
-		notifyAllNuevoJugador(jugadorNuevo);
+		notifyAllJugadorNuevo(jugadorNuevo);
 	}
 
 	XnUserID jugadorCalibrado;
@@ -239,7 +245,23 @@ void Kinect::update(){
 	//setea posiciones nuevas a los reconocedores basicos
 	updateReconocedoresBasicos();
 
-	//notifico a todos los listeners de reconocedores
+
+	XnUserID idManoAux;
+	if (isNuevaMano(idManoAux)) {
+		std::cout << "mano nueva encontrada" << idManoAux << std::endl;
+		notifyAllManoNueva(idManoAux);
+	}
+	if(isManoPerdida(idManoAux)){
+		std::cout << "mano nueva perdida" << idManoAux << std::endl;
+		notifyAllManoPerdida(idManoAux);
+	}
+
+
+	if (manos.find(manoActualizada) != manos.end())	{
+		manos[manoActualizada]->X = mano->X;
+		manos[manoActualizada]->Y = mano->Y;
+		manos[manoActualizada]->Z = mano->Z;
+	}
 	
 }
 
@@ -267,15 +289,6 @@ const XnPoint3D * Kinect::getMano(){
 	return hand;
 }
 
-bool Kinect::getArticulaciones(Joint * joints, XnSkeletonJointTransformation * jTransformations, XnUInt8 nJoints){
-	if (!isTrackingPlayer(activeID)) return false;	
-
-	for (int i = 0; i < nJoints; i++)
-		userG.GetSkeletonCap().GetSkeletonJoint(activeID, (XnSkeletonJoint)joints[i], jTransformations[i]);
-
-	return true;
-}
-
 XnSkeletonJointTransformation * Kinect::getArticulaciones(XnUserID jugador) {
 	if (jugadores.find(jugador) != jugadores.end())
 		return jugadores[jugador];
@@ -287,7 +300,7 @@ bool Kinect::isTrackingPlayer(XnUserID player){
 }
 
 bool Kinect::isTracking() {
-	return userG.IsGenerating() && userG.IsCapabilitySupported(XN_CAPABILITY_SKELETON) && userG.GetSkeletonCap().IsTracking(activeID);
+	return jugadores.size() > 0;
 }
 
 /*bool Kinect::setMotorPosition(short position) {
@@ -302,11 +315,6 @@ const XnLabel * Kinect::getPixelesUsuario(XnUserID usuario) {
 DepthGenerator * Kinect::getGenProfundidad() {
 	return &depthG;
 }
-
-XnUserID Kinect::getIDActivo(){
-	return activeID;
-}
-
 
 
 int Kinect::startReconocedor(XnUserID jugador, Joint articulacion, GestoPatron *patron){
@@ -347,11 +355,6 @@ void Kinect::updateReconocedoresBasicos(){
 	}
 }
 
-Gesto *Kinect::isGesto(int idRec){
-	return reconocedores.at(idRec)->getUltimoGesto();
-}
-
-
 
 bool Kinect::isNuevoJugador(XnUserID &player) {
 	if(nuevoJugadorID != -1) {
@@ -389,8 +392,8 @@ void Kinect::addListenerGesto(ListenerGesto *lg, int idRec){
 	reconocedores[idRec]->addListener(lg);
 }
 
-void Kinect::addListenerNuevoJugador(ListenerNuevoJugador *lnj){
-	listenersNuevoJugador.push_back(lnj);
+void Kinect::addListenerJugadorNuevo(ListenerJugadorNuevo *lnj){
+	listenersJugadorNuevo.push_back(lnj);
 }
 
 void Kinect::addListenerJugadorPerdido(ListenerJugadorPerdido *ljp){
@@ -402,14 +405,24 @@ void Kinect::addListenerJugadorCalibrado(ListenerJugadorCalibrado *ljc){
 }
 
 
+void Kinect::addListenerManoNueva(ListenerManoNueva *lmn){
+
+}
+
+void Kinect::addListenerManoPerdida(ListenerManoPerdida *lmp){
+
+}
+
+
+
 //Notificadores//
 
-void Kinect::notifyAllNuevoJugador( XnUserID jugadorNuevo ){
-	if (listenersNuevoJugador.empty())	{
+void Kinect::notifyAllJugadorNuevo( XnUserID jugadorNuevo ){
+	if (listenersJugadorNuevo.empty())	{
 		std::cout << "no hay listeners jugador nuevo" << std::endl;
 	}
-	for(int i = 0; i < listenersNuevoJugador.size(); i++){
-		listenersNuevoJugador[i]->updateNuevoJugador(jugadorNuevo);
+	for(int i = 0; i < listenersJugadorNuevo.size(); i++){
+		listenersJugadorNuevo[i]->updateJugadorNuevo(jugadorNuevo);
 	}
 }
 
@@ -422,6 +435,23 @@ void Kinect::notifyAllJugadorCalibrado( XnUserID jugadorCalibrado ){
 	for (int i = 0; i < listenersJugadorCalibrado.size(); i++)
 		listenersJugadorCalibrado[i]->updateJugadorCalibrado(jugadorCalibrado);
 }
+
+void Kinect::notifyAllManoNueva(XnUserID manoNueva){
+	for (int i = 0; i < listenersManoNueva.size(); i++)
+		listenersManoNueva[i]->updateManoNueva(manoNueva);
+}
+
+void Kinect::notifyAllManoPerdida(XnUserID manoPerdida){
+	for (int i = 0; i < listenersManoPerdida.size(); i++)
+		listenersManoPerdida[i]->updateManoPerdida(manoPerdida);
+}
+
+
+
+
+
+
+
 
 Gesto * Kinect::getUltimoGesto(XnUserID player){
 	std::map<int, Reconocedor *>::iterator it = reconocedores.begin();
@@ -443,6 +473,26 @@ Gesto * Kinect::getUltimoGesto(XnUserID player){
 
 Gesto * Kinect::getUltimoGesto(int idRec){
 	return reconocedores[idRec]->getUltimoGesto();
+}
+
+bool Kinect::isNuevaMano(XnUserID &mano){
+	if (nuevaManoID != -1){
+		mano = nuevaManoID;
+		manos[nuevaManoID] = nuevaMano;
+		nuevaManoID = -1;
+		return true;
+	}
+	return false;
+}
+
+bool Kinect::isManoPerdida(XnUserID &mano){
+	if(manoPerdidaID != -1){
+		mano = manoPerdidaID;
+		manos.erase(manoPerdidaID);
+		manoPerdidaID = -1;
+		return true;
+	}
+	return false;
 }
 
 

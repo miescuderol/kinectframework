@@ -13,6 +13,8 @@
 #include "ListenerMovimiento.h"
 #include "ListenerNuevoJugador.h"
 #include "ListenerReconocedor.h"
+#include "ListenerManoNueva.h"
+#include "ListenerManoPerdida.h"
 #include <boost/chrono/system_clocks.hpp>
 
 using namespace xn;
@@ -69,27 +71,39 @@ private:
 	DepthMetaData metaDataProfundidad;
 	SceneMetaData * escena;
 	
-	//Map que asocia un arreglo de articulaciones (XnSkeletonJointTransformation[25]) a un id de jugador
+	/** Map que asocia un arreglo de articulaciones (XnSkeletonJointTransformation[25]) a un id de jugador */
 	std::map<XnUserID, XnSkeletonJointTransformation*> jugadores;
+	
+	/** Map que asocia una mano (XnPoint3D*) a un id de jugador. */
+	
 
-	//Map de reconocedores asociados a un idRec
+	/** Map de reconocedores asociados a un idRec */
 	std::map<int, Reconocedor* > reconocedores;
 
-	//Map de reconocedores básicos asociados a una articulación
+	/** Map de reconocedores básicos asociados a una articulación.*/
 	std::map<char *, ReconocedorBasico *> reconocedoresBasicos;
 
-	//Vectores de listeners
+	/** Vector de listeners de jugadores calibrados.*/
 	std::vector<ListenerJugadorCalibrado *> listenersJugadorCalibrado;
+	/** Vector de listeners de jugadores perdidos.*/
 	std::vector<ListenerJugadorPerdido *> listenersJugadorPerdido;
-	std::vector<ListenerNuevoJugador *> listenersNuevoJugador;
+	/** Vector de listeners de jugadores nuevos.*/
+	std::vector<ListenerJugadorNuevo *> listenersJugadorNuevo;
+	/** Vector de listeners de manos nuevas.*/
+	std::vector<ListenerManoNueva *> listenersManoNueva;
+	/** Vector de listeners de manos perdidas.*/
+	std::vector<ListenerManoPerdida *> listenersManoPerdida;
 
 	bool checkStatusOK(const XnStatus estado, char* entorno);
 
-	void notifyAllNuevoJugador(XnUserID jugadorNuevo);
+	void notifyAllJugadorNuevo(XnUserID jugadorNuevo);
 	void notifyAllJugadorPerdido(XnUserID jugadorPerdido);
 	void notifyAllJugadorCalibrado(XnUserID jugadorCalibrado);
+	void notifyAllManoNueva(XnUserID manoNueva);
+	void notifyAllManoPerdida(XnUserID manoPerdida);
 
 public:
+	static std::map<XnUserID, XnPoint3D*> manos; 
 	Kinect(void);
 	~Kinect(void);
 
@@ -127,11 +141,17 @@ public:
 	bool isJugadorCalibrado(XnUserID &jugador);
 	bool isJugadorPerdido(XnUserID &jugador);
 
+	bool isNuevaMano(XnUserID &mano);
+	bool isManoPerdida(XnUserID &mano);
+
 	//métodos para agregar listeners
 	void addListenerGesto(ListenerGesto *lg, int idRec);
-	void addListenerNuevoJugador(ListenerNuevoJugador *lnj);
+	void addListenerJugadorNuevo(ListenerJugadorNuevo *lnj);
 	void addListenerJugadorPerdido(ListenerJugadorPerdido *ljp);
 	void addListenerJugadorCalibrado(ListenerJugadorCalibrado *ljc);
+	void addListenerManoNueva(ListenerManoNueva *lmn);
+	void addListenerManoPerdida(ListenerManoPerdida *lmp);
+
 
 	Gesto * getUltimoGesto(XnUserID player);
 	Gesto * getUltimoGesto(int idRec);

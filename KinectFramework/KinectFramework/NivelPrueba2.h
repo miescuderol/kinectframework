@@ -2,7 +2,7 @@
 #include "Nivel.h"
 #include "Kinect.h"
 
-class NivelPrueba2 : public Nivel, public ListenerNuevoJugador
+class NivelPrueba2 : public Nivel, public ListenerJugadorNuevo
 {
 public:
 	NivelPrueba2(Kinect * kinect);

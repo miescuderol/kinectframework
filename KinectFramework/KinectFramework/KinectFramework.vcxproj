@@ -19,6 +19,8 @@
     <ClInclude Include="ListenerGesto.h" />
     <ClInclude Include="ListenerJugadorCalibrado.h" />
     <ClInclude Include="ListenerJugadorPerdido.h" />
+    <ClInclude Include="ListenerManoNueva.h" />
+    <ClInclude Include="ListenerManoPerdida.h" />
     <ClInclude Include="ListenerMovimiento.h" />
     <ClInclude Include="ListenerNuevoJugador.h" />
     <ClInclude Include="ListenerReconocedor.h" />
