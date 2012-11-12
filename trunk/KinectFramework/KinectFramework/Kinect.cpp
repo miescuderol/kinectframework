@@ -423,14 +423,22 @@ void Kinect::notifyAllJugadorCalibrado( XnUserID jugadorCalibrado ){
 		listenersJugadorCalibrado[i]->updateJugadorCalibrado(jugadorCalibrado);
 }
 
-Gesto * Kinect::getUltimoGesto(XnUserID player){/*
+Gesto * Kinect::getUltimoGesto(XnUserID player){
 	std::map<int, Reconocedor *>::iterator it = reconocedores.begin();
+	std::time_t time = 0; //variable donde almaceno el tiempo del gesto mas actual
+	Gesto * ultimoGesto, * gestoAux;
 	for(it; it != reconocedores.end(); it++){
 		std::string clave = it->second->getIDJugador_Art();
 		XnUserID us = atoi(clave.substr(0, clave.find_first_of('_')).data());
-		if(us == player)
-			return it->second->getUltimoGesto();
-	}*/
+		if(us == player){
+			gestoAux = it->second->peekUltimoGesto();
+			if(gestoAux->getTime() > time){
+				ultimoGesto = gestoAux;
+				time = gestoAux->getTime();
+			}
+		}
+	}
+	return ultimoGesto;
 }
 
 Gesto * Kinect::getUltimoGesto(int idRec){

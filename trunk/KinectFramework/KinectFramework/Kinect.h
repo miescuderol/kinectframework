@@ -13,6 +13,7 @@
 #include "ListenerMovimiento.h"
 #include "ListenerNuevoJugador.h"
 #include "ListenerReconocedor.h"
+#include <boost/chrono/system_clocks.hpp>
 
 using namespace xn;
 
