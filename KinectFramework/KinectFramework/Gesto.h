@@ -1,6 +1,8 @@
 #pragma once
 #include "XnCppWrapper.h"
 #include "XnTypes.h"
+#include <boost/thread.hpp>
+#
 
 class Gesto
 {
