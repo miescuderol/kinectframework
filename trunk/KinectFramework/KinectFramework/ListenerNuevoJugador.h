@@ -1,8 +1,8 @@
 #pragma once
 #include "XnCppWrapper.h"
 
-class ListenerNuevoJugador
+class ListenerJugadorNuevo
 {
 public:
-	virtual void updateNuevoJugador(XnUserID user) = 0;
+	virtual void updateJugadorNuevo(XnUserID user) = 0;
 };

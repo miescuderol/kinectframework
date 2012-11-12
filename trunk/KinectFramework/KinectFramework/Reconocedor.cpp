@@ -4,7 +4,7 @@
 Reconocedor::Reconocedor(GestoPatron * gestoPatron, char* idJugador_Art, XnSkeletonJointTransformation * articulacion, ReconocedorBasico * recBasicos) {
 	this->recBasicos = recBasicos;
 	this->articulacion = articulacion;
-	this->idJugadorArt = idJugador_Art;
+	this->idJugador_Art = idJugador_Art;
 	this->gestoPatron = gestoPatron;
 	ultimoMovimiento = 0;
 	movimientoEsperado = gestoPatron->getMovement(ultimoMovimiento);

@@ -69,6 +69,12 @@
     <ClInclude Include="NivelPrueba2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ListenerManoNueva.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ListenerManoPerdida.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Grafo.cpp">

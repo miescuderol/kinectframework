@@ -16,7 +16,7 @@ NivelPrueba::~NivelPrueba(void) {
 void NivelPrueba::cargar(Nivel * nivelAnt) {
 	std::cout << "Cargando NivelPrueba" << std::endl;
 	float i = 0;
-	kinect->addListenerNuevoJugador(this);
+	kinect->addListenerJugadorNuevo(this);
 	while (i < 30000) i++;
 }
 
