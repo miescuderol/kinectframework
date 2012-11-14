@@ -45,6 +45,9 @@
     <ClCompile Include="Reconocedor.cpp" />
     <ClCompile Include="ReconocedorBasico.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="TODO List.txt" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{446AADD9-1DF5-4555-8434-BE7D7D49E540}</ProjectGuid>
     <RootNamespace>KinectFramework</RootNamespace>
