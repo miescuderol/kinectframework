@@ -119,7 +119,7 @@ public:
 	inline const XnUInt8 * getMapaImagen() { return mapaImagen; }
 	const int getXRes();
 	const int getYRes();
-	const XnPoint3D * getMano();
+	const XnPoint3D * getMano(XnUserID jugador);
 	bool getArticulaciones(Joint * articulaciones, XnSkeletonJointTransformation * jPosiciones, XnUInt8 nArticulaciones);
 	XnSkeletonJointTransformation * getArticulaciones(XnUserID jugador);
 	bool isTrackingPlayer(XnUserID jugador);
@@ -153,8 +153,8 @@ public:
 	void addListenerManoPerdida(ListenerManoPerdida *lmp);
 
 
-	Gesto * getUltimoGesto(XnUserID player);
-	Gesto * getUltimoGesto(int idRec);
+	const Gesto * getUltimoGesto(XnUserID player);
+	const Gesto * getUltimoGesto(int idRec);
 
 
 };

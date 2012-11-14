@@ -14,7 +14,8 @@ public:
 	Reconocedor(GestoPatron * gestoPatron, char* idJugadorArt, XnSkeletonJointTransformation * articulacion, ReconocedorBasico * recBasicos);
 	~Reconocedor(void);
 
-	Gesto * getUltimoGesto();
+	const Gesto * getUltimoGesto();
+	const Gesto * peekUltimoGesto();
 	GestoPatron * getGestoPatron();
 	char * getIDJugador_Art();
 
@@ -24,6 +25,7 @@ public:
 private:
 
 	void notifyObservers();
+	
 	std::vector<ListenerGesto*> listeners;
 
 	ReconocedorBasico * recBasicos;

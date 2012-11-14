@@ -15,12 +15,17 @@ Reconocedor::~Reconocedor(void) {
 
 }
 
-Gesto * Reconocedor::getUltimoGesto()
+const Gesto * Reconocedor::getUltimoGesto()
 {
 	Gesto * aux = ultimoGesto;
 	ultimoGesto = NULL;
 	return aux;
 }
+
+const Gesto * Reconocedor::peekUltimoGesto() {
+	return ultimoGesto;
+}
+
 
 GestoPatron * Reconocedor::getGestoPatron() {
 	return gestoPatron;

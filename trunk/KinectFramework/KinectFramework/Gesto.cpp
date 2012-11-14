@@ -12,7 +12,8 @@ XnPoint3D Gesto::getPosFinal() {
 	return posFinal;
 }
 
-long int Gesto::getTimeInMillis() {
+long int Gesto::getDuracion()
+{
 	return timeInMillis;
 }
 
@@ -43,4 +44,9 @@ Gesto * Gesto::setTimeInMillis(long int time) {
 Gesto * Gesto::setArticulacion(const XnSkeletonJointTransformation * articulacion) {
 	this->articulacion = articulacion;
 	return this;
+}
+
+bool Gesto::getTiempo() const
+{
+	throw std::exception("The method or operation is not implemented.");
 }

@@ -12,8 +12,13 @@ public:
 	int getID();
 	XnPoint3D getPosInicial();
 	XnPoint3D getPosFinal();
-	long int getTimeInMillis();
+
+	/** Devuelve la duración del gesto en milisegundos*/
+	long int getDuracion();
 	const XnSkeletonJointTransformation * getArticulacion();
+
+	/** Devuelve el momento (tiempo) en el que se hizo el gesto*/
+	bool getTiempo() const;
 
 	// Setters (hechos de esta forma se pueden encadenar, todos retornan this)
 	Gesto * setID(int id);
@@ -21,7 +26,7 @@ public:
 	Gesto * setPosFinal(XnPoint3D pos);
 	Gesto * setTimeInMillis(long int time);
 	Gesto * setArticulacion(const XnSkeletonJointTransformation * articulacion);
-
+	
 private:
 
 	int id;
