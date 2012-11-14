@@ -70,12 +70,24 @@ private:
 	const XnUInt8 * mapaImagen;
 	DepthMetaData metaDataProfundidad;
 	SceneMetaData * escena;
+
+	// Semaforos
+	boost::mutex m_manos;
+	boost::mutex m_jugadores;
+	boost::mutex m_generadores;
+	boost::mutex m_listenersJugadorCalibrado;
+	boost::mutex m_listenersJugadorPerdido;
+	boost::mutex m_listenersJugadorNuevo;
+	boost::mutex m_listenersManoNueva;
+	boost::mutex m_listenersManoPerdida;
+	boost::mutex m_reconocedores;
+	boost::mutex m_reconocedoresBasicos;
 	
 	/** Map que asocia un arreglo de articulaciones (XnSkeletonJointTransformation[25]) a un id de jugador */
 	std::map<XnUserID, XnSkeletonJointTransformation*> jugadores;
 	
 	/** Map que asocia una mano (XnPoint3D*) a un id de jugador. */
-	
+	std::map<XnUserID, XnPoint3D*> manos; 
 
 	/** Map de reconocedores asociados a un idRec */
 	std::map<int, Reconocedor* > reconocedores;
@@ -102,8 +114,14 @@ private:
 	void notifyAllManoNueva(XnUserID manoNueva);
 	void notifyAllManoPerdida(XnUserID manoPerdida);
 
+	ReconocedorBasico * buscarReconocedorBasico(char * idRecBasico);
+
+	void updateReconocedoresBasicos();	/**< Setea posiciones nuevas a los reconocedores basicos. */
+	void updateJugadores();
+	void updateManos();
+
 public:
-	static std::map<XnUserID, XnPoint3D*> manos; 
+
 	Kinect(void);
 	~Kinect(void);
 
@@ -115,27 +133,19 @@ public:
 	bool setMotorPosition(short position);
 	XnChar * getActiveGenerators();
 
-	inline const XnDepthPixel * getMapaProfundidad() { return mapaProfundidad; }
-	inline const XnUInt8 * getMapaImagen() { return mapaImagen; }
+	const XnDepthPixel * getMapaProfundidad();
+	const XnUInt8 * getMapaImagen();
 	const int getXRes();
 	const int getYRes();
 	const XnPoint3D * getMano(XnUserID jugador);
-	bool getArticulaciones(Joint * articulaciones, XnSkeletonJointTransformation * jPosiciones, XnUInt8 nArticulaciones);
-	XnSkeletonJointTransformation * getArticulaciones(XnUserID jugador);
+	const XnSkeletonJointTransformation * getArticulaciones(XnUserID jugador);
 	bool isTrackingPlayer(XnUserID jugador);
 	bool isTracking();
-	void setID(XnUserID nId);
-	XnUserID getIDActivo();
 	const XnLabel * getPixelesUsuario(XnUserID usuario);
-	DepthGenerator * getGenProfundidad();
 
 	//startReconocedor crea un nuevo reconocedor con las características pasadas por parámetro y devuelve el id del mismo.
 	//en caso de haber un reconocedor similar devuelve el id correspondiente en lugar de crear uno nuevo
 	int startReconocedor(XnUserID jugador, Joint articulacion, GestoPatron *patron);
-
-	ReconocedorBasico *buscarReconocedorBasico(char * idRecBasico);
-
-	void updateReconocedoresBasicos();
 
 	bool isNuevoJugador(XnUserID &jugador);
 	bool isJugadorCalibrado(XnUserID &jugador);
@@ -155,6 +165,5 @@ public:
 
 	const Gesto * getUltimoGesto(XnUserID player);
 	const Gesto * getUltimoGesto(int idRec);
-
 
 };
