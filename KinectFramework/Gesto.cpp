@@ -46,7 +46,7 @@ Gesto * Gesto::setArticulacion(const XnSkeletonJointTransformation * articulacio
 	return this;
 }
 
-bool Gesto::getTiempo() const
+std::time_t Gesto::getTiempo() const
 {
 	throw std::exception("The method or operation is not implemented.");
 }

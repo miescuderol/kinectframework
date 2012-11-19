@@ -5,3 +5,5 @@ Comentar para que ande con doxygen.
 Kinect::buscarReconocedorBasico Cambiar los parametros por constantes.
 
 Kinect::disableGenerator, Kinect::getActiveGenerators Hacer.
+
+Kinect::~Kinect() Hacer.

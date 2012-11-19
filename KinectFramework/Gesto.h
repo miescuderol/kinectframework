@@ -18,7 +18,7 @@ public:
 	const XnSkeletonJointTransformation * getArticulacion();
 
 	/** Devuelve el momento (tiempo) en el que se hizo el gesto*/
-	bool getTiempo() const;
+	std::time_t getTiempo() const;
 
 	// Setters (hechos de esta forma se pueden encadenar, todos retornan this)
 	Gesto * setID(int id);

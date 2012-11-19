@@ -19,7 +19,7 @@
 
 using namespace xn;
 
-class Kinect : public Subsistema
+class Kinect
 {
 public:
 	
@@ -106,6 +106,8 @@ private:
 	/** Vector de listeners de manos perdidas.*/
 	std::vector<ListenerManoPerdida *> listenersManoPerdida;
 
+	boost::thread threadKinect;
+
 	bool checkStatusOK(const XnStatus estado, char* entorno);
 
 	void notifyAllJugadorNuevo(XnUserID jugadorNuevo);
@@ -120,13 +122,20 @@ private:
 	void updateJugadores();
 	void updateManos();
 
+	void setup();
+	void update();
+	void run();
+
 public:
 
 	Kinect(void);
 	~Kinect(void);
 
-	void setup();
-	void update();
+	void start();
+	/**< Inicia la ejecución del componente Kinect en otro thread */
+
+	void shutdown();
+	/**< Termina la ejecución del componente Kinect */
 
 	bool enableGenerator(GeneratorType generator);
 	bool disableGenerator(GeneratorType generator);

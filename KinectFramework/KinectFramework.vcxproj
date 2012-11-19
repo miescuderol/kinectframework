@@ -24,6 +24,7 @@
     <ClInclude Include="ListenerMovimiento.h" />
     <ClInclude Include="ListenerNuevoJugador.h" />
     <ClInclude Include="ListenerReconocedor.h" />
+    <ClInclude Include="MiAplicacion.h" />
     <ClInclude Include="Movimiento.h" />
     <ClInclude Include="Nivel.h" />
     <ClInclude Include="NivelPrueba.h" />
@@ -39,6 +40,7 @@
     <ClCompile Include="Grafo.cpp" />
     <ClCompile Include="Kinect.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MiAplicacion.cpp" />
     <ClCompile Include="Movimiento.cpp" />
     <ClCompile Include="NivelPrueba.cpp" />
     <ClCompile Include="NivelPrueba2.cpp" />
