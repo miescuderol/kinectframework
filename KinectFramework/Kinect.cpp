@@ -202,28 +202,28 @@ void Kinect::disableGenerator(GeneratorType generator) {
 	switch(generator) {
 		case IMAGE_GENERATOR: 
 			imageG.StopGenerating();
-			if (generadoresActivos) generadoresActivos.push_back(IMAGE_GENERATOR);
 			break;
 		case DEPTH_GENERATOR: 
 			depthG.StopGenerating();
-			if (checkOK) generadoresActivos.push_back(DEPTH_GENERATOR);
 			break; 
 		case USER_GENERATOR: 
 			userG.UnregisterUserCallbacks(hUser);
 			userG.GetSkeletonCap().UnregisterFromCalibrationStart(hCalibration);
 			userG.StopGenerating();
-			if (checkOK) generadoresActivos.push_back(USER_GENERATOR);
 			break; 
 		case HAND_GENERATOR: 
 			handG.UnregisterHandCallbacks(hHand);
 			handG.StopGenerating();
-			if (checkOK) generadoresActivos.push_back(HAND_GENERATOR);
 			break;
 		case GESTURE_GENERATOR: 
 			gestureG.UnregisterGestureCallbacks(hGesture);
 			gestureG.StopGenerating();
-			if (checkOK) generadoresActivos.push_back(GESTURE_GENERATOR);
 			break;
+	}
+	for (std::vector<GeneratorType>::iterator it = generadoresActivos.begin(); it != generadoresActivos.end(); it++) {
+		if (*it = generator) {
+			generadoresActivos.erase(it);
+		}
 	}
 }
 
@@ -483,7 +483,8 @@ const Gesto * Kinect::getUltimoGesto(XnUserID player) {
 	m_reconocedores.lock();
 	std::map<int, Reconocedor *>::iterator it = reconocedores.begin();
 	std::time_t time = 0; //variable donde almaceno el tiempo del gesto mas actual
-	const Gesto * ultimoGesto, * gestoAux;
+	const Gesto * ultimoGesto; 
+	const Gesto * gestoAux;
 	for(it; it != reconocedores.end(); it++){
 		std::string clave = it->second->getIDJugador_Art();
 		XnUserID us = atoi(clave.substr(0, clave.find_first_of('_')).data());
