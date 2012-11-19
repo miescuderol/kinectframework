@@ -163,48 +163,72 @@ void Kinect::setup() {
 }
 
 bool Kinect::enableGenerator(GeneratorType generator) {
-	bool listo = true;
+	bool checkOK;
 	switch(generator) {
 		case IMAGE_GENERATOR: 
-			return checkStatusOK(imageG.StartGenerating(), "StartGenerating imageG");
+			checkOK = checkStatusOK(imageG.StartGenerating(), "StartGenerating imageG");
+			if (checkOK) generadoresActivos.push_back(IMAGE_GENERATOR);
 			break;
 		case DEPTH_GENERATOR: 
-			return checkStatusOK(depthG.StartGenerating(), "StartGenerating depthG");
+			checkOK = checkStatusOK(depthG.StartGenerating(), "StartGenerating depthG");
+			if (checkOK) generadoresActivos.push_back(DEPTH_GENERATOR);
 			break; 
 		case USER_GENERATOR: 
-			return checkStatusOK(userG.RegisterUserCallbacks(User_NewUser, User_LostUser, NULL, hUser), "Callbacks User") &&
+			checkOK = checkStatusOK(userG.RegisterUserCallbacks(User_NewUser, User_LostUser, NULL, hUser), "Callbacks User") &&
 					checkStatusOK(userG.GetPoseDetectionCap().RegisterToPoseCallbacks(Pose_Detected, NULL, NULL, hPose), "Callbacks Pose") &&
 					checkStatusOK(userG.GetSkeletonCap().RegisterCalibrationCallbacks(Calibration_Start, Calibration_End, NULL, hCalibration), "Callbacks Calibration") &&
 					checkStatusOK(userG.GetSkeletonCap().SetSkeletonProfile(XN_SKEL_PROFILE_ALL), "Skeleton Profile") &&
 					checkStatusOK(userG.GetSkeletonCap().SetSmoothing(XnFloat(0.4)), "Smoothing") &&
 					checkStatusOK(userG.StartGenerating(), "StartGenerating userG");
+			if (checkOK) generadoresActivos.push_back(USER_GENERATOR);
 			break; 
 		case HAND_GENERATOR: 
-			return checkStatusOK(handG.RegisterHandCallbacks(Hand_Create, Hand_Update, Hand_Destroy, NULL, hHand), "Callbacks Hand") &&
+			checkOK = checkStatusOK(handG.RegisterHandCallbacks(Hand_Create, Hand_Update, Hand_Destroy, NULL, hHand), "Callbacks Hand") &&
 				checkStatusOK(handG.StartGenerating(), "StartGenerating handG");
+			if (checkOK) generadoresActivos.push_back(HAND_GENERATOR);
 			break;
 		case GESTURE_GENERATOR: 
-			return checkStatusOK(gestureG.RegisterGestureCallbacks(Gesture_Recognized, Gesture_Process, NULL, hGesture), "Callbacks Gesture") && 
+			checkOK = checkStatusOK(gestureG.RegisterGestureCallbacks(Gesture_Recognized, Gesture_Process, NULL, hGesture), "Callbacks Gesture") && 
 					checkStatusOK(gestureG.AddGesture("Click", boundingBox), "Agregar gesto click") &&
 					checkStatusOK(gestureG.AddGesture("Wave", boundingBox), "Agregar gesto wave") &&
 					checkStatusOK(gestureG.StartGenerating(), "StartGenerating gestureG");
+			if (checkOK) generadoresActivos.push_back(GESTURE_GENERATOR);
 			break;
-		case ALL_GENERATORS: 
-			enableGenerator(IMAGE_GENERATOR);
-			enableGenerator(DEPTH_GENERATOR);
-			enableGenerator(USER_GENERATOR);
-			enableGenerator(HAND_GENERATOR);
-			enableGenerator(GESTURE_GENERATOR);
+	}
+	return checkOK;
+}
+
+void Kinect::disableGenerator(GeneratorType generator) {
+	switch(generator) {
+		case IMAGE_GENERATOR: 
+			imageG.StopGenerating();
+			if (generadoresActivos) generadoresActivos.push_back(IMAGE_GENERATOR);
+			break;
+		case DEPTH_GENERATOR: 
+			depthG.StopGenerating();
+			if (checkOK) generadoresActivos.push_back(DEPTH_GENERATOR);
+			break; 
+		case USER_GENERATOR: 
+			userG.UnregisterUserCallbacks(hUser);
+			userG.GetSkeletonCap().UnregisterFromCalibrationStart(hCalibration);
+			userG.StopGenerating();
+			if (checkOK) generadoresActivos.push_back(USER_GENERATOR);
+			break; 
+		case HAND_GENERATOR: 
+			handG.UnregisterHandCallbacks(hHand);
+			handG.StopGenerating();
+			if (checkOK) generadoresActivos.push_back(HAND_GENERATOR);
+			break;
+		case GESTURE_GENERATOR: 
+			gestureG.UnregisterGestureCallbacks(hGesture);
+			gestureG.StopGenerating();
+			if (checkOK) generadoresActivos.push_back(GESTURE_GENERATOR);
 			break;
 	}
 }
 
-bool Kinect::disableGenerator(GeneratorType generator) {
-	return false;
-}
-
-XnChar * Kinect::getActiveGenerators() {
-	return NULL;
+const std::vector<Kinect::GeneratorType> * Kinect::getActiveGenerators() {
+	return &generadoresActivos;
 }
 
 void Kinect::update() {

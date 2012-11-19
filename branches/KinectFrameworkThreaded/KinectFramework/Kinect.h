@@ -53,13 +53,12 @@ public:
 		RIGHT_ANKLE		=23,
 		RIGHT_FOOT		=24	
 	};
-	enum GeneratorType {
+	 enum GeneratorType {
 		IMAGE_GENERATOR, 
 		DEPTH_GENERATOR, 
 		USER_GENERATOR, 
 		HAND_GENERATOR,
-		GESTURE_GENERATOR,
-		ALL_GENERATORS
+		GESTURE_GENERATOR
 	};
 
 private:
@@ -82,6 +81,8 @@ private:
 	boost::mutex m_listenersManoPerdida;
 	boost::mutex m_reconocedores;
 	boost::mutex m_reconocedoresBasicos;
+
+	std::vector<GeneratorType> generadoresActivos;
 	
 	/** Map que asocia un arreglo de articulaciones (XnSkeletonJointTransformation[25]) a un id de jugador */
 	std::map<XnUserID, XnSkeletonJointTransformation*> jugadores;
@@ -138,9 +139,9 @@ public:
 	/**< Termina la ejecución del componente Kinect */
 
 	bool enableGenerator(GeneratorType generator);
-	bool disableGenerator(GeneratorType generator);
+	void disableGenerator(GeneratorType generator);
 	bool setMotorPosition(short position);
-	XnChar * getActiveGenerators();
+	const std::vector<GeneratorType> * getActiveGenerators();
 
 	const XnDepthPixel * getMapaProfundidad();
 	const XnUInt8 * getMapaImagen();
