@@ -14,7 +14,7 @@ public:
 
 	void update();
 
-    void update(XnUserID user);
+    void updateJugadorNuevo(XnUserID user);
 
 	Estado getEstadoFinal();
 

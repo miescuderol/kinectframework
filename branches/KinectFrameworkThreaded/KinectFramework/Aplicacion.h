@@ -13,10 +13,8 @@
 class Aplicacion
 {
 public:
-	Aplicacion(void);
-	~Aplicacion(void);
 
-	void setGrafoJuego(Grafo * grafo); /**< Agrega el grafo de niveles. */
+	Aplicacion();
 
 	void run(); 
 	/**< 
@@ -25,6 +23,21 @@ public:
 	 * después inicia el bucle update-draw.
 	 */
 
+protected:
+
+	virtual void initComponentes() = 0;
+	/**<
+	 * Inicializa los componentes de la Aplicacion.
+	 * En este método se deben crear los objetos de subsistemas, niveles, etc.
+	 */
+
+	void setup();
+	void update();
+	void draw();
+	void exit();
+
+	void setGrafoJuego(Grafo * grafo); /**< Agrega el grafo de niveles. */
+	
 	void addSubsistemaPreNivel(Subsistema * subsistema); 
 	/**< 
 	 * Agrega un subsistema que va a ser inicializado/actualizado
@@ -37,15 +50,14 @@ public:
 	 * después de la inicializacion/actualización del nivel activo. 
 	 */
 
+	Kinect * getKinect();
+
 private:
 
-	void setup();
-	void update();
-	void draw();
-	void exit();
-
+	Kinect * kinect;
 	Grafo * grafoNiveles;
 	Nivel * nivelActivo;
 	std::vector<Subsistema*> subsistemasPreNivel, subsistemasPostNivel;
+
 };
 

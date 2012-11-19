@@ -163,6 +163,7 @@ void Kinect::setup() {
 }
 
 bool Kinect::enableGenerator(GeneratorType generator) {
+	bool listo = true;
 	switch(generator) {
 		case IMAGE_GENERATOR: 
 			return checkStatusOK(imageG.StartGenerating(), "StartGenerating imageG");
@@ -175,7 +176,7 @@ bool Kinect::enableGenerator(GeneratorType generator) {
 					checkStatusOK(userG.GetPoseDetectionCap().RegisterToPoseCallbacks(Pose_Detected, NULL, NULL, hPose), "Callbacks Pose") &&
 					checkStatusOK(userG.GetSkeletonCap().RegisterCalibrationCallbacks(Calibration_Start, Calibration_End, NULL, hCalibration), "Callbacks Calibration") &&
 					checkStatusOK(userG.GetSkeletonCap().SetSkeletonProfile(XN_SKEL_PROFILE_ALL), "Skeleton Profile") &&
-					checkStatusOK(userG.GetSkeletonCap().SetSmoothing(0.4), "Smoothing") &&
+					checkStatusOK(userG.GetSkeletonCap().SetSmoothing(XnFloat(0.4)), "Smoothing") &&
 					checkStatusOK(userG.StartGenerating(), "StartGenerating userG");
 			break; 
 		case HAND_GENERATOR: 
@@ -298,7 +299,7 @@ int Kinect::startReconocedor(XnUserID jugador, Joint articulacion, GestoPatron *
 	ReconocedorBasico *recBasico = buscarReconocedorBasico(idRecBasico);
 
 	m_reconocedores.lock();
-	int i = 0;
+	unsigned int i = 0;
 	int idRec = -1;
 	for(i; (i < reconocedores.size()) && (idRec == -1); i++) {
 		Reconocedor *r = reconocedores.at(i);
@@ -307,7 +308,7 @@ int Kinect::startReconocedor(XnUserID jugador, Joint articulacion, GestoPatron *
 	}
 	if(i == reconocedores.size()) {
 		idRec = i;
-		XnSkeletonJointTransformation *art;
+		XnSkeletonJointTransformation *art = NULL;
 		m_generadores.lock();
 		userG.GetSkeletonCap().GetSkeletonJoint(jugador, (XnSkeletonJoint)articulacion, *art);
 		m_generadores.unlock();
@@ -421,35 +422,35 @@ void Kinect::addListenerManoPerdida(ListenerManoPerdida *lmp) {
 
 void Kinect::notifyAllJugadorNuevo(XnUserID jugadorNuevo) {
 	m_listenersJugadorNuevo.lock();
-	for(int i = 0; i < listenersJugadorNuevo.size(); i++)
+	for(unsigned int i = 0; i < listenersJugadorNuevo.size(); i++)
 		listenersJugadorNuevo[i]->updateJugadorNuevo(jugadorNuevo);
 	m_listenersJugadorNuevo.unlock();
 }
 
 void Kinect::notifyAllJugadorPerdido(XnUserID jugadorPerdido) {
 	m_listenersJugadorPerdido.lock();
-	for (int i = 0; i < listenersJugadorPerdido.size(); i++)
+	for (unsigned int i = 0; i < listenersJugadorPerdido.size(); i++)
 		listenersJugadorPerdido[i]->updateJugadorPerdido(jugadorPerdido);
 	m_listenersJugadorPerdido.unlock();
 }
 
 void Kinect::notifyAllJugadorCalibrado( XnUserID jugadorCalibrado ) {
 	m_listenersJugadorCalibrado.lock();
-	for (int i = 0; i < listenersJugadorCalibrado.size(); i++)
+	for (unsigned int i = 0; i < listenersJugadorCalibrado.size(); i++)
 		listenersJugadorCalibrado[i]->updateJugadorCalibrado(jugadorCalibrado);
 	m_listenersJugadorCalibrado.unlock();
 }
 
 void Kinect::notifyAllManoNueva(XnUserID manoNueva) {
 	m_listenersManoNueva.lock();
-	for (int i = 0; i < listenersManoNueva.size(); i++)
+	for (unsigned int i = 0; i < listenersManoNueva.size(); i++)
 		listenersManoNueva[i]->updateManoNueva(manoNueva);
 	m_listenersManoNueva.unlock();
 }
 
 void Kinect::notifyAllManoPerdida(XnUserID manoPerdida) {
 	m_listenersManoPerdida.lock();
-	for (int i = 0; i < listenersManoPerdida.size(); i++)
+	for (unsigned int i = 0; i < listenersManoPerdida.size(); i++)
 		listenersManoPerdida[i]->updateManoPerdida(manoPerdida);
 	m_listenersManoPerdida.unlock();
 }
@@ -562,4 +563,24 @@ void Kinect::updateManos() {
 		manos[manoActualizada]->Z = mano->Z;
 	}
 	m_manos.unlock();
+}
+
+void Kinect::start() {
+	threadKinect = boost::thread(&Kinect::run, this);
+}
+
+void Kinect::shutdown() {	
+	threadKinect.interrupt();
+}
+
+void Kinect::run() {
+	setup();
+	while (true) {
+		try {
+			update();
+		} catch (std::exception) {
+			Kinect().~Kinect();
+			return;
+		}
+	}
 }
