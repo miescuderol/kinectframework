@@ -10,7 +10,6 @@ using namespace std;
 
 int main(int argc, char **argv) {
 
-	MiAplicacion aplicacion;
-	aplicacion.run();
+	(new MiAplicacion)->run();
 
 }
