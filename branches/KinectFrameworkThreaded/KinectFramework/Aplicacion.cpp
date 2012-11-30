@@ -4,6 +4,9 @@
 Aplicacion::Aplicacion() {
 	kinect = new Kinect();
 	kinect->start();
+
+	while (!kinect->isStarted());
+
 }
 
 
@@ -47,7 +50,9 @@ void Aplicacion::draw() {
 }
 
 void Aplicacion::exit() {
-
+	std::cout << "Cerrando aplicacion." << std::endl;
+	kinect->shutdown();
+	kinect->~Kinect();
 }
 
 void Aplicacion::setGrafoJuego(Grafo * grafo) {
