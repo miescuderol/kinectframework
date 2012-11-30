@@ -127,12 +127,12 @@
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Kinect::Kinect(void) {
-
+	started = false;
 }
 
 
 Kinect::~Kinect(void) {
-
+	contexto.Shutdown();
 }
 
 void Kinect::setup() {
@@ -160,9 +160,13 @@ void Kinect::setup() {
 
 	enableGenerator(Kinect::DEPTH_GENERATOR);
 	enableGenerator(Kinect::USER_GENERATOR);
+
+	started = true;
+
 }
 
 bool Kinect::enableGenerator(GeneratorType generator) {
+	std::cout << " ...enabling generator... ";
 	bool checkOK;
 	switch(generator) {
 		case IMAGE_GENERATOR: 
@@ -195,6 +199,7 @@ bool Kinect::enableGenerator(GeneratorType generator) {
 			if (checkOK) generadoresActivos.push_back(GESTURE_GENERATOR);
 			break;
 	}
+	std::cout << " enabled." << std::endl;
 	return checkOK;
 }
 
@@ -227,8 +232,8 @@ void Kinect::disableGenerator(GeneratorType generator) {
 	}
 }
 
-const std::vector<Kinect::GeneratorType> * Kinect::getActiveGenerators() {
-	return &generadoresActivos;
+std::vector<Kinect::GeneratorType> Kinect::getActiveGenerators() {
+	return generadoresActivos;
 }
 
 void Kinect::update() {
@@ -594,18 +599,27 @@ void Kinect::start() {
 	threadKinect = boost::thread(&Kinect::run, this);
 }
 
-void Kinect::shutdown() {	
+void Kinect::shutdown() {
+
 	threadKinect.interrupt();
+	
 }
 
 void Kinect::run() {
+
 	setup();
+
 	while (true) {
+		update();
 		try {
-			update();
-		} catch (std::exception) {
-			Kinect().~Kinect();
-			return;
+			boost::this_thread::interruption_point();
+		} catch (boost::thread_interrupted) {
+			break;
 		}
 	}
+
+}
+
+bool Kinect::isStarted() {
+	return started;
 }

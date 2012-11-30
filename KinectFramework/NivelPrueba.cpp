@@ -26,7 +26,6 @@ bool NivelPrueba::isTerminado() {
 
 void NivelPrueba::update() {
 	ciclos++;
-	std::cout << ciclos << " Nivel 1 - ID Activo: " << jugadorActivo << std::endl;
 }
 
 void NivelPrueba::updateJugadorNuevo(XnUserID user) {

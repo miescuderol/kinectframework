@@ -70,6 +70,8 @@ private:
 	DepthMetaData metaDataProfundidad;
 	SceneMetaData * escena;
 
+	bool started;
+
 	// Semaforos
 	boost::mutex m_manos;
 	boost::mutex m_jugadores;
@@ -141,7 +143,7 @@ public:
 	bool enableGenerator(GeneratorType generator);
 	void disableGenerator(GeneratorType generator);
 	bool setMotorPosition(short position);
-	const std::vector<GeneratorType> * getActiveGenerators();
+	std::vector<GeneratorType> getActiveGenerators();
 
 	const XnDepthPixel * getMapaProfundidad();
 	const XnUInt8 * getMapaImagen();
@@ -163,6 +165,8 @@ public:
 
 	bool isNuevaMano(XnUserID &mano);
 	bool isManoPerdida(XnUserID &mano);
+
+	bool isStarted();
 
 	//métodos para agregar listeners
 	void addListenerGesto(ListenerGesto *lg, int idRec);
