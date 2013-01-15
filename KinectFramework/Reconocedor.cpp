@@ -52,6 +52,6 @@ void Reconocedor::updateMovimiento(Movimiento * m) {
 }
 
 void Reconocedor::notifyObservers() {
-	for (int i = 0; i < listeners.size(); i++)
+	for (unsigned int i = 0; i < listeners.size(); i++)
 		listeners.at(i)->updateGesto(ultimoGesto);
 }

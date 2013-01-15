@@ -127,12 +127,12 @@
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Kinect::Kinect(void) {
-
+	started = false;
 }
 
 
 Kinect::~Kinect(void) {
-
+	contexto.Shutdown();
 }
 
 void Kinect::setup() {
@@ -160,108 +160,101 @@ void Kinect::setup() {
 
 	enableGenerator(Kinect::DEPTH_GENERATOR);
 	enableGenerator(Kinect::USER_GENERATOR);
+
+	started = true;
+
 }
 
 bool Kinect::enableGenerator(GeneratorType generator) {
+	std::cout << " ...enabling generator... ";
+	bool checkOK;
 	switch(generator) {
 		case IMAGE_GENERATOR: 
-			return checkStatusOK(imageG.StartGenerating(), "StartGenerating imageG");
+			checkOK = checkStatusOK(imageG.StartGenerating(), "StartGenerating imageG");
+			if (checkOK) generadoresActivos.push_back(IMAGE_GENERATOR);
 			break;
 		case DEPTH_GENERATOR: 
-			return checkStatusOK(depthG.StartGenerating(), "StartGenerating depthG");
+			checkOK = checkStatusOK(depthG.StartGenerating(), "StartGenerating depthG");
+			if (checkOK) generadoresActivos.push_back(DEPTH_GENERATOR);
 			break; 
 		case USER_GENERATOR: 
-			return checkStatusOK(userG.RegisterUserCallbacks(User_NewUser, User_LostUser, NULL, hUser), "Callbacks User") &&
+			checkOK = checkStatusOK(userG.RegisterUserCallbacks(User_NewUser, User_LostUser, NULL, hUser), "Callbacks User") &&
 					checkStatusOK(userG.GetPoseDetectionCap().RegisterToPoseCallbacks(Pose_Detected, NULL, NULL, hPose), "Callbacks Pose") &&
 					checkStatusOK(userG.GetSkeletonCap().RegisterCalibrationCallbacks(Calibration_Start, Calibration_End, NULL, hCalibration), "Callbacks Calibration") &&
 					checkStatusOK(userG.GetSkeletonCap().SetSkeletonProfile(XN_SKEL_PROFILE_ALL), "Skeleton Profile") &&
-					checkStatusOK(userG.GetSkeletonCap().SetSmoothing(0.4), "Smoothing") &&
+					checkStatusOK(userG.GetSkeletonCap().SetSmoothing(XnFloat(0.4)), "Smoothing") &&
 					checkStatusOK(userG.StartGenerating(), "StartGenerating userG");
+			if (checkOK) generadoresActivos.push_back(USER_GENERATOR);
 			break; 
 		case HAND_GENERATOR: 
-			return checkStatusOK(handG.RegisterHandCallbacks(Hand_Create, Hand_Update, Hand_Destroy, NULL, hHand), "Callbacks Hand") &&
+			checkOK = checkStatusOK(handG.RegisterHandCallbacks(Hand_Create, Hand_Update, Hand_Destroy, NULL, hHand), "Callbacks Hand") &&
 				checkStatusOK(handG.StartGenerating(), "StartGenerating handG");
+			if (checkOK) generadoresActivos.push_back(HAND_GENERATOR);
 			break;
 		case GESTURE_GENERATOR: 
-			return checkStatusOK(gestureG.RegisterGestureCallbacks(Gesture_Recognized, Gesture_Process, NULL, hGesture), "Callbacks Gesture") && 
+			checkOK = checkStatusOK(gestureG.RegisterGestureCallbacks(Gesture_Recognized, Gesture_Process, NULL, hGesture), "Callbacks Gesture") && 
 					checkStatusOK(gestureG.AddGesture("Click", boundingBox), "Agregar gesto click") &&
 					checkStatusOK(gestureG.AddGesture("Wave", boundingBox), "Agregar gesto wave") &&
 					checkStatusOK(gestureG.StartGenerating(), "StartGenerating gestureG");
+			if (checkOK) generadoresActivos.push_back(GESTURE_GENERATOR);
 			break;
-		case ALL_GENERATORS: 
-			enableGenerator(IMAGE_GENERATOR);
-			enableGenerator(DEPTH_GENERATOR);
-			enableGenerator(USER_GENERATOR);
-			enableGenerator(HAND_GENERATOR);
-			enableGenerator(GESTURE_GENERATOR);
+	}
+	std::cout << " enabled." << std::endl;
+	return checkOK;
+}
+
+void Kinect::disableGenerator(GeneratorType generator) {
+	switch(generator) {
+		case IMAGE_GENERATOR: 
+			imageG.StopGenerating();
 			break;
+		case DEPTH_GENERATOR: 
+			depthG.StopGenerating();
+			break; 
+		case USER_GENERATOR: 
+			userG.UnregisterUserCallbacks(hUser);
+			userG.GetSkeletonCap().UnregisterFromCalibrationStart(hCalibration);
+			userG.StopGenerating();
+			break; 
+		case HAND_GENERATOR: 
+			handG.UnregisterHandCallbacks(hHand);
+			handG.StopGenerating();
+			break;
+		case GESTURE_GENERATOR: 
+			gestureG.UnregisterGestureCallbacks(hGesture);
+			gestureG.StopGenerating();
+			break;
+	}
+	for (std::vector<GeneratorType>::iterator it = generadoresActivos.begin(); it != generadoresActivos.end(); it++) {
+		if (*it = generator) {
+			generadoresActivos.erase(it);
+		}
 	}
 }
 
-bool Kinect::disableGenerator(GeneratorType generator) {
-	return false;
+std::vector<Kinect::GeneratorType> Kinect::getActiveGenerators() {
+	return generadoresActivos;
 }
-
-XnChar * getActiveGenerators() {
-	return NULL;
-}
-
 
 void Kinect::update() {
-	if (!checkStatusOK(contexto.WaitAnyUpdateAll(), "Wait and Update all lala"))
+
+	m_generadores.lock();
+	bool ok = checkStatusOK(contexto.WaitAnyUpdateAll(), "Wait and Update all");
+	m_generadores.unlock();
+
+	if (!ok)
 		return;
 
+	// va sin semaforo porque no hay race conditions
 	mapaProfundidad = depthG.GetDepthMap();
+
 	mapaImagen = imageG.GetImageMap();
 
-	XnUserID jugadorNuevo;
-	if(isNuevoJugador(jugadorNuevo)) {
-		std::cout << "nuevo jugador encontrado"<< jugadorNuevo << std::endl;
-		notifyAllJugadorNuevo(jugadorNuevo);
-	}
+	updateJugadores();
 
-	XnUserID jugadorCalibrado;
-	if(isJugadorCalibrado(jugadorCalibrado)) {
-		std::cout << "nuevo jugador calibrado"<< jugadorCalibrado << std::endl;
-		notifyAllJugadorCalibrado(jugadorCalibrado);
-	}
-	
-	XnUserID jugadorPerdido;
-	if(isJugadorPerdido(jugadorPerdido)) {
-		std::cout << "jugador perdido"<< jugadorPerdido << std::endl;
-		notifyAllJugadorPerdido(jugadorPerdido);
-	}
-
-	std::map<XnUserID, XnSkeletonJointTransformation* >::iterator it = jugadores.begin();
-	for(it; it != jugadores.end(); it++) {
-		if (isTrackingPlayer(it->first))
-			for (int i = 1; i <= 24; i++) { // 24 = cantidad de Kinect::Joint 
-				XnSkeletonJointTransformation j;
-				userG.GetSkeletonCap().GetSkeletonJoint(it->first, (XnSkeletonJoint)i, j);
-		//		if(j.position.fConfidence > minConfidence)
-					(it->second[i]) = j;
-			}
-	}
-	//setea posiciones nuevas a los reconocedores basicos
 	updateReconocedoresBasicos();
 
-
-	XnUserID idManoAux;
-	if (isNuevaMano(idManoAux)) {
-		std::cout << "mano nueva encontrada" << idManoAux << std::endl;
-		notifyAllManoNueva(idManoAux);
-	}
-	if(isManoPerdida(idManoAux)) {
-		std::cout << "mano nueva perdida" << idManoAux << std::endl;
-		notifyAllManoPerdida(idManoAux);
-	}
-
-
-	if (manos.find(manoActualizada) != manos.end())	{
-		manos[manoActualizada]->X = mano->X;
-		manos[manoActualizada]->Y = mano->Y;
-		manos[manoActualizada]->Z = mano->Z;
-	}
+	updateManos();
 	
 }
 
@@ -275,34 +268,48 @@ bool Kinect::checkStatusOK(const XnStatus status, char* entorno) {
 
 const int Kinect::getXRes() {
 	DepthMetaData m;
+	m_generadores.lock();
 	depthG.GetMetaData(m);
+	m_generadores.unlock();
 	return m.XRes();
 }
 
 const int Kinect::getYRes() {
 	DepthMetaData m;
+	m_generadores.lock();
 	depthG.GetMetaData(m);
+	m_generadores.unlock();
 	return m.YRes();
 }
 
 const XnPoint3D * Kinect::getMano(XnUserID jugador) {
-	if (manos.find(jugador) != manos.end())
-		return manos[jugador];
-	return NULL;
+	m_manos.lock();
+	const XnPoint3D * aux = manos.find(jugador) != manos.end() ? 
+		manos[jugador] : NULL;
+	m_manos.unlock();
+	return aux;
 }
 
-XnSkeletonJointTransformation * Kinect::getArticulaciones(XnUserID jugador) {
-	if (jugadores.find(jugador) != jugadores.end())
-		return jugadores[jugador];
-	return NULL;
+const XnSkeletonJointTransformation * Kinect::getArticulaciones(XnUserID jugador) {
+	m_jugadores.lock();
+	const XnSkeletonJointTransformation * aux = jugadores.find(jugador) != jugadores.end() ? 
+		jugadores[jugador] : NULL;
+	m_jugadores.unlock();
+	return aux;
 }
 
 bool Kinect::isTrackingPlayer(XnUserID player) {
-	return userG.IsGenerating() && userG.IsCapabilitySupported(XN_CAPABILITY_SKELETON) && userG.GetSkeletonCap().IsTracking(player);
+	m_generadores.lock();
+	bool b = userG.IsGenerating() && userG.IsCapabilitySupported(XN_CAPABILITY_SKELETON) && userG.GetSkeletonCap().IsTracking(player);
+	m_generadores.unlock();
+	return b;
 }
 
 bool Kinect::isTracking() {
-	return jugadores.size() > 0;
+	m_jugadores.lock();
+	bool b = (jugadores.size() > 0);
+	m_jugadores.unlock();
+	return b;
 }
 
 /*bool Kinect::setMotorPosition(short position) {
@@ -310,43 +317,50 @@ bool Kinect::isTracking() {
 }*/
 
 const XnLabel * Kinect::getPixelesUsuario(XnUserID usuario) {
+	m_generadores.lock();
 	userG.GetUserPixels(usuario, *escena);
+	m_generadores.unlock();
 	return escena->Data();
 }
-
-DepthGenerator * Kinect::getGenProfundidad() {
-	return &depthG;
-}
-
 
 int Kinect::startReconocedor(XnUserID jugador, Joint articulacion, GestoPatron *patron) {
 	char* idRecBasico = new char(jugador + '_' + articulacion);
 	ReconocedorBasico *recBasico = buscarReconocedorBasico(idRecBasico);
 
-	int i = 0;
-	for(i; i < reconocedores.size(); i++) {
+	m_reconocedores.lock();
+	unsigned int i = 0;
+	int idRec = -1;
+	for(i; (i < reconocedores.size()) && (idRec == -1); i++) {
 		Reconocedor *r = reconocedores.at(i);
 		if(r->getIDJugador_Art() == idRecBasico && r->getGestoPatron() == patron)
-			return i;
+			idRec = i;
 	}
 	if(i == reconocedores.size()) {
-		XnSkeletonJointTransformation *art;
+		idRec = i;
+		XnSkeletonJointTransformation *art = NULL;
+		m_generadores.lock();
 		userG.GetSkeletonCap().GetSkeletonJoint(jugador, (XnSkeletonJoint)articulacion, *art);
+		m_generadores.unlock();
 		Reconocedor *nuevo = new Reconocedor(patron, idRecBasico, art, recBasico);
 		reconocedores[i] = nuevo;
 	}
-	return i;
+	m_reconocedores.unlock();
+	return idRec;
 }
 
 ReconocedorBasico * Kinect::buscarReconocedorBasico(char * idRecBasico) {
-
+	m_reconocedoresBasicos.lock();
 	if(reconocedoresBasicos.find(idRecBasico) == reconocedoresBasicos.end()){
 		reconocedoresBasicos[idRecBasico] = new ReconocedorBasico(8, 70); //cambiar los parámetros por constantes
 	}
-	return reconocedoresBasicos[idRecBasico];
+	ReconocedorBasico * reconocedorBasicoAux;
+	reconocedorBasicoAux = reconocedoresBasicos[idRecBasico];
+	m_reconocedoresBasicos.unlock();
+	return reconocedorBasicoAux;
 }
 
 void Kinect::updateReconocedoresBasicos() {
+	m_reconocedoresBasicos.lock();
 	std::map<char*, ReconocedorBasico*>::iterator it = reconocedoresBasicos.begin();
 	for(it; it != reconocedoresBasicos.end(); it++){
 		std::string clave = it->first;
@@ -355,8 +369,8 @@ void Kinect::updateReconocedoresBasicos() {
 		XnSkeletonJointTransformation * joints = jugadores[us];
 		it->second->setNewPosition(joints[joint].position.position.X, joints[joint].position.position.Y, joints[joint].position.position.Z);
 	}
+	m_reconocedoresBasicos.unlock();
 }
-
 
 bool Kinect::isNuevoJugador(XnUserID &player) {
 	if(nuevoJugadorID != -1) {
@@ -371,7 +385,9 @@ bool Kinect::isJugadorCalibrado(XnUserID &player) {
 	if(jugadorCalibradoID != -1) {
 		player = jugadorCalibradoID;
 		jugadorCalibradoID = -1;
+		m_jugadores.lock();
 		jugadores[player] = new XnSkeletonJointTransformation[25]; // el [0] no se usa
+		m_jugadores.unlock();
 		return true;
 	}
 	return false;
@@ -381,7 +397,9 @@ bool Kinect::isJugadorPerdido(XnUserID &player) {
 	if(jugadorPerdidoID != -1) {
 		player = jugadorPerdidoID;
 		jugadorPerdidoID = -1;
+		m_jugadores.lock();
 		jugadores.erase(player);
+		m_jugadores.unlock();
 		return true;
 	}
 	return false;
@@ -391,67 +409,87 @@ bool Kinect::isJugadorPerdido(XnUserID &player) {
 //Agregar Listeners//
 
 void Kinect::addListenerGesto(ListenerGesto *lg, int idRec) {
-	reconocedores[idRec]->addListener(lg);
+	m_reconocedores.lock();
+	if (reconocedores.find(idRec) != reconocedores.end())
+		reconocedores[idRec]->addListener(lg);
+	m_reconocedores.unlock();
 }
 
 void Kinect::addListenerJugadorNuevo(ListenerJugadorNuevo *lnj) {
+	m_listenersJugadorNuevo.lock();
 	listenersJugadorNuevo.push_back(lnj);
+	m_listenersJugadorNuevo.unlock();
 }
 
 void Kinect::addListenerJugadorPerdido(ListenerJugadorPerdido *ljp) {
+	m_listenersJugadorPerdido.lock();
 	listenersJugadorPerdido.push_back(ljp);
+	m_listenersJugadorPerdido.unlock();
 }
 
 void Kinect::addListenerJugadorCalibrado(ListenerJugadorCalibrado *ljc) {
+	m_listenersJugadorCalibrado.lock();
 	listenersJugadorCalibrado.push_back(ljc);
+	m_listenersJugadorCalibrado.unlock();
 }
 
 
 void Kinect::addListenerManoNueva(ListenerManoNueva *lmn) {
-
+	m_listenersManoNueva.lock();
+	listenersManoNueva.push_back(lmn);
+	m_listenersManoNueva.unlock();
 }
 
 void Kinect::addListenerManoPerdida(ListenerManoPerdida *lmp) {
-
+	m_listenersManoPerdida.lock();
+	listenersManoPerdida.push_back(lmp);
+	m_listenersManoPerdida.unlock();
 }
-
 
 
 //Notificadores//
 
 void Kinect::notifyAllJugadorNuevo(XnUserID jugadorNuevo) {
-	if (listenersJugadorNuevo.empty())	{
-		std::cout << "no hay listeners jugador nuevo" << std::endl;
-	}
-	for(int i = 0; i < listenersJugadorNuevo.size(); i++) {
+	m_listenersJugadorNuevo.lock();
+	for(unsigned int i = 0; i < listenersJugadorNuevo.size(); i++)
 		listenersJugadorNuevo[i]->updateJugadorNuevo(jugadorNuevo);
-	}
+	m_listenersJugadorNuevo.unlock();
 }
 
 void Kinect::notifyAllJugadorPerdido(XnUserID jugadorPerdido) {
-	for (int i = 0; i < listenersJugadorPerdido.size(); i++)
+	m_listenersJugadorPerdido.lock();
+	for (unsigned int i = 0; i < listenersJugadorPerdido.size(); i++)
 		listenersJugadorPerdido[i]->updateJugadorPerdido(jugadorPerdido);
+	m_listenersJugadorPerdido.unlock();
 }
 
 void Kinect::notifyAllJugadorCalibrado( XnUserID jugadorCalibrado ) {
-	for (int i = 0; i < listenersJugadorCalibrado.size(); i++)
+	m_listenersJugadorCalibrado.lock();
+	for (unsigned int i = 0; i < listenersJugadorCalibrado.size(); i++)
 		listenersJugadorCalibrado[i]->updateJugadorCalibrado(jugadorCalibrado);
+	m_listenersJugadorCalibrado.unlock();
 }
 
 void Kinect::notifyAllManoNueva(XnUserID manoNueva) {
-	for (int i = 0; i < listenersManoNueva.size(); i++)
+	m_listenersManoNueva.lock();
+	for (unsigned int i = 0; i < listenersManoNueva.size(); i++)
 		listenersManoNueva[i]->updateManoNueva(manoNueva);
+	m_listenersManoNueva.unlock();
 }
 
 void Kinect::notifyAllManoPerdida(XnUserID manoPerdida) {
-	for (int i = 0; i < listenersManoPerdida.size(); i++)
+	m_listenersManoPerdida.lock();
+	for (unsigned int i = 0; i < listenersManoPerdida.size(); i++)
 		listenersManoPerdida[i]->updateManoPerdida(manoPerdida);
+	m_listenersManoPerdida.unlock();
 }
 
 const Gesto * Kinect::getUltimoGesto(XnUserID player) {
+	m_reconocedores.lock();
 	std::map<int, Reconocedor *>::iterator it = reconocedores.begin();
 	std::time_t time = 0; //variable donde almaceno el tiempo del gesto mas actual
-	const Gesto * ultimoGesto, * gestoAux;
+	const Gesto * ultimoGesto; 
+	const Gesto * gestoAux;
 	for(it; it != reconocedores.end(); it++){
 		std::string clave = it->second->getIDJugador_Art();
 		XnUserID us = atoi(clave.substr(0, clave.find_first_of('_')).data());
@@ -463,6 +501,7 @@ const Gesto * Kinect::getUltimoGesto(XnUserID player) {
 			}
 		}
 	}
+	m_reconocedores.unlock();
 	return ultimoGesto;
 }
 
@@ -473,7 +512,9 @@ const Gesto * Kinect::getUltimoGesto(int idRec) {
 bool Kinect::isNuevaMano(XnUserID &mano) {
 	if (nuevaManoID != -1){
 		mano = nuevaManoID;
+		m_manos.lock();
 		manos[nuevaManoID] = nuevaMano;
+		m_manos.unlock();
 		nuevaManoID = -1;
 		return true;
 	}
@@ -483,11 +524,102 @@ bool Kinect::isNuevaMano(XnUserID &mano) {
 bool Kinect::isManoPerdida(XnUserID &mano) {
 	if(manoPerdidaID != -1){
 		mano = manoPerdidaID;
+		m_manos.lock();
 		manos.erase(manoPerdidaID);
+		m_manos.unlock();
 		manoPerdidaID = -1;
 		return true;
 	}
 	return false;
 }
 
+const XnDepthPixel * Kinect::getMapaProfundidad() {
+	return mapaProfundidad;
+}
 
+const XnUInt8 * Kinect::getMapaImagen() {
+	return mapaImagen;
+}
+
+void Kinect::updateJugadores() {
+
+	XnUserID jugadorNuevo;
+	if(isNuevoJugador(jugadorNuevo)) {
+		std::cout << "nuevo jugador encontrado"<< jugadorNuevo << std::endl;
+		notifyAllJugadorNuevo(jugadorNuevo);
+	}
+
+	XnUserID jugadorCalibrado;
+	if(isJugadorCalibrado(jugadorCalibrado)) {
+		std::cout << "nuevo jugador calibrado"<< jugadorCalibrado << std::endl;
+		notifyAllJugadorCalibrado(jugadorCalibrado);
+	}
+
+	XnUserID jugadorPerdido;
+	if(isJugadorPerdido(jugadorPerdido)) {
+		std::cout << "jugador perdido"<< jugadorPerdido << std::endl;
+		notifyAllJugadorPerdido(jugadorPerdido);
+	}
+
+	m_jugadores.lock();
+	std::map<XnUserID, XnSkeletonJointTransformation* >::iterator it = jugadores.begin();
+	for(it; it != jugadores.end(); it++) {
+		if (isTrackingPlayer(it->first))
+			for (int i = 1; i <= 24; i++) { // 24 = cantidad de Kinect::Joint 
+				XnSkeletonJointTransformation j;
+				userG.GetSkeletonCap().GetSkeletonJoint(it->first, (XnSkeletonJoint)i, j);
+				//		if(j.position.fConfidence > minConfidence)
+				(it->second[i]) = j;
+			}
+	}
+	m_jugadores.unlock();
+}
+
+void Kinect::updateManos() {
+	XnUserID idManoAux;
+	if (isNuevaMano(idManoAux)) {
+		std::cout << "mano nueva encontrada" << idManoAux << std::endl;
+		notifyAllManoNueva(idManoAux);
+	}
+	if(isManoPerdida(idManoAux)) {
+		std::cout << "mano nueva perdida" << idManoAux << std::endl;
+		notifyAllManoPerdida(idManoAux);
+	}
+
+	m_manos.lock();
+	if (manos.find(manoActualizada) != manos.end())	{
+		manos[manoActualizada]->X = mano->X;
+		manos[manoActualizada]->Y = mano->Y;
+		manos[manoActualizada]->Z = mano->Z;
+	}
+	m_manos.unlock();
+}
+
+void Kinect::start() {
+	threadKinect = boost::thread(&Kinect::run, this);
+}
+
+void Kinect::shutdown() {
+
+	threadKinect.interrupt();
+	
+}
+
+void Kinect::run() {
+
+	setup();
+
+	while (true) {
+		update();
+		try {
+			boost::this_thread::interruption_point();
+		} catch (boost::thread_interrupted) {
+			break;
+		}
+	}
+
+}
+
+bool Kinect::isStarted() {
+	return started;
+}

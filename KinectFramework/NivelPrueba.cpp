@@ -21,15 +21,14 @@ void NivelPrueba::cargar(Nivel * nivelAnt) {
 }
 
 bool NivelPrueba::isTerminado() {
-	return (ciclos > 500000);
+	return (ciclos > 5000);
 }
 
 void NivelPrueba::update() {
 	ciclos++;
-	std::cout << "ID Activo: " << jugadorActivo << std::endl;
 }
 
-void NivelPrueba::update(XnUserID user) {
+void NivelPrueba::updateJugadorNuevo(XnUserID user) {
 	jugadorActivo = user;
 	std::cout << "jugador encontrado en el nivel " << user << std::endl;
 }

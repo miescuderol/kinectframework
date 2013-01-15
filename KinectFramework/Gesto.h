@@ -9,16 +9,16 @@ class Gesto
 public:
 
 	// Getters
-	int getID();
-	XnPoint3D getPosInicial();
-	XnPoint3D getPosFinal();
+	const int getID();
+	const XnPoint3D getPosInicial();
+	const XnPoint3D getPosFinal();
 
 	/** Devuelve la duración del gesto en milisegundos*/
-	long int getDuracion();
+	const long int getDuracion();
 	const XnSkeletonJointTransformation * getArticulacion();
 
 	/** Devuelve el momento (tiempo) en el que se hizo el gesto*/
-	bool getTiempo() const;
+	const std::time_t getTiempo() const;
 
 	// Setters (hechos de esta forma se pueden encadenar, todos retornan this)
 	Gesto * setID(int id);

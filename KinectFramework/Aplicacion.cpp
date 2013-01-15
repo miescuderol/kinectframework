@@ -1,26 +1,25 @@
 #include "Aplicacion.h"
 #include <iostream>
 
+Aplicacion::Aplicacion() {
+	kinect = new Kinect();
+	kinect->start();
 
-Aplicacion::Aplicacion(void) {
-
-}
-
-
-Aplicacion::~Aplicacion(void) {
+	while (!kinect->isStarted());
 
 }
+
 
 void Aplicacion::setup() {
 	//PRE: grafoNiveles != NULL
-
+	
 	nivelActivo = grafoNiveles->getInicio();
 
-	for (int i = 0; i < subsistemasPreNivel.size(); i++) {
+	for (unsigned int i = 0; i < subsistemasPreNivel.size(); i++) {
 		subsistemasPreNivel[i]->setup();
 	}
 	nivelActivo->cargar(NULL);
-	for (int i = 0; i < subsistemasPostNivel.size(); i++) {
+	for (unsigned int i = 0; i < subsistemasPostNivel.size(); i++) {
 		subsistemasPostNivel[i]->setup();
 	}
 
@@ -36,11 +35,11 @@ void Aplicacion::update() {
 
 	}
 
-	for (int i = 0; i < subsistemasPreNivel.size(); i++) {
+	for (unsigned int i = 0; i < subsistemasPreNivel.size(); i++) {
 		subsistemasPreNivel[i]->update();
 	}
 	nivelActivo->update();
-	for (int i = 0; i < subsistemasPostNivel.size(); i++) {
+	for (unsigned int i = 0; i < subsistemasPostNivel.size(); i++) {
 		subsistemasPostNivel[i]->update();
 	}
 
@@ -51,7 +50,9 @@ void Aplicacion::draw() {
 }
 
 void Aplicacion::exit() {
-
+	std::cout << "Cerrando aplicacion." << std::endl;
+	kinect->shutdown();
+	kinect->~Kinect();
 }
 
 void Aplicacion::setGrafoJuego(Grafo * grafo) {
@@ -63,6 +64,7 @@ void Aplicacion::run() {
 	if (grafoNiveles == NULL) return;
 
 	std::cout << "Iniciando setup... ";
+	initComponentes();
 	setup();
 	std::cout << "hecho." << std::endl;
 	if(nivelActivo == NULL) std::cout << "nivel activo es null" << std::endl;
@@ -81,4 +83,8 @@ void Aplicacion::addSubsistemaPreNivel(Subsistema * subsistema) {
 
 void Aplicacion::addSubsistemaPostNivel(Subsistema * subsistema) {
 	subsistemasPostNivel.push_back(subsistema);
+}
+
+Kinect * Aplicacion::getKinect() {
+	return kinect;
 }

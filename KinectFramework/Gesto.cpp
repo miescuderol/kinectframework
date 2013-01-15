@@ -1,18 +1,21 @@
 #include "Gesto.h"
 
-int Gesto::getID() {
+const int Gesto::getID()
+{
 	return id;
 }
 
-XnPoint3D Gesto::getPosInicial() {
+const XnPoint3D Gesto::getPosInicial()
+{
 	return posInicial;
 }
 
-XnPoint3D Gesto::getPosFinal() {
+const XnPoint3D Gesto::getPosFinal()
+{
 	return posFinal;
 }
 
-long int Gesto::getDuracion()
+const long int Gesto::getDuracion()
 {
 	return timeInMillis;
 }
@@ -46,7 +49,7 @@ Gesto * Gesto::setArticulacion(const XnSkeletonJointTransformation * articulacio
 	return this;
 }
 
-bool Gesto::getTiempo() const
+const std::time_t Gesto::getTiempo() const
 {
 	throw std::exception("The method or operation is not implemented.");
 }

@@ -7,7 +7,7 @@
 ReconocedorBasico::ReconocedorBasico(int divisiones, float deadZone) {
 	this->divisions = divisiones;
 	this->deadZone = deadZone;
-	amplitude = (2*PI)/divisions;
+	amplitude = (float) (2*PI)/divisions;
 	displacement = (divisions/2-1)*amplitude/2;
 }
 
