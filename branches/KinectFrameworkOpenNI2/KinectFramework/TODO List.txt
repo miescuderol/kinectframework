@@ -1,0 +1,7 @@
+Agregar const a los getters.
+
+Comentar para que ande con doxygen.
+
+Kinect::buscarReconocedorBasico Cambiar los parametros por constantes.
+
+Kinect::~Kinect() Hacer.
