@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Aplicacion.h" />
+    <ClInclude Include="DepthDevice.h" />
     <ClInclude Include="Gesto.h" />
     <ClInclude Include="GestoPatron.h" />
     <ClInclude Include="Grafo.h" />
@@ -35,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Aplicacion.cpp" />
+    <ClCompile Include="DepthDevice.cpp" />
     <ClCompile Include="Gesto.cpp" />
     <ClCompile Include="GestoPatron.cpp" />
     <ClCompile Include="Grafo.cpp" />

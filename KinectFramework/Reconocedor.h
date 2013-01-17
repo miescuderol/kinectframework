@@ -16,7 +16,7 @@
 */
 class Reconocedor : public ListenerMovimiento {
 public:
-	Reconocedor(GestoPatron * gestoPatron, char* idJugadorArt, XnSkeletonJointTransformation * articulacion, ReconocedorBasico * recBasicos);
+	Reconocedor(GestoPatron * gestoPatron, char* idJugadorArt, ReconocedorBasico * recBasicos);
 	~Reconocedor(void);
 
 	const Gesto * getUltimoGesto();
@@ -60,7 +60,6 @@ private:
 	GestoPatron * gestoPatron;
 	Movimiento * movimientoEsperado;
 	int ultimoMovimiento;
-	XnSkeletonJointTransformation * articulacion;
 //	Kinect::Joint joint;
 //	XnUserID idJugador;
 	char * idJugador_Art;
