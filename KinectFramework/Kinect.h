@@ -1,11 +1,15 @@
 #pragma once
 
-#include "DepthDevice.h"
+#include "Sensor.h"
+#include "OpenNI.h"
+#include "NiTE.h"
+#include "OpenNINiTEWrappers.h"
 
-using namespace xn;
+using namespace openni;
 
-class Kinect : public DepthDevice
+class Kinect : public Sensor
 {
+	
 public:
 	
 	enum Joint{
@@ -38,23 +42,72 @@ public:
 		RIGHT_ANKLE		=23,
 		RIGHT_FOOT		=24	
 	};
-	 enum GeneratorType {
-		IMAGE_GENERATOR, 
-		DEPTH_GENERATOR, 
-		USER_GENERATOR, 
-		HAND_GENERATOR,
-		GESTURE_GENERATOR
-	};
+	
 
 private:
 	XnStatus estado;
-	Context contexto;
+	//Context contexto;
 
-	const XnDepthPixel * mapaProfundidad;
+	/*const XnDepthPixel * mapaProfundidad;
 	const XnUInt8 * mapaImagen;
 	DepthMetaData metaDataProfundidad;
-	SceneMetaData * escena;
+	SceneMetaData * escena;*/
+
+	XnUserID jugadorNuevo, jugadorPerdido;
+	std::vector<XnUserID> jugadoresTrackeados;
+
+	// Semáforos
+	boost::mutex m_mapas;
+
+	Device dispositivo;
+	VideoStream camaraProfundidad, camaraImagen;
+	nite::UserTracker userTracker;
+	nite::HandTracker handTracker;
+
+	VideoFrameRef * mapaProfundidad, * mapaImagen;
+	nite::UserTrackerFrameRef * mapaUsuarios;
+	nite::HandTrackerFrameRef * mapaManos;
+
+	void updateArticulacionesJugador( XnUserID jugador );
+
+	XnUserID jugadorNuevo();
+
+	XnUserID jugadorCalibrado(Esqueleto *& esqueleto);
+
+	XnUserID jugadorPerdido();
+
+	XnUserID manoNueva( Punto3f *& manoNueva );
+
+	XnUserID manoActualizada( Punto3f *& manoActualizada );
+
+	XnUserID manoPerdida();
+
+	void setup();
+
+	void update();
 
 public:
+
+	bool enableGenerator(GeneratorType tipo);
+
+	void disableGenerator(GeneratorType tipo);
+
+	const VideoFrameRef * getMapaProfundidad();
+
+	const VideoFrameRef * getMapaImagen();
+
+	const int getXRes( SensorType tipo );
+
+	const int getYRes( SensorType tipo );
+
+	const XnPoint3D * getMano( XnUserID jugador );
+
+	const XnSkeletonJointTransformation * getArticulaciones( XnUserID jugador );
+
+	bool isTrackingPlayer( XnUserID jugador );
+
+	bool isTracking();
+
+	const XnLabel * getPixelesUsuario( XnUserID usuario );
 
 };

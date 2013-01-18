@@ -78,7 +78,13 @@
     <ClInclude Include="MiAplicacion.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DepthDevice.h">
+    <ClInclude Include="Sensor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Wrappers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenNINiTEWrappers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -119,7 +125,7 @@
     <ClCompile Include="MiAplicacion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DepthDevice.cpp">
+    <ClCompile Include="Sensor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
