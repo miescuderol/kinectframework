@@ -1,8 +1,6 @@
 #pragma once
-#include "XnCppWrapper.h"
-#include "XnTypes.h"
 #include <boost/thread.hpp>
-#
+#include "Wrappers.h"
 
 class Gesto
 {
@@ -10,12 +8,12 @@ public:
 
 	// Getters
 	const int getID();
-	const XnPoint3D getPosInicial();
-	const XnPoint3D getPosFinal();
+	const Punto3f getPosInicial();
+	const Punto3f getPosFinal();
 
 	/** Devuelve la duración del gesto en milisegundos*/
 	const long int getDuracion();
-	const XnSkeletonJointTransformation * getArticulacion();
+	const Articulacion * getArticulacion();
 
 	/** Devuelve el momento (tiempo) en el que se hizo el gesto*/
 	const std::time_t getTiempo() const;
@@ -30,8 +28,8 @@ public:
 private:
 
 	int id;
-	XnPoint3D posInicial;
-	XnPoint3D posFinal;
+	Punto3f posInicial;
+	Punto3f posFinal;
 	long int timeInMillis;
 	const XnSkeletonJointTransformation * articulacion;
 };

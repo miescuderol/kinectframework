@@ -5,12 +5,12 @@ const int Gesto::getID()
 	return id;
 }
 
-const XnPoint3D Gesto::getPosInicial()
+const Punto3f Gesto::getPosInicial()
 {
 	return posInicial;
 }
 
-const XnPoint3D Gesto::getPosFinal()
+const Punto3f Gesto::getPosFinal()
 {
 	return posFinal;
 }
@@ -20,7 +20,8 @@ const long int Gesto::getDuracion()
 	return timeInMillis;
 }
 
-const XnSkeletonJointTransformation * Gesto::getArticulacion() {
+const Articulacion * Gesto::getArticulacion()
+{
 	return articulacion;
 }
 

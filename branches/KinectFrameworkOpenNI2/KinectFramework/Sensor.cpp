@@ -4,35 +4,35 @@
  *	PROTECTED
  */
 
-void Sensor::notifyAllJugadorNuevo(XnUserID jugadorNuevo) {
+void Sensor::notifyAllJugadorNuevo(JugadorID jugadorNuevo) {
 	m_listenersJugadorNuevo.lock();
 	for(unsigned int i = 0; i < listenersJugadorNuevo.size(); i++)
 		listenersJugadorNuevo[i]->updateJugadorNuevo(jugadorNuevo);
 	m_listenersJugadorNuevo.unlock();
 }
 
-void Sensor::notifyAllJugadorPerdido(XnUserID jugadorPerdido) {
+void Sensor::notifyAllJugadorPerdido(JugadorID jugadorPerdido) {
 	m_listenersJugadorPerdido.lock();
 	for (unsigned int i = 0; i < listenersJugadorPerdido.size(); i++)
 		listenersJugadorPerdido[i]->updateJugadorPerdido(jugadorPerdido);
 	m_listenersJugadorPerdido.unlock();
 }
 
-void Sensor::notifyAllJugadorCalibrado( XnUserID jugadorCalibrado ) {
+void Sensor::notifyAllJugadorCalibrado( JugadorID jugadorCalibrado ) {
 	m_listenersJugadorCalibrado.lock();
 	for (unsigned int i = 0; i < listenersJugadorCalibrado.size(); i++)
 		listenersJugadorCalibrado[i]->updateJugadorCalibrado(jugadorCalibrado);
 	m_listenersJugadorCalibrado.unlock();
 }
 
-void Sensor::notifyAllManoNueva(XnUserID manoNueva) {
+void Sensor::notifyAllManoNueva(JugadorID manoNueva) {
 	m_listenersManoNueva.lock();
 	for (unsigned int i = 0; i < listenersManoNueva.size(); i++)
 		listenersManoNueva[i]->updateManoNueva(manoNueva);
 	m_listenersManoNueva.unlock();
 }
 
-void Sensor::notifyAllManoPerdida(XnUserID manoPerdida) {
+void Sensor::notifyAllManoPerdida(JugadorID manoPerdida) {
 	m_listenersManoPerdida.lock();
 	for (unsigned int i = 0; i < listenersManoPerdida.size(); i++)
 		listenersManoPerdida[i]->updateManoPerdida(manoPerdida);
@@ -55,7 +55,7 @@ void Sensor::updateReconocedoresBasicos() {
 	std::map<char*, ReconocedorBasico*>::iterator it = reconocedoresBasicos.begin();
 	for(it; it != reconocedoresBasicos.end(); it++){
 		std::string clave = it->first;
-		XnUserID us = atoi(clave.substr(0, clave.find_first_of('_')).data());
+		JugadorID us = atoi(clave.substr(0, clave.find_first_of('_')).data());
 		int joint = atoi(clave.substr(clave.find_first_of('_')+1).data());
 		Esqueleto * esqueleto = jugadores[us];
 		it->second->setNewPosition(esqueleto->getArticulacion(joint)->getPosicion()->X(),
@@ -70,19 +70,19 @@ void Sensor::updateJugadores() {
 	if (!isActive(USER_GENERATOR))
 		return;
 
-	XnUserID jugadorNuevo;
+	JugadorID jugadorNuevo;
 	if(isNuevoJugador(jugadorNuevo)) {
 		std::cout << "nuevo jugador encontrado"<< jugadorNuevo << std::endl;
 		notifyAllJugadorNuevo(jugadorNuevo);
 	}
 
-	XnUserID jugadorCalibrado;
+	JugadorID jugadorCalibrado;
 	if(isJugadorCalibrado(jugadorCalibrado)) {
 		std::cout << "nuevo jugador calibrado"<< jugadorCalibrado << std::endl;
 		notifyAllJugadorCalibrado(jugadorCalibrado);
 	}
 
-	XnUserID jugadorPerdido;
+	JugadorID jugadorPerdido;
 	if(isJugadorPerdido(jugadorPerdido)) {
 		std::cout << "jugador perdido"<< jugadorPerdido << std::endl;
 		notifyAllJugadorPerdido(jugadorPerdido);
@@ -98,7 +98,7 @@ void Sensor::updateManos() {
 	if (!isActive(HAND_GENERATOR))
 		return;
 
-	XnUserID idManoAux;
+	JugadorID idManoAux;
 	if (isNuevaMano(idManoAux)) {
 		std::cout << "mano nueva encontrada" << idManoAux << std::endl;
 		notifyAllManoNueva(idManoAux);
@@ -110,7 +110,7 @@ void Sensor::updateManos() {
 
 	m_manos.lock();
 	XnPoint3D * mano;
-	XnUserID manoActualizada = manoActualizada(mano);
+	JugadorID manoActualizada = manoActualizada(mano);
 	if (manos.find(manoActualizada) != manos.end())	{
 		manos[manoActualizada]->X = mano->X;
 		manos[manoActualizada]->Y = mano->Y;
@@ -148,11 +148,25 @@ void Sensor::shutdown() {
 	threadKinect.interrupt();
 }
 
-std::vector<GeneratorType> Sensor::getActiveGenerators() {
+std::vector<Sensor::TipoGenerador> Sensor::getActiveGenerators() {
 	return generadoresActivos;
 }
 
-int Sensor::startReconocedor( XnUserID jugador, int articulacion, GestoPatron *patron )
+const Punto3f * Sensor::getMano( JugadorID jugador )
+{
+	if (manos.find(jugador) != manos.end()))
+		return manos[jugador];
+	return NULL;
+}
+
+const Esqueleto * Sensor::getArticulaciones( JugadorID jugador )
+{
+	if (jugadores.find(jugador) != jugadores.end())
+		return jugadores[jugador];
+	return NULL;
+}
+
+int Sensor::startReconocedor( JugadorID jugador, int articulacion, GestoPatron *patron )
 {
 	if (!isTrackingPlayer(jugador))
 		return -1;
@@ -177,22 +191,22 @@ int Sensor::startReconocedor( XnUserID jugador, int articulacion, GestoPatron *p
 	return idRec;
 }
 
-bool Sensor::isNuevoJugador(XnUserID &player) {
+bool Sensor::isNuevoJugador(JugadorID &player) {
 
-	XnUserID jugadorNuevoID = jugadorNuevo();
+	JugadorID jugadorNuevoID = jugadorNuevo();
 
-	if(nuevoJugadorID != -1) {
-		player = nuevoJugadorID;
+	if(jugadorNuevoID != -1) {
+		player = jugadorNuevoID;
 		return true;
 	}
 	return false;
 
 }
 
-bool Sensor::isJugadorCalibrado(XnUserID &player) {
+bool Sensor::isJugadorCalibrado(JugadorID &player) {
 
 	Esqueleto * esqueleto;
-	XnUserID jugadorCalibradoID = jugadorCalibrado(esqueleto);
+	JugadorID jugadorCalibradoID = jugadorCalibrado(esqueleto);
 
 	if(jugadorCalibradoID != -1) {
 		player = jugadorCalibradoID;
@@ -204,9 +218,9 @@ bool Sensor::isJugadorCalibrado(XnUserID &player) {
 	return false;
 }
 
-bool Sensor::isJugadorPerdido(XnUserID &player) {
+bool Sensor::isJugadorPerdido(JugadorID &player) {
 
-	XnUserID jugadorPerdidoID = jugadorPerdido();
+	JugadorID jugadorPerdidoID = jugadorPerdido();
 
 	if(jugadorPerdidoID != -1) {
 		player = jugadorPerdidoID;
@@ -220,27 +234,27 @@ bool Sensor::isJugadorPerdido(XnUserID &player) {
 
 }
 
-bool Sensor::isNuevaMano(XnUserID &mano) {
+bool Sensor::isNuevaMano(JugadorID &mano) {
 
-	XnPoint3D * manoNueva;
-	XnUserID manoNuevaID = manoNueva(manoNueva);
+	Punto3f * _manoNueva;
+	JugadorID manoNuevaID = manoNueva(_manoNueva);
 
 	if (manoNuevaID != -1){
 		mano = manoNuevaID;
 		m_manos.lock();
-		manos[manoNuevaID] = manoNueva;
+		manos[manoNuevaID] = _manoNueva;
 		m_manos.unlock();
 		return true;
 	}
 	return false;
 }
 
-bool Sensor::isManoPerdida(XnUserID &mano) {
-	XnUserID manoPerdida = manoPerdida();
-	if(manoPerdida != -1){
-		mano = manoPerdida;
+bool Sensor::isManoPerdida(JugadorID &mano) {
+	JugadorID _manoPerdida = manoPerdida();
+	if(_manoPerdida != -1){
+		mano = _manoPerdida;
 		m_manos.lock();
-		manos.erase(manoPerdida);
+		manos.erase(_manoPerdida);
 		m_manos.unlock();
 		return true;
 	}
@@ -251,7 +265,7 @@ bool Sensor::isStarted() {
 	return started;
 }
 
-bool Sensor::isActive( GeneratorType tipo )
+bool Sensor::isActive( TipoGenerador tipo )
 {
 	for (unsigned int i = 0; i < generadoresActivos.size(); i++)
 		if (generadoresActivos.at(i) == tipo)
@@ -298,7 +312,7 @@ void Sensor::addListenerManoPerdida(ListenerManoPerdida *lmp) {
 	m_listenersManoPerdida.unlock();
 }
 
-const Gesto * Sensor::getUltimoGesto(XnUserID player) {
+const Gesto * Sensor::getUltimoGestoJugador(JugadorID player) {
 	m_reconocedores.lock();
 	std::map<int, Reconocedor *>::iterator it = reconocedores.begin();
 	std::time_t time = 0; //variable donde almaceno el tiempo del gesto mas actual
@@ -306,7 +320,7 @@ const Gesto * Sensor::getUltimoGesto(XnUserID player) {
 	const Gesto * gestoAux;
 	for(it; it != reconocedores.end(); it++){
 		std::string clave = it->second->getIDJugador_Art();
-		XnUserID us = atoi(clave.substr(0, clave.find_first_of('_')).data());
+		JugadorID us = atoi(clave.substr(0, clave.find_first_of('_')).data());
 		if(us == player){
 			gestoAux = it->second->peekUltimoGesto();
 			if(gestoAux->getTiempo() > time){
@@ -319,7 +333,20 @@ const Gesto * Sensor::getUltimoGesto(XnUserID player) {
 	return ultimoGesto;
 }
 
-const Gesto * Sensor::getUltimoGesto(int idRec) {
+const Gesto * Sensor::getUltimoGestoReconocedor(int idRec) {
 	return reconocedores[idRec]->getUltimoGesto();
 }
 
+bool Sensor::isTrackingPlayer( JugadorID jugador )
+{
+	if (jugadores.find(jugador) != jugadores.end())
+		return true;
+	return false;
+}
+
+bool Sensor::isTracking()
+{
+	if (!jugadores.empty())
+		return true;
+	return false;
+}

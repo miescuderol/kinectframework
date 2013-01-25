@@ -4,7 +4,7 @@
 #include "GestoPatron.h"
 #include "ListenerMovimiento.h"
 #include "ListenerGesto.h"
-#include "XnCppWrapper.h"
+#include "Wrappers.h"
 
 #include <vector>
 
@@ -61,7 +61,7 @@ private:
 	Movimiento * movimientoEsperado;
 	int ultimoMovimiento;
 //	Kinect::Joint joint;
-//	XnUserID idJugador;
+//	JugadorID idJugador;
 	char * idJugador_Art;
 
 };

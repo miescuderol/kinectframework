@@ -14,7 +14,7 @@ public:
 
 	void update();
 
-    void updateJugadorNuevo(XnUserID user);
+    void updateJugadorNuevo(JugadorID user);
 
 	Estado getEstadoFinal();
 
@@ -22,6 +22,6 @@ private:
 
 	Kinect * kinect;
 	long int ciclos;
-	XnUserID jugadorActivo;
+	JugadorID jugadorActivo;
 
 };

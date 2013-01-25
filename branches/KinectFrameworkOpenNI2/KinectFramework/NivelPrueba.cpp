@@ -28,7 +28,7 @@ void NivelPrueba::update() {
 	ciclos++;
 }
 
-void NivelPrueba::updateJugadorNuevo(XnUserID user) {
+void NivelPrueba::updateJugadorNuevo(JugadorID user) {
 	jugadorActivo = user;
 	std::cout << "jugador encontrado en el nivel " << user << std::endl;
 }
