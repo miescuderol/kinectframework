@@ -6,7 +6,7 @@ using namespace std;
 
 void MiAplicacion::initComponentes() {
 
-	getKinect()->enableGenerator(Kinect::GeneratorType::USER_GENERATOR);
+	getKinect()->enableGenerator(Kinect::TipoGenerador::USER_GENERATOR);
 
 	// Crear niveles
 	cout << "Creando Niveles... ";

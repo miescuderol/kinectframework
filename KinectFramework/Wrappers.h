@@ -55,3 +55,5 @@ class Esqueleto {
 public:
 	virtual const Articulacion * getArticulacion(int articulacion) = 0;
 };
+
+typedef int JugadorID;

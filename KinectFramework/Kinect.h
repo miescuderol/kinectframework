@@ -45,7 +45,6 @@ public:
 	
 
 private:
-	XnStatus estado;
 	//Context contexto;
 
 	/*const XnDepthPixel * mapaProfundidad;
@@ -53,8 +52,9 @@ private:
 	DepthMetaData metaDataProfundidad;
 	SceneMetaData * escena;*/
 
-	XnUserID jugadorNuevo, jugadorPerdido;
-	std::vector<XnUserID> jugadoresTrackeados;
+	JugadorID _jugadorNuevo, _jugadorPerdido;
+	const nite::HandData * _manoNueva, * _manoPerdida, * _manoActualizada;
+	std::vector<JugadorID> jugadoresTrackeados;
 
 	// Semáforos
 	boost::mutex m_mapas;
@@ -68,19 +68,19 @@ private:
 	nite::UserTrackerFrameRef * mapaUsuarios;
 	nite::HandTrackerFrameRef * mapaManos;
 
-	void updateArticulacionesJugador( XnUserID jugador );
+	void updateArticulacionesJugadores();
 
-	XnUserID jugadorNuevo();
+	JugadorID jugadorNuevo();
 
-	XnUserID jugadorCalibrado(Esqueleto *& esqueleto);
+	JugadorID jugadorCalibrado(Esqueleto *& esqueleto);
 
-	XnUserID jugadorPerdido();
+	JugadorID jugadorPerdido();
 
-	XnUserID manoNueva( Punto3f *& manoNueva );
+	JugadorID manoNueva( Punto3f *& mano );
 
-	XnUserID manoActualizada( Punto3f *& manoActualizada );
+	JugadorID manoActualizada( Punto3f *& mano );
 
-	XnUserID manoPerdida();
+	JugadorID manoPerdida();
 
 	void setup();
 
@@ -88,26 +88,18 @@ private:
 
 public:
 
-	bool enableGenerator(GeneratorType tipo);
+	bool enableGenerator(TipoGenerador tipo);
 
-	void disableGenerator(GeneratorType tipo);
+	void disableGenerator(TipoGenerador tipo);
 
-	const VideoFrameRef * getMapaProfundidad();
+	const void * getMapaProfundidad();
 
-	const VideoFrameRef * getMapaImagen();
+	const void * getMapaImagen();
 
-	const int getXRes( SensorType tipo );
+	const int getXRes( TipoSensor tipo );
 
-	const int getYRes( SensorType tipo );
+	const int getYRes( TipoSensor tipo );
 
-	const XnPoint3D * getMano( XnUserID jugador );
-
-	const XnSkeletonJointTransformation * getArticulaciones( XnUserID jugador );
-
-	bool isTrackingPlayer( XnUserID jugador );
-
-	bool isTracking();
-
-	const XnLabel * getPixelesUsuario( XnUserID usuario );
+	const JugadorID * getPixelesUsuario( JugadorID usuario );
 
 };
