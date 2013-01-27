@@ -1,7 +1,7 @@
 #include "Kinect.h"
 #include "NivelPrueba.h"
 #include "NivelPrueba2.h"
-#include "Grafo.h"
+#include "GrafoEscenas.h"
 #include "MiAplicacion.h"
 #include <iostream>
 #include <boost/regex.hpp>

@@ -4,22 +4,30 @@
 
 using namespace std;
 
+MiAplicacion::MiAplicacion() {
+	Sensor * kinect = new Kinect();
+	kinect->start();
+
+	while (!kinect->isStarted());
+	setSensor(kinect);
+}
+
 void MiAplicacion::initComponentes() {
 
-	getKinect()->enableGenerator(Kinect::TipoGenerador::USER_GENERATOR);
+	getSensor()->enableGenerator(Kinect::TipoGenerador::USER_GENERATOR);
 
 	// Crear niveles
 	cout << "Creando Niveles... ";
-	Nivel * nivelPrueba = new NivelPrueba(getKinect());
-	Nivel * nivelPrueba2 = new NivelPrueba2(getKinect());
+	Escena * nivelPrueba = new NivelPrueba(getSensor());
+	Escena * nivelPrueba2 = new NivelPrueba2(getSensor());
 	cout << "creados." << endl;
 
 	// Crear grafo de niveles y llenarlo
 	cout << "Creando Grafo de Niveles" << endl;
-	Grafo * grafoNiveles = new Grafo();
-	grafoNiveles->addNivel(nivelPrueba);
+	GrafoEscenas * grafoNiveles = new GrafoEscenas();
+	grafoNiveles->addEscena(nivelPrueba);
 	cout << "Agregado nivelPrueba";
-	grafoNiveles->addNivel(nivelPrueba2);
+	grafoNiveles->addEscena(nivelPrueba2);
 	cout << ", nivelPrueba2.";
 	grafoNiveles->addArco(nivelPrueba, Estado::SALIDA_1, nivelPrueba2);
 	cout << "Hecho el arco entre niveles." << endl;
@@ -31,4 +39,9 @@ void MiAplicacion::initComponentes() {
 	setGrafoJuego(grafoNiveles);
 	cout << "agregado." << endl;
 
+}
+
+void MiAplicacion::draw()
+{
+	throw std::exception("The method or operation is not implemented.");
 }

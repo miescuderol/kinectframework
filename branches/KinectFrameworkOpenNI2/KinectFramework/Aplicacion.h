@@ -1,8 +1,9 @@
 #pragma once
-#include "Grafo.h"
+#include "GrafoEscenas.h"
 #include "Subsistema.h"
-#include "Nivel.h"
+#include "Escena.h"
 #include "Kinect.h"
+#include "Sensor.h"
 #include <vector>
 
 /// Clase básica para construir cualquier juego.
@@ -19,7 +20,7 @@ public:
 	void run(); 
 	/**< 
 	 * Inicia el game-loop. 
-	 * Primero llama al setup de todos los subsistemas, carga el primer nivel,
+	 * Primero llama al setup de todos los subsistemas, carga la primer escena,
 	 * después inicia el bucle update-draw.
 	 */
 
@@ -33,10 +34,10 @@ protected:
 
 	void setup();
 	void update();
-	void draw();
+	virtual void draw() = 0;
 	void exit();
 
-	void setGrafoJuego(Grafo * grafo); /**< Agrega el grafo de niveles. */
+	void setGrafoJuego(GrafoEscenas * grafo); /**< Agrega el grafo de niveles. */
 	
 	void addSubsistemaPreNivel(Subsistema * subsistema); 
 	/**< 
@@ -50,13 +51,15 @@ protected:
 	 * después de la inicializacion/actualización del nivel activo. 
 	 */
 
-	Kinect * getKinect();
+	Sensor * getSensor();
+
+	void setSensor(Sensor * sensor);
 
 private:
 
-	Kinect * kinect;
-	Grafo * grafoNiveles;
-	Nivel * nivelActivo;
+	Sensor * sensor;
+	GrafoEscenas * grafoNiveles;
+	Escena * nivelActivo;
 	std::vector<Subsistema*> subsistemasPreNivel, subsistemasPostNivel;
 
 };

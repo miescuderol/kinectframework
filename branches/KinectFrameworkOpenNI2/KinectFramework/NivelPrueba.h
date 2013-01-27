@@ -1,14 +1,14 @@
 #pragma once
-#include "Nivel.h"
+#include "Escena.h"
 #include "Kinect.h"
 
-class NivelPrueba : public Nivel, public ListenerJugadorNuevo
+class NivelPrueba : public Escena, public ListenerJugadorNuevo
 {
 public:
-	NivelPrueba(Kinect * kinect);
+	NivelPrueba(Sensor * kinect);
 	~NivelPrueba();
 
-	void cargar(Nivel * nivelAnt);
+	void cargar(Escena * nivelAnt);
 
 	bool isTerminado();
 
@@ -20,7 +20,7 @@ public:
 
 private:
 
-	Kinect * kinect;
+	Sensor * kinect;
 	long int ciclos;
 	JugadorID jugadorActivo;
 

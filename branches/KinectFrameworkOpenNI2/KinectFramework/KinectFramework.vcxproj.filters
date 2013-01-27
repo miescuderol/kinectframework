@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Grafo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ReconocedorBasico.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -31,9 +28,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Kinect.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Nivel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GestoPatron.h">
@@ -87,11 +81,14 @@
     <ClInclude Include="OpenNINiTEWrappers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GrafoEscenas.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Escena.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Grafo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ReconocedorBasico.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -126,6 +123,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Sensor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GrafoEscenas.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

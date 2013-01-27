@@ -2,10 +2,6 @@
 #include <iostream>
 
 Aplicacion::Aplicacion() {
-	kinect = new Kinect();
-	kinect->start();
-
-	while (!kinect->isStarted());
 
 }
 
@@ -29,8 +25,8 @@ void Aplicacion::update() {
 
 	//Hace el cambio de nivel si es necesario
 	if (nivelActivo->isTerminado()) {
-		Nivel * nivelAnt = nivelActivo;
-		nivelActivo = grafoNiveles->getSigNivel(nivelActivo, nivelActivo->getEstadoFinal());
+		Escena * nivelAnt = nivelActivo;
+		nivelActivo = grafoNiveles->getSigEscena(nivelActivo, nivelActivo->getEstadoFinal());
 		nivelActivo->cargar(nivelAnt);
 
 	}
@@ -45,17 +41,16 @@ void Aplicacion::update() {
 
 }
 
-void Aplicacion::draw() {
-
-}
 
 void Aplicacion::exit() {
-	std::cout << "Cerrando aplicacion." << std::endl;
-	kinect->shutdown();
-	kinect->~Kinect();
+	if (sensor != NULL){
+		std::cout << "Cerrando aplicacion." << std::endl;
+		sensor->shutdown();
+		sensor->~Sensor();
+	}
 }
 
-void Aplicacion::setGrafoJuego(Grafo * grafo) {
+void Aplicacion::setGrafoJuego(GrafoEscenas * grafo) {
 	grafoNiveles = grafo;
 }
 
@@ -85,6 +80,10 @@ void Aplicacion::addSubsistemaPostNivel(Subsistema * subsistema) {
 	subsistemasPostNivel.push_back(subsistema);
 }
 
-Kinect * Aplicacion::getKinect() {
-	return kinect;
+Sensor * Aplicacion::getSensor() {
+	return sensor;
+}
+
+void Aplicacion::setSensor( Sensor * sensor ) {
+	this->sensor = sensor;
 }

@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-NivelPrueba::NivelPrueba(Kinect * kinect) {
+NivelPrueba::NivelPrueba(Sensor * kinect) {
 	this->kinect = kinect;
 	ciclos = 0;
 	jugadorActivo = 100000000;
@@ -13,7 +13,7 @@ NivelPrueba::~NivelPrueba(void) {
 
 }
 
-void NivelPrueba::cargar(Nivel * nivelAnt) {
+void NivelPrueba::cargar(Escena * nivelAnt) {
 	std::cout << "Cargando NivelPrueba" << std::endl;
 	float i = 0;
 	kinect->addListenerJugadorNuevo(this);
