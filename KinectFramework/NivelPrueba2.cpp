@@ -1,7 +1,7 @@
 #include "NivelPrueba2.h"
 #include <iostream>
 
-NivelPrueba2::NivelPrueba2(Kinect * kinect) {
+NivelPrueba2::NivelPrueba2(Sensor * kinect) {
 	this->kinect = kinect;
 	ciclos = 0;
 }
@@ -11,7 +11,7 @@ NivelPrueba2::~NivelPrueba2(void) {
 
 }
 
-void NivelPrueba2::cargar(Nivel * nivelAnt) {
+void NivelPrueba2::cargar(Escena * nivelAnt) {
 	std::cout << std::endl << std::endl << "Cargando NivelPrueba2" << std::endl;
 	float i = 0;
 	while (i < 30000) i++;

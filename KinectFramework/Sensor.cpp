@@ -109,12 +109,10 @@ void Sensor::updateManos() {
 	}
 
 	m_manos.lock();
-	XnPoint3D * mano;
-	JugadorID manoActualizada = manoActualizada(mano);
-	if (manos.find(manoActualizada) != manos.end())	{
-		manos[manoActualizada]->X = mano->X;
-		manos[manoActualizada]->Y = mano->Y;
-		manos[manoActualizada]->Z = mano->Z;
+	Punto3f * mano;
+	JugadorID _manoActualizada = manoActualizada(mano);
+	if (manos.find(_manoActualizada) != manos.end())	{
+		manos[_manoActualizada]->set(mano->X(), mano->Y(), mano->Z());
 	}
 	m_manos.unlock();
 }
@@ -154,7 +152,7 @@ std::vector<Sensor::TipoGenerador> Sensor::getActiveGenerators() {
 
 const Punto3f * Sensor::getMano( JugadorID jugador )
 {
-	if (manos.find(jugador) != manos.end()))
+	if (manos.find(jugador) != manos.end())
 		return manos[jugador];
 	return NULL;
 }
@@ -190,6 +188,14 @@ int Sensor::startReconocedor( JugadorID jugador, int articulacion, GestoPatron *
 	m_reconocedores.unlock();
 	return idRec;
 }
+
+
+bool Sensor::stopReconocedor( int idRec ) {
+	if(reconocedores.find(idRec) != reconocedores.end())
+		return reconocedores.erase(idRec);
+	return false;
+}
+
 
 bool Sensor::isNuevoJugador(JugadorID &player) {
 
@@ -265,8 +271,7 @@ bool Sensor::isStarted() {
 	return started;
 }
 
-bool Sensor::isActive( TipoGenerador tipo )
-{
+bool Sensor::isActive( TipoGenerador tipo ) {
 	for (unsigned int i = 0; i < generadoresActivos.size(); i++)
 		if (generadoresActivos.at(i) == tipo)
 			return true;
@@ -334,19 +339,20 @@ const Gesto * Sensor::getUltimoGestoJugador(JugadorID player) {
 }
 
 const Gesto * Sensor::getUltimoGestoReconocedor(int idRec) {
-	return reconocedores[idRec]->getUltimoGesto();
+	if(reconocedores.find(idRec) != reconocedores.end())
+		return reconocedores[idRec]->getUltimoGesto();
+	return NULL;
 }
 
-bool Sensor::isTrackingPlayer( JugadorID jugador )
-{
+bool Sensor::isTrackingPlayer( JugadorID jugador ) {
 	if (jugadores.find(jugador) != jugadores.end())
 		return true;
 	return false;
 }
 
-bool Sensor::isTracking()
-{
+bool Sensor::isTracking() {
 	if (!jugadores.empty())
 		return true;
 	return false;
 }
+

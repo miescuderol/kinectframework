@@ -20,10 +20,10 @@ public:
 
 	// Setters (hechos de esta forma se pueden encadenar, todos retornan this)
 	Gesto * setID(int id);
-	Gesto * setPosInicial(XnPoint3D pos);
-	Gesto * setPosFinal(XnPoint3D pos);
+	Gesto * setPosInicial(Punto3f pos);
+	Gesto * setPosFinal(Punto3f pos);
 	Gesto * setTimeInMillis(long int time);
-	Gesto * setArticulacion(const XnSkeletonJointTransformation * articulacion);
+	Gesto * setArticulacion(const Articulacion * articulacion);
 	
 private:
 
@@ -31,6 +31,6 @@ private:
 	Punto3f posInicial;
 	Punto3f posFinal;
 	long int timeInMillis;
-	const XnSkeletonJointTransformation * articulacion;
+	const Articulacion * articulacion;
 };
 

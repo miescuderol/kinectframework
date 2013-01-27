@@ -30,12 +30,12 @@ Gesto * Gesto::setID(int id) {
 	return this;
 }
 
-Gesto * Gesto::setPosInicial(XnPoint3D pos) {
+Gesto * Gesto::setPosInicial(Punto3f pos) {
 	posInicial = pos;
 	return this;
 }
 
-Gesto * Gesto::setPosFinal(XnPoint3D pos) {
+Gesto * Gesto::setPosFinal(Punto3f pos) {
 	posFinal = pos;
 	return this;
 }
@@ -45,7 +45,7 @@ Gesto * Gesto::setTimeInMillis(long int time) {
 	return this;
 }
 
-Gesto * Gesto::setArticulacion(const XnSkeletonJointTransformation * articulacion) {
+Gesto * Gesto::setArticulacion(const Articulacion * articulacion) {
 	this->articulacion = articulacion;
 	return this;
 }

@@ -128,6 +128,9 @@ void Kinect::update()
 	updateManos();
 }
 
+Kinect::Kinect():Sensor(){
+}
+
 bool Kinect::enableGenerator( TipoGenerador tipo )
 {
 	switch (tipo) {
@@ -188,8 +191,6 @@ void Kinect::disableGenerator( TipoGenerador tipo )
 	case Sensor::HAND_GENERATOR:
 		handTracker.destroy();
 		break;
-	default:
-		return false;
 	}
 }
 

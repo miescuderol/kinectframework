@@ -16,7 +16,7 @@
     <ClInclude Include="Sensor.h" />
     <ClInclude Include="Gesto.h" />
     <ClInclude Include="GestoPatron.h" />
-    <ClInclude Include="Grafo.h" />
+    <ClInclude Include="GrafoEscenas.h" />
     <ClInclude Include="Kinect.h" />
     <ClInclude Include="ListenerGesto.h" />
     <ClInclude Include="ListenerJugadorCalibrado.h" />
@@ -28,7 +28,7 @@
     <ClInclude Include="ListenerReconocedor.h" />
     <ClInclude Include="MiAplicacion.h" />
     <ClInclude Include="Movimiento.h" />
-    <ClInclude Include="Nivel.h" />
+    <ClInclude Include="Escena.h" />
     <ClInclude Include="NivelPrueba.h" />
     <ClInclude Include="NivelPrueba2.h" />
     <ClInclude Include="Reconocedor.h" />
@@ -41,7 +41,7 @@
     <ClCompile Include="Sensor.cpp" />
     <ClCompile Include="Gesto.cpp" />
     <ClCompile Include="GestoPatron.cpp" />
-    <ClCompile Include="Grafo.cpp" />
+    <ClCompile Include="GrafoEscenas.cpp" />
     <ClCompile Include="Kinect.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MiAplicacion.cpp" />
