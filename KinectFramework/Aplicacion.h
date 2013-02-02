@@ -8,7 +8,7 @@
 
 /// Clase básica para construir cualquier juego.
 /**
-* La clase aplicación maneja el game-loop. Conoce los subsistemas del juego, y los niveles.
+* La clase aplicación maneja el game-loop. Conoce los subsistemas del juego, y las escenas.
 * El orden de inicialización/actualización de los Subsistemas es configurable por el programador.
 */
 class Aplicacion
@@ -29,7 +29,7 @@ protected:
 	virtual void initComponentes() = 0;
 	/**<
 	 * Inicializa los componentes de la Aplicacion.
-	 * En este método se deben crear los objetos de subsistemas, niveles, etc.
+	 * En este método se deben crear los objetos de subsistemas, escenas, etc.
 	 */
 
 	void setup();
@@ -39,16 +39,16 @@ protected:
 
 	void setGrafoJuego(GrafoEscenas * grafo); /**< Agrega el grafo de niveles. */
 	
-	void addSubsistemaPreNivel(Subsistema * subsistema); 
+	void addSubsistemaPreEscena(Subsistema * subsistema); 
 	/**< 
 	 * Agrega un subsistema que va a ser inicializado/actualizado
-	 * antes de la inicializacion/actualización del nivel activo. 
+	 * antes de la inicializacion/actualización de la escena activa. 
 	 */
 
-	void addSubsistemaPostNivel(Subsistema * subsistema);
+	void addSubsistemaPostEscena(Subsistema * subsistema);
 	/**< 
 	 * Agrega un subsistema que va a ser inicializado/actualizado
-	 * después de la inicializacion/actualización del nivel activo. 
+	 * después de la inicializacion/actualización de la escena activa. 
 	 */
 
 	Sensor * getSensor();
@@ -58,9 +58,9 @@ protected:
 private:
 
 	Sensor * sensor;
-	GrafoEscenas * grafoNiveles;
-	Escena * nivelActivo;
-	std::vector<Subsistema*> subsistemasPreNivel, subsistemasPostNivel;
+	GrafoEscenas * grafoEscenas;
+	Escena * escenaActiva;
+	std::vector<Subsistema*> subsistemasPreEscena, subsistemasPostEscena;
 
 };
 
