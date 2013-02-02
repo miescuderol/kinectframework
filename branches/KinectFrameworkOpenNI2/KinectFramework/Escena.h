@@ -7,7 +7,7 @@ class Escena
 public:
 
 	virtual void cargar(Escena * escenaAnt) = 0;
-	virtual bool isTerminado() = 0;
+	virtual bool isTerminada() = 0;
 	virtual void update() = 0;
 	virtual Estado getEstadoFinal() = 0;
 

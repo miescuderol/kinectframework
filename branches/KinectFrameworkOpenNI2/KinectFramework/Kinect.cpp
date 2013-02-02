@@ -66,15 +66,18 @@ JugadorID Kinect::manoPerdida()
 
 void Kinect::setup()
 {
-	OpenNI::initialize();
-	nite::NiTE::initialize();
+	Status st = OpenNI::initialize();
+	if(st != openni::STATUS_OK)
+		std::cout << "Error al inicializar OpenNI: " << st << std::endl;
+	if(nite::NiTE::initialize() != nite::STATUS_OK)
+		std::cout << "Error al inicializar NiTE" << std::endl;
 
 	dispositivo.open(openni::ANY_DEVICE);
 
 	mapaImagen = new VideoFrameRef();
 	mapaProfundidad = new VideoFrameRef();
 	mapaUsuarios = new nite::UserTrackerFrameRef();
-	mapaManos = new nite::HandTrackerFrameRef();
+	mapaManos = new nite::HandTrackerFrameRef(); 
 }
 
 void Kinect::update()

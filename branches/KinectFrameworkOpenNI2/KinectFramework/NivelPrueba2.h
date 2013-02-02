@@ -10,7 +10,7 @@ public:
 
 	void cargar(Escena * nivelAnt);
 
-	bool isTerminado();
+	bool isTerminada();
 
 	void update();
 

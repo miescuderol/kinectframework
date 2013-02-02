@@ -20,7 +20,7 @@ void NivelPrueba::cargar(Escena * nivelAnt) {
 	while (i < 30000) i++;
 }
 
-bool NivelPrueba::isTerminado() {
+bool NivelPrueba::isTerminada() {
 	return (ciclos > 5000);
 }
 
