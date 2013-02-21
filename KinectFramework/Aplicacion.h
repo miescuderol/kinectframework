@@ -6,8 +6,8 @@
 #include "Sensor.h"
 #include <vector>
 
-/// Clase básica para construir cualquier juego.
-/**
+//! Clase básica para construir cualquier juego.
+/*!
 * La clase aplicación maneja el game-loop. Conoce los subsistemas del juego, y las escenas.
 * El orden de inicialización/actualización de los Subsistemas es configurable por el programador.
 */
@@ -18,7 +18,7 @@ public:
 	Aplicacion();
 
 	void run(); 
-	/**< 
+	/*!< 
 	 * Inicia el game-loop. 
 	 * Primero llama al setup de todos los subsistemas, carga la primer escena,
 	 * después inicia el bucle update-draw.
@@ -27,7 +27,7 @@ public:
 protected:
 
 	virtual void initComponentes() = 0;
-	/**<
+	/*!<
 	 * Inicializa los componentes de la Aplicacion.
 	 * En este método se deben crear los objetos de subsistemas, escenas, etc.
 	 */
@@ -37,16 +37,17 @@ protected:
 	virtual void draw() = 0;
 	void exit();
 
-	void setGrafoJuego(GrafoEscenas * grafo); /**< Agrega el grafo de niveles. */
+	void setGrafoJuego(GrafoEscenas * grafo); 
+	/*!< Agrega el grafo de niveles. */
 	
 	void addSubsistemaPreEscena(Subsistema * subsistema); 
-	/**< 
+	/*!< 
 	 * Agrega un subsistema que va a ser inicializado/actualizado
 	 * antes de la inicializacion/actualización de la escena activa. 
 	 */
 
 	void addSubsistemaPostEscena(Subsistema * subsistema);
-	/**< 
+	/*!< 
 	 * Agrega un subsistema que va a ser inicializado/actualizado
 	 * después de la inicializacion/actualización de la escena activa. 
 	 */

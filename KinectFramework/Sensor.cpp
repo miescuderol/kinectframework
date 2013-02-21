@@ -125,6 +125,7 @@ void Sensor::run() {
 		try {
 			boost::this_thread::interruption_point();
 		} catch (boost::thread_interrupted) {
+			stop();
 			break;
 		}
 	}

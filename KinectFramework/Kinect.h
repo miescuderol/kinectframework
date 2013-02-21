@@ -47,6 +47,8 @@ private:
 
 	void update();
 
+	void stop();
+
 public:
 
 	Kinect();
@@ -64,5 +66,6 @@ public:
 	const int getYRes( TipoSensor tipo );
 
 	const JugadorID * getPixelesUsuario( JugadorID usuario );
+
 
 };
