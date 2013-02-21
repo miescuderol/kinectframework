@@ -11,12 +11,14 @@ public:
 	const Punto3f getPosInicial();
 	const Punto3f getPosFinal();
 
-	/** Devuelve la duración del gesto en milisegundos*/
+	
 	const long int getDuracion();
+	/*!< Devuelve la duración del gesto en milisegundos*/
 	const Articulacion * getArticulacion();
 
-	/** Devuelve el momento (tiempo) en el que se hizo el gesto*/
+	
 	const std::time_t getTiempo() const;
+	/*!< Devuelve el momento (tiempo) en el que se hizo el gesto*/
 
 	// Setters (hechos de esta forma se pueden encadenar, todos retornan this)
 	Gesto * setID(int id);

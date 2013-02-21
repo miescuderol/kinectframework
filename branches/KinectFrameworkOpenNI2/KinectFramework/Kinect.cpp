@@ -131,17 +131,22 @@ void Kinect::update()
 	updateManos();
 }
 
+void Kinect::stop() {
+	OpenNI.shutdown();
+}
+
 Kinect::Kinect():Sensor(){
 }
 
-bool Kinect::enableGenerator( TipoGenerador tipo )
-{
+bool Kinect::enableGenerator( TipoGenerador tipo ) {
 	switch (tipo) {
 	case Sensor::DEPTH_GENERATOR:
 		if(dispositivo.isValid() && dispositivo.hasSensor(SENSOR_DEPTH)) {
 			camaraProfundidad.create(dispositivo, SENSOR_DEPTH);
-			if (camaraProfundidad.start() == STATUS_OK)
+			if (camaraProfundidad.start() == STATUS_OK) {
+				generadoresActivos.push_back(Sensor::DEPTH_GENERATOR);
 				return true;
+			}
 			else {
 				camaraProfundidad.destroy();
 				return false;
@@ -152,8 +157,10 @@ bool Kinect::enableGenerator( TipoGenerador tipo )
 	case Sensor::IMAGE_GENERATOR:
 		if(dispositivo.isValid() && dispositivo.hasSensor(SENSOR_COLOR)) {
 			camaraImagen.create(dispositivo, SENSOR_COLOR);
-			if (camaraImagen.start() == STATUS_OK)
+			if (camaraImagen.start() == STATUS_OK) {
+				generadoresActivos.push_back(Sensor::IMAGE_GENERATOR);
 				return true;
+			}
 			else {
 				camaraImagen.destroy();
 				return false;
@@ -162,13 +169,17 @@ bool Kinect::enableGenerator( TipoGenerador tipo )
 			return false;
 		break;
 	case Sensor::USER_GENERATOR:
-		if (userTracker.create(&dispositivo) == nite::STATUS_OK)
+		if (userTracker.create(&dispositivo) == nite::STATUS_OK) {
+			generadoresActivos.push_back(Sensor::USER_GENERATOR);
 			return true;
+		}
 		else return false;
 		break;
 	case Sensor::HAND_GENERATOR:
-		if (handTracker.create(&dispositivo) == nite::STATUS_OK)
+		if (handTracker.create(&dispositivo) == nite::STATUS_OK) {
+			generadoresActivos.push_back(Sensor::HAND_GENERATOR);
 			return true;
+		}
 		else return false;
 		break;
 	default:
@@ -247,3 +258,4 @@ const JugadorID * Kinect::getPixelesUsuario( JugadorID usuario )
 {
 	return (const JugadorID *)mapaUsuarios->getUserMap().getPixels();
 }
+

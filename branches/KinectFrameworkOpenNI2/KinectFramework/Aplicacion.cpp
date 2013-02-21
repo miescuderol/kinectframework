@@ -28,7 +28,7 @@ void Aplicacion::update() {
 		Escena * escenaAnt = escenaActiva;
 		escenaActiva = grafoEscenas->getSigEscena(escenaActiva, escenaActiva->getEstadoFinal());
 		escenaActiva->cargar(escenaAnt);
-
+		escenaAnt->descargar();
 	}
 
 	for (unsigned int i = 0; i < subsistemasPreEscena.size(); i++) {
