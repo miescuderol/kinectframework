@@ -141,6 +141,7 @@ Sensor::Sensor() {
 
 void Sensor::start() {
 	threadKinect = boost::thread(&Sensor::run, this);
+	this->started = true;
 }
 
 void Sensor::shutdown() {

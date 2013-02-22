@@ -12,7 +12,7 @@ public:
 
 private:
 
-	void initComponentes();
+	bool initComponentes();
 
 	void draw();
 

@@ -32,7 +32,7 @@
     <ClInclude Include="ListenerManoNueva.h" />
     <ClInclude Include="ListenerManoPerdida.h" />
     <ClInclude Include="ListenerMovimiento.h" />
-    <ClInclude Include="ListenerNuevoJugador.h" />
+    <ClInclude Include="ListenerJugadorNuevo.h" />
     <ClInclude Include="ListenerReconocedor.h" />
     <ClInclude Include="MiAplicacion.h" />
     <ClInclude Include="Movimiento.h" />
@@ -114,8 +114,8 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(BOOST_ROOT);$(OPENNI2_LIB);$(NITE2_LIB)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;OpenNI2.lib;NiTE2.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files\boost\boost_1_51\lib;$(OPENNI2_LIB);$(NITE2_LIB)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;OpenNI2.lib;NiTE2.lib;libboost_thread-vc100-mt-gd-1_51.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

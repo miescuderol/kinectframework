@@ -9,7 +9,7 @@
 #include "ListenerJugadorCalibrado.h"
 #include "ListenerJugadorPerdido.h"
 #include "ListenerMovimiento.h"
-#include "ListenerNuevoJugador.h"
+#include "ListenerJugadorNuevo.h"
 #include "ListenerReconocedor.h"
 #include "ListenerManoNueva.h"
 #include "ListenerManoPerdida.h"

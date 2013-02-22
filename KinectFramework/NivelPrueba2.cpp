@@ -31,5 +31,10 @@ void NivelPrueba2::updateJugadorNuevo(JugadorID user){
 }
 
 Estado NivelPrueba2::getEstadoFinal() {
-	return Estado::MUERTO;
+	return 0;
+}
+
+void NivelPrueba2::descargar()
+{
+	throw std::exception("The method or operation is not implemented.");
 }
