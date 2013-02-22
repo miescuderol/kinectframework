@@ -20,7 +20,7 @@ JugadorID Kinect::jugadorNuevo()
 JugadorID Kinect::jugadorCalibrado(Esqueleto *& esqueleto)
 {
 	JugadorID jugadorCalibrado = -1;
-	for (int i = 0; i < jugadoresTrackeados.size(); i++)
+	for (unsigned int i = 0; i < jugadoresTrackeados.size(); i++)
 		if (jugadores.find(jugadoresTrackeados[i]) == jugadores.end())
 			jugadorCalibrado = jugadoresTrackeados[i];
 
@@ -68,7 +68,7 @@ void Kinect::setup()
 {
 	Status st = OpenNI::initialize();
 	if(st != openni::STATUS_OK)
-		std::cout << "Error al inicializar OpenNI: " << st << std::endl;
+		std::cout << "Error al inicializar OpenNI: " << st << OpenNI::getExtendedError() << std::endl;
 	if(nite::NiTE::initialize() != nite::STATUS_OK)
 		std::cout << "Error al inicializar NiTE" << std::endl;
 
@@ -132,7 +132,7 @@ void Kinect::update()
 }
 
 void Kinect::stop() {
-	OpenNI.shutdown();
+	OpenNI::shutdown();
 }
 
 Kinect::Kinect():Sensor(){
@@ -169,7 +169,7 @@ bool Kinect::enableGenerator( TipoGenerador tipo ) {
 			return false;
 		break;
 	case Sensor::USER_GENERATOR:
-		if (userTracker.create(&dispositivo) == nite::STATUS_OK) {
+		if (userTracker.create() == nite::STATUS_OK) {
 			generadoresActivos.push_back(Sensor::USER_GENERATOR);
 			return true;
 		}

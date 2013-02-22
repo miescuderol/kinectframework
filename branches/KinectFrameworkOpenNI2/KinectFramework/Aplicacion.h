@@ -26,10 +26,11 @@ public:
 
 protected:
 
-	virtual void initComponentes() = 0;
+	virtual bool initComponentes() = 0;
 	/*!<
 	 * Inicializa los componentes de la Aplicacion.
 	 * En este método se deben crear los objetos de subsistemas, escenas, etc.
+	 * De haber algún error al iniciar un componente este método debe retornar false.
 	 */
 
 	void setup();

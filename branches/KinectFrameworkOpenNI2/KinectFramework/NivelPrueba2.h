@@ -18,6 +18,8 @@ public:
 
 	Estado getEstadoFinal();
 
+	virtual void descargar();
+
 private:
 
 	Sensor * kinect;

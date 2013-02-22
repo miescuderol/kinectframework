@@ -43,11 +43,16 @@ void Aplicacion::update() {
 
 
 void Aplicacion::exit() {
-	for (unsigned int i = subsistemasPostEscena.size() - 1; i >= 0 ; i--) 
+	std::cout << "exit()... " << std::endl;
+	for (int i = subsistemasPostEscena.size() - 1; i >= 0 ; i--) {
+		std::cout << "cerrando subsistemas post escena" << std::endl;
 		subsistemasPostEscena[i]->shutdown();
-
-	for (unsigned int i = subsistemasPreEscena.size() - 1; i >= 0 ; i--) 
+	}
+	
+	for (int i = subsistemasPreEscena.size() - 1; i >= 0 ; i--) {
+		std::cout << "cerrando subsistemas pre escena" << std::endl;
 		subsistemasPreEscena[i]->shutdown();
+	}
 	
 
 	if (sensor != NULL){
@@ -55,6 +60,9 @@ void Aplicacion::exit() {
 		sensor->shutdown();
 		sensor->~Sensor();
 	}
+	std::cout << "Aplicacion cerrada, presione una tecla para continuar" << std::endl;
+	char tecla;
+	std::cin >> tecla;
 }
 
 void Aplicacion::setGrafoJuego(GrafoEscenas * grafo) {
@@ -65,18 +73,21 @@ void Aplicacion::run() {
 
 	if (grafoEscenas == NULL) return;
 
-	std::cout << "Iniciando setup... ";
-	initComponentes();
-	setup();
-	std::cout << "hecho." << std::endl;
-	if(escenaActiva == NULL) std::cout << "escena activa es null" << std::endl;
-	std::cout << "Iniciando Game Loop... " << std::endl;
-	while (!grafoEscenas->isFinal(escenaActiva) || !escenaActiva->isTerminada()) {
-		update();
-		draw();
-	}
+	std::cout << "Iniciando setup... " << std::endl;
+	if(initComponentes()) {
+		std::cout << "componentes inicializados" << std::endl;
+			
+		setup();
+		std::cout << "hecho." << std::endl;
+		if(escenaActiva == NULL) std::cout << "escena activa es null" << std::endl;
+		std::cout << "Iniciando Game Loop... " << std::endl;
+		while (!grafoEscenas->isFinal(escenaActiva) || !escenaActiva->isTerminada()) {
+			update();
+			draw();
+		}
+	} else
+		std::cout << "error en initComponentes() " << std::endl;
 	exit();
-
 }
 
 void Aplicacion::addSubsistemaPreEscena(Subsistema * subsistema) {
