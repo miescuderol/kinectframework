@@ -1,4 +1,4 @@
-p#ragma once
+#pragma once
 class Subsistema
 {
 public:
