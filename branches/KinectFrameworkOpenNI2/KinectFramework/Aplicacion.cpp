@@ -58,7 +58,7 @@ void Aplicacion::exit() {
 	if (sensor != NULL){
 		std::cout << "Cerrando aplicacion." << std::endl;
 		sensor->shutdown();
-		sensor->~Sensor();
+		//sensor->~Sensor();
 	}
 	std::cout << "Aplicacion cerrada, presione una tecla para continuar" << std::endl;
 	char tecla;

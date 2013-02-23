@@ -119,7 +119,9 @@ void Sensor::updateManos() {
 
 void Sensor::run() {
 	setup();
-
+	m_isStarted.lock();
+	started = true;
+	m_isStarted.unlock();
 	while (true) {
 		update();
 		try {
@@ -141,7 +143,6 @@ Sensor::Sensor() {
 
 void Sensor::start() {
 	threadKinect = boost::thread(&Sensor::run, this);
-	this->started = true;
 }
 
 void Sensor::shutdown() {
@@ -270,7 +271,10 @@ bool Sensor::isManoPerdida(JugadorID &mano) {
 }
 
 bool Sensor::isStarted() {
-	return started;
+	m_isStarted.lock();
+	bool start = started;
+	m_isStarted.unlock();
+	return start;
 }
 
 bool Sensor::isActive( TipoGenerador tipo ) {

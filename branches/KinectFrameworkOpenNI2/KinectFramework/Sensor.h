@@ -50,6 +50,7 @@ private:
 	boost::mutex m_listenersManoPerdida;
 	boost::mutex m_reconocedores;
 	boost::mutex m_reconocedoresBasicos;
+	boost::mutex m_isStarted;
 
 	/*! Map de reconocedores asociados a un idRec */
 	std::map<int, Reconocedor* > reconocedores;
