@@ -276,7 +276,7 @@ public:
 	* \return const JugadorID*. Arreglo de Y*ancho de longitud.
 	*/
 
-	const Punto3f * getMano(JugadorID jugador);
+	const Punto3f * getMano(JugadorID jugador) const;
 	/*!<
 	* Devuelve la posición actual de la mano del jugador pasado como parámetro.
 	* 
@@ -285,7 +285,7 @@ public:
 	* \return const [Punto3f*] (@ref Punto3f). 
 	*/
 
-	const Esqueleto * getArticulaciones(JugadorID jugador);
+	const Esqueleto * getArticulaciones(JugadorID jugador) const;
 	/*!<
 	* Devuelve el esqueleto del jugador pasado como parametro, que contiene las posiciones de las articulaciones.
 	* 

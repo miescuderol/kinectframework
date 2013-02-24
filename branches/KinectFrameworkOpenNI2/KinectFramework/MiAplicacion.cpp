@@ -6,11 +6,8 @@ using namespace std;
 
 MiAplicacion::MiAplicacion() {
 	Sensor * kinect = new Kinect();
-	cout << "asd" << endl;
 	kinect->start();
-	cout << "qwe" << endl;
 	while (!kinect->isStarted());
-	cout << "kinect creado" << endl;
 	setSensor(kinect);
 }
 
@@ -48,5 +45,5 @@ bool MiAplicacion::initComponentes() {
 }
 
 void MiAplicacion::draw() {
-	throw std::exception("The method or operation is not implemented.");
+	
 }

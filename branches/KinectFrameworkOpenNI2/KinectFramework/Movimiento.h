@@ -3,7 +3,9 @@ class Movimiento
 {
 public:
 
-	typedef enum Direccion {SIN_DIRECCION,a,b,c};
+	const static int SIN_DIRECCION = -1;
+
+	typedef int Direccion;
 
 	Movimiento(void);
 	~Movimiento(void);

@@ -56,7 +56,5 @@ private:
 	float amplitude;
 	float displacement;
 
-	Movimiento::Direccion intADireccion(int i);
-
 };
 
