@@ -58,9 +58,10 @@ void Sensor::updateReconocedoresBasicos() {
 		JugadorID us = atoi(clave.substr(0, clave.find_first_of('_')).data());
 		int joint = atoi(clave.substr(clave.find_first_of('_')+1).data());
 		Esqueleto * esqueleto = jugadores[us];
-		it->second->setNewPosition(esqueleto->getArticulacion(joint)->getPosicion()->X(),
-								   esqueleto->getArticulacion(joint)->getPosicion()->Y(),
-								   esqueleto->getArticulacion(joint)->getPosicion()->Z());
+		if (esqueleto != NULL)
+			it->second->setNewPosition(esqueleto->getArticulacion(joint)->getPosicion()->X(),
+			esqueleto->getArticulacion(joint)->getPosicion()->Y(),
+			esqueleto->getArticulacion(joint)->getPosicion()->Z());
 	}
 	m_reconocedoresBasicos.unlock();
 }
@@ -153,17 +154,17 @@ std::vector<Sensor::TipoGenerador> Sensor::getActiveGenerators() {
 	return generadoresActivos;
 }
 
-const Punto3f * Sensor::getMano( JugadorID jugador )
+const Punto3f * Sensor::getMano( JugadorID jugador ) const
 {
 	if (manos.find(jugador) != manos.end())
-		return manos[jugador];
+		return manos.at(jugador);
 	return NULL;
 }
 
-const Esqueleto * Sensor::getArticulaciones( JugadorID jugador )
+const Esqueleto * Sensor::getArticulaciones( JugadorID jugador ) const
 {
 	if (jugadores.find(jugador) != jugadores.end())
-		return jugadores[jugador];
+		return jugadores.at(jugador);
 	return NULL;
 }
 
@@ -232,9 +233,11 @@ bool Sensor::isJugadorPerdido(JugadorID &player) {
 	JugadorID jugadorPerdidoID = jugadorPerdido();
 
 	if(jugadorPerdidoID != -1) {
+		std::cout << "ID Jugador Perdido: " << jugadorPerdidoID << std::endl;
 		player = jugadorPerdidoID;
 		m_jugadores.lock();
-		jugadores.erase(jugadores.find(player));
+		if (jugadores.find(player) != jugadores.end())
+			jugadores.erase(jugadores.find(player));
 		//!\todo Borrar los reconocedores asociados al jugador
 		m_jugadores.unlock();
 		return true;

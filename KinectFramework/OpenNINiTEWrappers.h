@@ -55,7 +55,7 @@ public:
 		this->esqueleto = esqueleto;
 	}
 
-	const Articulacion * getArticulacion( int articulacion ) 
+	const Articulacion * getArticulacion( int articulacion ) const
 	{
 		return new NiTEArticulacion(esqueleto.getJoint((nite::JointType)articulacion));
 	}

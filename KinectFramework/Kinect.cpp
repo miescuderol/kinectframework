@@ -66,6 +66,9 @@ JugadorID Kinect::manoPerdida()
 
 void Kinect::setup()
 {
+	_jugadorNuevo = -1;
+	_jugadorPerdido = -1;
+
 	Status st = OpenNI::initialize();
 	if(st != openni::STATUS_OK)
 		std::cout << "Error al inicializar OpenNI: " << st << OpenNI::getExtendedError() << std::endl;
