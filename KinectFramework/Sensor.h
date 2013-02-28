@@ -56,7 +56,7 @@ private:
 	std::map<int, Reconocedor* > reconocedores;
 
 	/*! Map de reconocedores básicos asociados a una articulación.*/
-	std::map<char *, ReconocedorBasico *> reconocedoresBasicos;
+	std::map<std::string, ReconocedorBasico *> reconocedoresBasicos;
 
 	/*! Vector de listeners de jugadores calibrados.*/
 	std::vector<ListenerJugadorCalibrado *> listenersJugadorCalibrado;
@@ -105,7 +105,7 @@ protected:
 	*/
 
 
-	ReconocedorBasico * buscarReconocedorBasico(char * idRecBasico);
+	ReconocedorBasico * buscarReconocedorBasico(std::string idRecBasico);
 	/*!<
 	* Busca un ReconocedorBasico en el map reconocedoresBasicos en base a la clave idRecBasico y lo devuelve. 
 	* En caso de no existir crea uno nuevo.
@@ -398,6 +398,35 @@ public:
 	*
 	*/
 
+	void removeListenerGesto(ListenerGesto * lg, int idRec);
+	/*!<
+	*
+	*/
+
+	void removeListenerJugadorNuevo(ListenerJugadorNuevo * lnj);
+	/*!<
+	*
+	*/
+
+	void removeListenerJugadorPerdido(ListenerJugadorPerdido *ljp);
+	/*!<
+	*
+	*/
+
+	void removeListenerJugadorCalibrado(ListenerJugadorCalibrado * ljc);
+	/*!<
+	*
+	*/
+
+	void removeListenerManoNueva(ListenerManoNueva * lmn);
+	/*!<
+	*
+	*/
+
+	void removeListenerManoPerdida(ListenerManoPerdida * lmp);
+	/*!<
+	*
+	*/
 
 	const Gesto * getUltimoGestoJugador(JugadorID player);
 	/*!<

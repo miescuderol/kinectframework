@@ -53,7 +53,7 @@ private:
 	float prevX, prevY, prevZ;
 	float deadZone;
 	int divisions;
-	float amplitude;
+	float gamma;
 	float displacement;
 
 };

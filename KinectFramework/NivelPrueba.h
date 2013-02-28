@@ -37,5 +37,6 @@ private:
 	JugadorID jugadorActivo;
 	std::vector<JugadorID> jugadores;
 	bool gestoDetectado;
+	int idRec;
 
 };

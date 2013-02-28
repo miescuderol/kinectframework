@@ -39,7 +39,7 @@ void Sensor::notifyAllManoPerdida(JugadorID manoPerdida) {
 	m_listenersManoPerdida.unlock();
 }
 
-ReconocedorBasico * Sensor::buscarReconocedorBasico(char * idRecBasico) {
+ReconocedorBasico * Sensor::buscarReconocedorBasico(std::string idRecBasico) {
 	m_reconocedoresBasicos.lock();
 	if(reconocedoresBasicos.find(idRecBasico) == reconocedoresBasicos.end()){
 		reconocedoresBasicos[idRecBasico] = new ReconocedorBasico(8, 70); //cambiar los parámetros por constantes
@@ -52,17 +52,21 @@ ReconocedorBasico * Sensor::buscarReconocedorBasico(char * idRecBasico) {
 
 void Sensor::updateReconocedoresBasicos() {
 	m_reconocedoresBasicos.lock();
-	std::map<char*, ReconocedorBasico*>::iterator it = reconocedoresBasicos.begin();
+	m_jugadores.lock();
+	std::map<std::string, ReconocedorBasico*>::iterator it = reconocedoresBasicos.begin();
 	for(it; it != reconocedoresBasicos.end(); it++){
 		std::string clave = it->first;
-		JugadorID us = atoi(clave.substr(0, clave.find_first_of('_')).data());
+		JugadorID id = atoi(clave.substr(0, clave.find_first_of('_')).data());
 		int joint = atoi(clave.substr(clave.find_first_of('_')+1).data());
-		Esqueleto * esqueleto = jugadores[us];
+		//std::cout << "clave: " << clave << ", id: " << id << ", joint: " << joint << std::endl;
+		const Esqueleto * esqueleto = getArticulaciones(id);
 		if (esqueleto != NULL)
 			it->second->setNewPosition(esqueleto->getArticulacion(joint)->getPosicion()->X(),
 			esqueleto->getArticulacion(joint)->getPosicion()->Y(),
 			esqueleto->getArticulacion(joint)->getPosicion()->Z());
+		else std::cout << "esqueleto == NULL, id =" << id << ", clave = " << clave << std::endl;
 	}
+	m_jugadores.unlock();
 	m_reconocedoresBasicos.unlock();
 }
 
@@ -173,7 +177,14 @@ int Sensor::startReconocedor( JugadorID jugador, int articulacion, GestoPatron *
 	if (!isTrackingPlayer(jugador))
 		return -1;
 
-	char* idRecBasico = new char(jugador + '_' + articulacion);
+	// crea la clave del map
+	std::string idRecBasico;
+	std::ostringstream s, s2;
+	s << jugador;
+	idRecBasico.append(s.str());
+	idRecBasico.append("_");
+	s2 << articulacion;
+	idRecBasico.append(s2.str());
 	ReconocedorBasico *recBasico = buscarReconocedorBasico(idRecBasico);
 
 	m_reconocedores.lock();
@@ -235,11 +246,39 @@ bool Sensor::isJugadorPerdido(JugadorID &player) {
 	if(jugadorPerdidoID != -1) {
 		std::cout << "ID Jugador Perdido: " << jugadorPerdidoID << std::endl;
 		player = jugadorPerdidoID;
+
+		//Borra el jugador
 		m_jugadores.lock();
 		if (jugadores.find(player) != jugadores.end())
 			jugadores.erase(jugadores.find(player));
-		//!\todo Borrar los reconocedores asociados al jugador
 		m_jugadores.unlock();
+
+		//Borra los reconocedores basicos asociados al jugador
+		m_reconocedoresBasicos.lock();
+		for(std::map<std::string, ReconocedorBasico*>::iterator it = reconocedoresBasicos.begin(); it != reconocedoresBasicos.end();) {
+			std::string id_art = it->first;
+			JugadorID id = atoi(id_art.substr(0, id_art.find_first_of('_')).c_str());
+			if (id == player) {
+				reconocedoresBasicos.erase(it++);
+			} else {
+				++it;
+			}
+		}
+		m_reconocedoresBasicos.unlock();
+
+		//Borra los reconocedores asociados al jugador
+		m_reconocedores.lock();
+		for (std::map<int, Reconocedor*>::iterator it = reconocedores.begin(); it != reconocedores.end();) {
+			std::string id_art = it->second->getIDJugador_Art();
+			JugadorID id = atoi(id_art.substr(0, id_art.find_first_of('_')).c_str());
+			if (id == player) {
+				reconocedores.erase(it++);
+			} else {
+				++it;
+			}
+		}
+		m_reconocedores.unlock();
+
 		return true;
 	}
 	return false;
@@ -363,5 +402,88 @@ bool Sensor::isTracking() {
 	if (!jugadores.empty())
 		return true;
 	return false;
+}
+
+void Sensor::removeListenerGesto( ListenerGesto * lg, int idRec ) {
+	m_reconocedores.lock();
+	if (reconocedores.find(idRec) != reconocedores.end()) {
+		reconocedores[idRec]->removeListener(lg);
+	}
+	m_reconocedores.unlock();
+}
+
+void Sensor::removeListenerJugadorNuevo( ListenerJugadorNuevo * lnj ) {
+	m_listenersJugadorNuevo.lock();
+	bool encontrado = false;
+	std::vector<ListenerJugadorNuevo*>::const_iterator it;
+	for (it = listenersJugadorNuevo.begin(); it != listenersJugadorNuevo.end();) {
+		if (*it == lnj) {
+			encontrado = true;
+			listenersJugadorNuevo.erase(it++);
+		} else {
+			++it;
+		}
+	}
+	m_listenersJugadorNuevo.unlock();
+}
+
+void Sensor::removeListenerJugadorPerdido( ListenerJugadorPerdido *ljp ) {
+	m_listenersJugadorPerdido.lock();
+	bool encontrado = false;
+	std::vector<ListenerJugadorPerdido*>::const_iterator it;
+	for (it = listenersJugadorPerdido.begin(); it != listenersJugadorPerdido.end();) {
+		if (*it == ljp) {
+			encontrado = true;
+			listenersJugadorPerdido.erase(it++);
+		} else {
+			++it;
+		}
+	}
+	m_listenersJugadorPerdido.unlock();
+}
+
+void Sensor::removeListenerJugadorCalibrado( ListenerJugadorCalibrado * ljc ) {
+	m_listenersJugadorCalibrado.lock();
+	bool encontrado = false;
+	std::vector<ListenerJugadorCalibrado*>::const_iterator it;
+	for (it = listenersJugadorCalibrado.begin(); it != listenersJugadorCalibrado.end();) {
+		if (*it == ljc) {
+			encontrado = true;
+			listenersJugadorCalibrado.erase(it++);
+		} else {
+			++it;
+		}
+	}
+	m_listenersJugadorCalibrado.unlock();
+}
+
+void Sensor::removeListenerManoNueva( ListenerManoNueva * lmn ) {
+	m_listenersManoNueva.lock();
+	bool encontrado = false;
+	std::vector<ListenerManoNueva*>::const_iterator it;
+	for (it = listenersManoNueva.begin(); it != listenersManoNueva.end();) {
+		if (*it == lmn) {
+			encontrado = true;
+			listenersManoNueva.erase(it++);
+		} else {
+			++it;
+		}
+	}
+	m_listenersManoNueva.unlock();
+}
+
+void Sensor::removeListenerManoPerdida( ListenerManoPerdida * lmp ) {
+	m_listenersManoPerdida.lock();
+	bool encontrado = false;
+	std::vector<ListenerManoPerdida*>::const_iterator it;
+	for (it = listenersManoPerdida.begin(); it != listenersManoPerdida.end();) {
+		if (*it == lmp) {
+			encontrado = true;
+			listenersManoPerdida.erase(it++);
+		} else {
+			++it;
+		}
+	}
+	m_listenersManoPerdida.unlock();
 }
 

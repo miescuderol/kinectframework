@@ -1,7 +1,9 @@
 #include "Reconocedor.h"
+#include <iostream>
+#include <fstream>
 
-
-Reconocedor::Reconocedor(GestoPatron * gestoPatron, char* idJugador_Art, ReconocedorBasico * recBasicos) {
+Reconocedor::Reconocedor(GestoPatron * gestoPatron, std::string idJugador_Art, ReconocedorBasico * recBasicos) {
+	std::cout << "Reconocedor creado." << std::endl;
 	this->recBasicos = recBasicos;
 	this->idJugador_Art = idJugador_Art;
 	this->gestoPatron = gestoPatron;
@@ -30,7 +32,7 @@ GestoPatron * Reconocedor::getGestoPatron() {
 	return gestoPatron;
 }
 
-char * Reconocedor::getIDJugador_Art(){
+std::string Reconocedor::getIDJugador_Art(){
 	return idJugador_Art;
 }
 
@@ -38,11 +40,23 @@ void Reconocedor::addListener(ListenerGesto * listener) {
 	listeners.push_back(listener);
 }
 
+void Reconocedor::removeListener( ListenerGesto * listener )
+{
+	std::vector<ListenerGesto*>::iterator it;
+	for (it = listeners.begin(); it != listeners.end();) {
+		if (*it == listener) {
+			listeners.erase(it);
+			break;
+		}
+	}
+}
+
 void Reconocedor::updateMovimiento(Movimiento * m) {
 	
 	if (movimientoEsperado == m) {
 		ultimoMovimiento++;
 		if (ultimoMovimiento == gestoPatron->length()) {
+			std::cout << "Se detecto un Gesto! Notificando... ";
 			ultimoGesto = new Gesto(); // falta setearlo (acordarse de pasarle el idJugador_art)
 			notifyObservers();
 		}
