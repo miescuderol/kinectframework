@@ -33,7 +33,7 @@ void NivelPrueba::update() {
 	ciclos++;
 	if (gestoDetectado)
 		ciclosGesto++;
-	system("cls");
+	//system("cls");
 	std::cout << "Nivel 1" << std::endl;
 	std::cout << "Jugadores: ";
 	for (int i = 0; i < jugadores.size(); i++)
@@ -41,6 +41,7 @@ void NivelPrueba::update() {
 	std::cout << std::endl;
 	for (int i = 0; i < jugadores.size(); i++) {
 		const Esqueleto * esq = kinect->getArticulaciones(jugadores[i]);
+		if (esq == NULL) return;
 		const Articulacion * art = esq->getArticulacion(NiTEEsqueleto::MANO_DER);
 		std::cout << "Jugador " << jugadores[i] << ": " << art->getPosicion()->X() << ", "
 														<< art->getPosicion()->Y() << ", "
@@ -51,6 +52,10 @@ void NivelPrueba::update() {
 	else {
 		ciclosGesto = 0;
 		gestoDetectado = false;
+	}
+	if (ciclos > 50) {
+		int c;
+		std::cin >> c;
 	}
 }
 
@@ -70,7 +75,8 @@ void NivelPrueba::descargar()
 void NivelPrueba::updateJugadorPerdido( JugadorID user )
 {
 	std::cout << "updateJugadorPerdido: " << user << std::endl;
-	for (std::vector<JugadorID>::iterator it = jugadores.begin(); it != jugadores.end(); ++it) {
+	kinect->removeListenerGesto(this, idRec);
+	for (std::vector<JugadorID>::iterator it = jugadores.begin(); it != jugadores.end();) {
 		if (*it == user) {
 			jugadores.erase(it);
 			break;
@@ -87,11 +93,12 @@ void NivelPrueba::updateJugadorCalibrado( JugadorID user )
 	Movimiento arriba;
 	arriba.setDireccionHorizontal(0);
 	gesto->addMovement(arriba);
-	int idRec = kinect->startReconocedor(user, NiTEEsqueleto::MANO_DER, gesto);
+	idRec = kinect->startReconocedor(user, NiTEEsqueleto::MANO_DER, gesto);
 	kinect->addListenerGesto(this, idRec);
 }
 
 void NivelPrueba::updateGesto( Gesto * m )
 {
+	std::cout << " Notificado." << std::endl;
 	gestoDetectado = true;
 }

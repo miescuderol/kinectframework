@@ -16,7 +16,7 @@
 */
 class Reconocedor : public ListenerMovimiento {
 public:
-	Reconocedor(GestoPatron * gestoPatron, char* idJugadorArt, ReconocedorBasico * recBasicos);
+	Reconocedor(GestoPatron * gestoPatron, std::string idJugadorArt, ReconocedorBasico * recBasicos);
 	~Reconocedor(void);
 
 	const Gesto * getUltimoGesto();
@@ -34,7 +34,7 @@ public:
 	 * \return gestoPatron indicado en el constructor.
 	 */
 
-	char * getIDJugador_Art();
+	std::string getIDJugador_Art();
 	/*!<
 	 * \return idJugadorArt indicado en el constructor.
 	 */
@@ -42,6 +42,11 @@ public:
 	void addListener(ListenerGesto * listener);
 	/*!<
 	 * Suscribe listener a los eventos de reconocimiento de gestos.
+	 */
+
+	void removeListener(ListenerGesto * listener);
+	/*!<
+	 * Elimina listener de los objetos suscriptos mediante addListener(ListenerGesto * listener).
 	 */
 
 	void updateMovimiento(Movimiento * m);
@@ -62,7 +67,7 @@ private:
 	int ultimoMovimiento;
 //	Kinect::Joint joint;
 //	JugadorID idJugador;
-	char * idJugador_Art;
+	std::string idJugador_Art;
 
 };
 

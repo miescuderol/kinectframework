@@ -3,25 +3,26 @@ class Movimiento
 {
 public:
 
-	const static int SIN_DIRECCION = -1;
+	//typedef int Direccion;
 
-	typedef int Direccion;
+	const static int SIN_DIRECCION = -1;
 
 	Movimiento(void);
 	~Movimiento(void);
 
-	void setDireccionVertical(Direccion d);
-	void setDireccionHorizontal(Direccion d);
+	void setDireccionVertical(int d);
+	void setDireccionHorizontal(int d);
 
-	Direccion getDireccionVertical();
-	Direccion getDireccionHorizontal();
+	int getDireccionVertical();
+	int getDireccionHorizontal();
 
 	bool operator==(Movimiento & otroMovimiento);
 	bool operator!=(Movimiento & otroMovimiento);
 
 private:
 
-	Direccion vertical, horizontal;
+	int vertical;
+	int horizontal;
 
 };
 

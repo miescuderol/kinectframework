@@ -3,6 +3,8 @@
 
 Movimiento::Movimiento(void)
 {
+	vertical = SIN_DIRECCION;
+	horizontal = SIN_DIRECCION;
 }
 
 
@@ -10,19 +12,19 @@ Movimiento::~Movimiento(void)
 {
 }
 
-void Movimiento::setDireccionVertical(Direccion d) {
+void Movimiento::setDireccionVertical(int d) {
 	vertical = d;
 }
 
-void Movimiento::setDireccionHorizontal(Direccion d) {
+void Movimiento::setDireccionHorizontal(int d) {
 	horizontal = d;
 }
 
-Movimiento::Direccion Movimiento::getDireccionVertical() {
+int Movimiento::getDireccionVertical() {
 	return vertical;
 }
 
-Movimiento::Direccion Movimiento::getDireccionHorizontal() {
+int Movimiento::getDireccionHorizontal() {
 	return horizontal;
 }
 
