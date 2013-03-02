@@ -1,13 +1,12 @@
 #include "GestoPatron.h"
 
 
-GestoPatron::GestoPatron(void)
-{
+GestoPatron::GestoPatron(std::string nombre) {
+	setNombre(nombre);
 }
 
 
-GestoPatron::~GestoPatron(void)
-{
+GestoPatron::~GestoPatron(void) {
 }
 
 void GestoPatron::addMovement(Movimiento m) {
@@ -19,7 +18,9 @@ void GestoPatron::insertAt(int i, Movimiento m) {
 }
 
 Movimiento * GestoPatron::getMovement(int i) {
-	return &movimientos[i];
+	if (i < movimientos.size())
+		return &movimientos[i];
+	return NULL;
 }
 
 const int GestoPatron::length() {
@@ -43,4 +44,12 @@ bool GestoPatron::operator==(GestoPatron & otroGesto) {
 
 bool GestoPatron::operator!=(GestoPatron & otroGesto) {
 	return !(*this == otroGesto);
+}
+
+void GestoPatron::setNombre( std::string nombre ) {
+	this->nombre = nombre;
+}
+
+const std::string GestoPatron::getNombre() const {
+	return nombre;
 }

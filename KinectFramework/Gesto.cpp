@@ -1,32 +1,39 @@
 #include "Gesto.h"
 
-const int Gesto::getID()
-{
-	return id;
+Gesto::Gesto() {
+
 }
 
-const Punto3f Gesto::getPosInicial()
-{
+Gesto::~Gesto() {
+
+}
+
+const std::string Gesto::getNombre() {
+	return nombre;
+}
+
+const Punto3f Gesto::getPosInicial() {
 	return posInicial;
 }
 
-const Punto3f Gesto::getPosFinal()
-{
+const Punto3f Gesto::getPosFinal() {
 	return posFinal;
 }
 
-const long int Gesto::getDuracion()
-{
+const long int Gesto::getDuracion() {
 	return timeInMillis;
 }
 
-const Articulacion * Gesto::getArticulacion()
-{
+const std::string Gesto::getArticulacion() {
 	return articulacion;
 }
 
-Gesto * Gesto::setID(int id) {
-	this->id = id;
+const std::time_t Gesto::getTiempo() const {
+	return tiempo;
+}
+
+Gesto * Gesto::setNombre(std::string nombre) {
+	this->nombre = nombre;
 	return this;
 }
 
@@ -45,12 +52,14 @@ Gesto * Gesto::setTimeInMillis(long int time) {
 	return this;
 }
 
-Gesto * Gesto::setArticulacion(const Articulacion * articulacion) {
-	this->articulacion = articulacion;
+Gesto * Gesto::setArticulacion(const std::string idJugador_articulacion) {
+	this->articulacion.clear();
+	this->articulacion.append(idJugador_articulacion);
+
 	return this;
 }
 
-const std::time_t Gesto::getTiempo() const
-{
-	throw std::exception("The method or operation is not implemented.");
+Gesto * Gesto::setTiempo( std::time_t t ) {
+	this->tiempo = t;
+	return this;
 }

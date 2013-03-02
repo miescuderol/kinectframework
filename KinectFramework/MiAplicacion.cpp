@@ -18,7 +18,6 @@ bool MiAplicacion::initComponentes() {
 		return false;
 	}
 
-
 	// Crear niveles
 	cout << "Creando Niveles... ";
 	Escena * nivelPrueba = new NivelPrueba(getSensor());

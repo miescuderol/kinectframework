@@ -42,7 +42,7 @@ void Sensor::notifyAllManoPerdida(JugadorID manoPerdida) {
 ReconocedorBasico * Sensor::buscarReconocedorBasico(std::string idRecBasico) {
 	m_reconocedoresBasicos.lock();
 	if(reconocedoresBasicos.find(idRecBasico) == reconocedoresBasicos.end()){
-		reconocedoresBasicos[idRecBasico] = new ReconocedorBasico(8, 70); //cambiar los parámetros por constantes
+		reconocedoresBasicos[idRecBasico] = new ReconocedorBasico(70); //cambiar los parámetros por constantes
 	}
 	ReconocedorBasico * reconocedorBasicoAux;
 	reconocedorBasicoAux = reconocedoresBasicos[idRecBasico];
@@ -165,15 +165,13 @@ const Punto3f * Sensor::getMano( JugadorID jugador ) const
 	return NULL;
 }
 
-const Esqueleto * Sensor::getArticulaciones( JugadorID jugador ) const
-{
+const Esqueleto * Sensor::getArticulaciones( JugadorID jugador ) const {
 	if (jugadores.find(jugador) != jugadores.end())
 		return jugadores.at(jugador);
 	return NULL;
 }
 
-int Sensor::startReconocedor( JugadorID jugador, int articulacion, GestoPatron *patron )
-{
+int Sensor::startReconocedor( JugadorID jugador, int articulacion, GestoPatron *patron ) {
 	if (!isTrackingPlayer(jugador))
 		return -1;
 
@@ -207,7 +205,10 @@ int Sensor::startReconocedor( JugadorID jugador, int articulacion, GestoPatron *
 
 bool Sensor::stopReconocedor( int idRec ) {
 	if(reconocedores.find(idRec) != reconocedores.end())
-		return reconocedores.erase(idRec);
+		if (reconocedores[idRec]->getCantListeners() == 0) {
+			delete reconocedores[idRec];
+			return reconocedores.erase(idRec);
+		}
 	return false;
 }
 
@@ -404,6 +405,13 @@ bool Sensor::isTracking() {
 	return false;
 }
 
+std::vector<JugadorID> Sensor::getJugadoresActivos() {
+	std::vector<JugadorID> jugadoresActivos;
+	for (std::map<JugadorID, Esqueleto*>::const_iterator it = jugadores.begin(); it != jugadores.end(); it++)
+		jugadoresActivos.push_back(it->first);
+	return jugadoresActivos;
+}
+
 void Sensor::removeListenerGesto( ListenerGesto * lg, int idRec ) {
 	m_reconocedores.lock();
 	if (reconocedores.find(idRec) != reconocedores.end()) {
@@ -416,12 +424,10 @@ void Sensor::removeListenerJugadorNuevo( ListenerJugadorNuevo * lnj ) {
 	m_listenersJugadorNuevo.lock();
 	bool encontrado = false;
 	std::vector<ListenerJugadorNuevo*>::const_iterator it;
-	for (it = listenersJugadorNuevo.begin(); it != listenersJugadorNuevo.end();) {
+	for (it = listenersJugadorNuevo.begin(); it != listenersJugadorNuevo.end(); it++) {
 		if (*it == lnj) {
-			encontrado = true;
-			listenersJugadorNuevo.erase(it++);
-		} else {
-			++it;
+			listenersJugadorNuevo.erase(it);
+			break;
 		}
 	}
 	m_listenersJugadorNuevo.unlock();
@@ -431,12 +437,10 @@ void Sensor::removeListenerJugadorPerdido( ListenerJugadorPerdido *ljp ) {
 	m_listenersJugadorPerdido.lock();
 	bool encontrado = false;
 	std::vector<ListenerJugadorPerdido*>::const_iterator it;
-	for (it = listenersJugadorPerdido.begin(); it != listenersJugadorPerdido.end();) {
+	for (it = listenersJugadorPerdido.begin(); it != listenersJugadorPerdido.end(); it++) {
 		if (*it == ljp) {
-			encontrado = true;
-			listenersJugadorPerdido.erase(it++);
-		} else {
-			++it;
+			listenersJugadorPerdido.erase(it);
+			break;
 		}
 	}
 	m_listenersJugadorPerdido.unlock();
@@ -446,12 +450,10 @@ void Sensor::removeListenerJugadorCalibrado( ListenerJugadorCalibrado * ljc ) {
 	m_listenersJugadorCalibrado.lock();
 	bool encontrado = false;
 	std::vector<ListenerJugadorCalibrado*>::const_iterator it;
-	for (it = listenersJugadorCalibrado.begin(); it != listenersJugadorCalibrado.end();) {
+	for (it = listenersJugadorCalibrado.begin(); it != listenersJugadorCalibrado.end(); it++) {
 		if (*it == ljc) {
-			encontrado = true;
-			listenersJugadorCalibrado.erase(it++);
-		} else {
-			++it;
+			listenersJugadorCalibrado.erase(it);
+			break;
 		}
 	}
 	m_listenersJugadorCalibrado.unlock();
@@ -461,12 +463,10 @@ void Sensor::removeListenerManoNueva( ListenerManoNueva * lmn ) {
 	m_listenersManoNueva.lock();
 	bool encontrado = false;
 	std::vector<ListenerManoNueva*>::const_iterator it;
-	for (it = listenersManoNueva.begin(); it != listenersManoNueva.end();) {
+	for (it = listenersManoNueva.begin(); it != listenersManoNueva.end(); it++) {
 		if (*it == lmn) {
-			encontrado = true;
-			listenersManoNueva.erase(it++);
-		} else {
-			++it;
+			listenersManoNueva.erase(it);
+			break;
 		}
 	}
 	m_listenersManoNueva.unlock();
@@ -476,14 +476,13 @@ void Sensor::removeListenerManoPerdida( ListenerManoPerdida * lmp ) {
 	m_listenersManoPerdida.lock();
 	bool encontrado = false;
 	std::vector<ListenerManoPerdida*>::const_iterator it;
-	for (it = listenersManoPerdida.begin(); it != listenersManoPerdida.end();) {
+	for (it = listenersManoPerdida.begin(); it != listenersManoPerdida.end(); it++) {
 		if (*it == lmp) {
-			encontrado = true;
 			listenersManoPerdida.erase(it++);
-		} else {
-			++it;
+			break;
 		}
 	}
 	m_listenersManoPerdida.unlock();
 }
+
 

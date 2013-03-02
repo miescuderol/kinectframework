@@ -17,7 +17,7 @@ class ReconocedorBasico
 
 public:
 
-	ReconocedorBasico(int divisions, float deadZone);
+	ReconocedorBasico(float deadZone);
 	/*!<
 	 * Crea una instancia de ReconocedorBasico. 
 	 * \param divisions determina la cantidad de divisiones en cada plano de la esfera reconocedora.
@@ -52,9 +52,6 @@ private:
 	std::vector<ListenerMovimiento*> listeners;
 	float prevX, prevY, prevZ;
 	float deadZone;
-	int divisions;
-	float gamma;
-	float displacement;
 
 };
 
