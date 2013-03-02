@@ -310,6 +310,10 @@ public:
 	* \return bool.
 	*/
 
+	std::vector<JugadorID> getJugadoresActivos();
+	/*!<
+	* Devuelve un vector con todos los identificadores de jugadores activos.
+	*/
 
 	int startReconocedor(JugadorID jugador, int articulacion, GestoPatron *patron);
 	/*!<

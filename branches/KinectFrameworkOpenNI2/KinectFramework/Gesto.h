@@ -6,33 +6,38 @@ class Gesto
 {
 public:
 
+	Gesto();
+	~Gesto();
+
 	// Getters
-	const int getID();
+	const std::string getNombre();
 	const Punto3f getPosInicial();
 	const Punto3f getPosFinal();
 
 	
 	const long int getDuracion();
 	/*!< Devuelve la duración del gesto en milisegundos*/
-	const Articulacion * getArticulacion();
+	const std::string getArticulacion();
 
-	
 	const std::time_t getTiempo() const;
 	/*!< Devuelve el momento (tiempo) en el que se hizo el gesto*/
 
 	// Setters (hechos de esta forma se pueden encadenar, todos retornan this)
-	Gesto * setID(int id);
+	Gesto * setNombre(std::string nombre);
 	Gesto * setPosInicial(Punto3f pos);
 	Gesto * setPosFinal(Punto3f pos);
 	Gesto * setTimeInMillis(long int time);
-	Gesto * setArticulacion(const Articulacion * articulacion);
+	Gesto * setArticulacion(std::string idJugador_articulacion);
+	Gesto * setTiempo(std::time_t t);
 	
 private:
 
-	int id;
+	std::string nombre;
 	Punto3f posInicial;
 	Punto3f posFinal;
 	long int timeInMillis;
-	const Articulacion * articulacion;
+	std::time_t tiempo;
+	std::string articulacion;
+
 };
 

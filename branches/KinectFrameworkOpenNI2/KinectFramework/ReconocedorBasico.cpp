@@ -5,13 +5,10 @@
 
 #define PI 3.14159
 
-ReconocedorBasico::ReconocedorBasico(int divisiones, float deadZone) {
-	this->divisions = divisiones;
+ReconocedorBasico::ReconocedorBasico(float deadZone) {
 	this->deadZone = deadZone;
-	gamma = (float) (2*PI)/divisions;
-	displacement = (divisions/2-1)*gamma/2;
 	prevX = prevY = prevZ = 0;
-	ultimoMovimiento = NULL;
+	ultimoMovimiento = new Movimiento();
 }
 
 ReconocedorBasico::~ReconocedorBasico(void) {
@@ -20,64 +17,48 @@ ReconocedorBasico::~ReconocedorBasico(void) {
 
 void ReconocedorBasico::setNewPosition(float x, float y, float z) {
 
-	//std::cout << "RB: (" << x <<", " << y << ", " << z << ")" << std::endl;
-
 	Movimiento * movimiento = new Movimiento();
 
 	float dx = x - prevX;
 	float dy = y - prevY;
 	float dz = z - prevZ;
 
-	//std::cout << "dx:" << dx << " dy:" << dy << " dz:" << dz << std::endl;
-
-	double moduloXZ = sqrt(pow(dx,2)+pow(dz,2));
-	double moduloXY = sqrt(pow(dx,2)+pow(dy,2));
-	double modulo = sqrt(pow(dx,2)+pow(dy,2)+pow(dz,2));
-
 	prevX = x;
 	prevY = y;
 	prevZ = z;
-			
-	if (modulo < deadZone) {
-		delete movimiento;
-		return;
-	}
-	
-	if (moduloXZ > deadZone) {
-		double alpha = asin(dx/moduloXZ);
 
-		if (alpha-displacement < 0) alpha += 2*PI;
+	int movimientoX = 0;
+	if (abs(dx) > deadZone)
+		movimientoX = dx > 0 ? Movimiento::DERECHA : Movimiento::IZQUIERDA;
 
-		int movimientoHorizontal = floor((alpha-displacement)/(2*gamma));
+	int movimientoY = 0;
+	if (abs(dy) > deadZone)
+		movimientoY = dy > 0 ? Movimiento::ARRIBA : Movimiento::ABAJO;
 
-		if (dx < 0 && movimientoHorizontal != 0) movimientoHorizontal = divisions - movimientoHorizontal;
+	int movimientoZ = 0;
+	if (abs(dz) > deadZone)
+		movimientoZ = dz > 0 ? Movimiento::ADELANTE : Movimiento::ATRAS;
 
-		movimiento->setDireccionHorizontal(movimientoHorizontal);
+	if (movimientoX == 0 && movimientoY == 0 && movimientoZ == 0) return;
 
-		std::cout << "MH: " << movimientoHorizontal << "    ";
-	}
-	
-	if (moduloXY > deadZone) {
-		double beta = asin(dy/moduloXY);
+	movimiento->setDireccionX(movimientoX);
+	movimiento->setDireccionY(movimientoY);
+	movimiento->setDireccionZ(movimientoZ);
 
-		if (beta-displacement < 0) beta += 2*PI;
-	
-		int movimientoVertical = floor((beta-displacement)/gamma);
+	if (*movimiento == *ultimoMovimiento) return;
 
-		if (dx < 0 && movimientoVertical != 0) movimientoVertical = divisions - movimientoVertical;
+	movimiento->setX(x);
+	movimiento->setY(y);
+	movimiento->setZ(z);
+	std::time_t tiempo;
+	time(&tiempo);
+	movimiento->setTiempo(tiempo);
 
-		movimiento->setDireccionVertical(movimientoVertical);
-
-	}
-
-	if (ultimoMovimiento != NULL && *movimiento == *ultimoMovimiento) return;
-
-	if (movimiento->getDireccionHorizontal() != Movimiento::SIN_DIRECCION || 
-		movimiento->getDireccionVertical() != Movimiento::SIN_DIRECCION) {
+	if (movimiento->getDireccionX() != Movimiento::SIN_DIRECCION || 
+		movimiento->getDireccionY() != Movimiento::SIN_DIRECCION) {
 		for (unsigned int i = 0; i < listeners.size(); i++)
 			listeners.at(i)->updateMovimiento(movimiento);
 		ultimoMovimiento = movimiento;
-		std::cout << "MV: " << movimiento->getDireccionVertical() << std::endl;
 	}
 }
 

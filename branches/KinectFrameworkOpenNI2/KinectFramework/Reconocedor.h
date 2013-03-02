@@ -49,6 +49,11 @@ public:
 	 * Elimina listener de los objetos suscriptos mediante addListener(ListenerGesto * listener).
 	 */
 
+	int getCantListeners();
+	/*!<
+	 * \return la cantidad de listeners suscriptos a eventos de este Reconocedor.
+	 */
+
 	void updateMovimiento(Movimiento * m);
 	/*!<
 	 * Realiza una iteración del ciclo de actualización para la detección de gestos.
@@ -68,6 +73,7 @@ private:
 //	Kinect::Joint joint;
 //	JugadorID idJugador;
 	std::string idJugador_Art;
-
+	Punto3f puntoInicial;
+	std::time_t tiempoInicial;
 };
 
