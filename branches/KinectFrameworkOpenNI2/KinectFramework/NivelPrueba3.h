@@ -4,16 +4,16 @@
 #include "Rendering.h"
 #include "Renderizable.h"
 
-class NivelPrueba : public Escena, 
-					public ListenerJugadorNuevo, 
-					public ListenerJugadorPerdido, 
-					public ListenerJugadorCalibrado,
-					public ListenerGesto,
-					public Renderizable
+class NivelPrueba3 : public Escena, 
+	public ListenerJugadorNuevo, 
+	public ListenerJugadorPerdido, 
+	public ListenerJugadorCalibrado,
+	public ListenerGesto,
+	public Renderizable
 {
 public:
-	NivelPrueba(Sensor * kinect, Rendering * rendering);
-	~NivelPrueba();
+	NivelPrueba3(Sensor * kinect, Rendering * rendering);
+	~NivelPrueba3();
 
 	void cargar(Escena * nivelAnt);
 

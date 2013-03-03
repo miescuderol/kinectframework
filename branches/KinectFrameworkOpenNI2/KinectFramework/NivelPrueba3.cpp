@@ -1,17 +1,17 @@
-#include "NivelPrueba2.h"
+#include "NivelPrueba3.h"
 #include <iostream>
 
-NivelPrueba2::NivelPrueba2(Sensor * kinect, Rendering * rendering) {
+NivelPrueba3::NivelPrueba3(Sensor * kinect, Rendering * rendering) {
 	this->kinect = kinect;
 	this->rendering = rendering;
 }
 
 
-NivelPrueba2::~NivelPrueba2(void) {
+NivelPrueba3::~NivelPrueba3(void) {
 
 }
 
-void NivelPrueba2::cargar(Escena * nivelAnt) {
+void NivelPrueba3::cargar(Escena * nivelAnt) {
 	ciclos = 0;
 	ciclosGesto = 0;
 	cantGestos = 0;
@@ -29,16 +29,16 @@ void NivelPrueba2::cargar(Escena * nivelAnt) {
 	rendering->setEscena(this);
 }
 
-bool NivelPrueba2::isTerminada() {
+bool NivelPrueba3::isTerminada() {
 	return cantGestos > 10;
 }
 
-void NivelPrueba2::update() {
+void NivelPrueba3::update() {
 	ciclos++;
 	if (gestoDetectado)
 		ciclosGesto++;
 	system("cls");
-	std::cout << "Nivel 2 - (" << cantGestos << "/10) gestos detectados." << std::endl;
+	std::cout << "Nivel 3 - (" << cantGestos << "/10) gestos detectados." << std::endl;
 	std::cout << "Jugadores: ";
 	for (int i = 0; i < jugadores.size(); i++)
 		std::cout << jugadores[i] << " ";
@@ -67,15 +67,15 @@ void NivelPrueba2::update() {
 	}
 }
 
-void NivelPrueba2::updateJugadorNuevo(JugadorID user) {
-	std::cout << "Jugador " << user << " encontrado en el nivel 2" << std::endl;
+void NivelPrueba3::updateJugadorNuevo(JugadorID user) {
+	std::cout << "Jugador " << user << " encontrado en el nivel 3" << std::endl;
 }
 
-Estado NivelPrueba2::getEstadoFinal() {
+Estado NivelPrueba3::getEstadoFinal() {
 	return 1;
 }
 
-void NivelPrueba2::descargar() {
+void NivelPrueba3::descargar() {
 	bool rec1, rec2;
 	rec1 = kinect->stopReconocedor(idRec);
 	rec2 = kinect->stopReconocedor(idRec2);
@@ -86,7 +86,7 @@ void NivelPrueba2::descargar() {
 	kinect->removeListenerJugadorNuevo(this);
 }
 
-void NivelPrueba2::updateJugadorPerdido( JugadorID user ) {
+void NivelPrueba3::updateJugadorPerdido( JugadorID user ) {
 	std::cout << "updateJugadorPerdido: " << user << std::endl;
 	kinect->removeListenerGesto(this, idRec);
 	for (std::vector<JugadorID>::iterator it = jugadores.begin(); it != jugadores.end();) {
@@ -97,7 +97,7 @@ void NivelPrueba2::updateJugadorPerdido( JugadorID user ) {
 	}
 }
 
-void NivelPrueba2::updateJugadorCalibrado( JugadorID user ) {
+void NivelPrueba3::updateJugadorCalibrado( JugadorID user ) {
 	std::cout << "Jugador " << user << " calibrado." << std::endl;
 	jugadorActivo = user;
 	jugadores.push_back(user);
@@ -122,37 +122,32 @@ void NivelPrueba2::updateJugadorCalibrado( JugadorID user ) {
 	adelanteArriba.setDireccionY(Movimiento::ARRIBA);
 	adelanteArriba.setDireccionZ(Movimiento::ADELANTE);
 
-	// Gesto ABAJO
-	GestoPatron * gesto = new GestoPatron("ABAJO");
-	
-	gesto->addMovement(abajo);
-	idRec = kinect->startReconocedor(user, NiTEEsqueleto::MANO_IZQ, gesto);
-	kinect->addListenerGesto(this, idRec);
+	// Gesto ONDA ONDA CON LA RODILLA
+	GestoPatron * gesto = new GestoPatron("ONDA ONDA CON LA RODILLA!!1!uno!");
 
-	//Gesto AdelanteArriba - Izquierda
-	GestoPatron * ele = new GestoPatron("SUPER GESTO RE DIFICIL BUENA CAPO!");
-	
-	ele->addMovement(adelanteArriba);
-	ele->addMovement(izquierda);
-	idRec2 = kinect->startReconocedor(user, NiTEEsqueleto::MANO_DER, gesto);
-	kinect->addListenerGesto(this, idRec2);
+	gesto->addMovement(arriba);
+	gesto->addMovement(abajo);
+	gesto->addMovement(arriba);
+	gesto->addMovement(abajo);
+	idRec = kinect->startReconocedor(user, NiTEEsqueleto::RODILLA_DER, gesto);
+	kinect->addListenerGesto(this, idRec);
 }
 
-void NivelPrueba2::updateGesto( Gesto * m ) {
+void NivelPrueba3::updateGesto( Gesto * m ) {
 	std::cout << " Notificado." << std::endl;
 	gestoDetectado = true;
 	cantGestos++;
 	gesto = m;
 }
 
-void NivelPrueba2::getColorFondo( int& r, int& g, int& b ) {
+void NivelPrueba3::getColorFondo( int& r, int& g, int& b ) {
 	if (jugadores.size() > 0) {
 		const Esqueleto * esq = kinect->getArticulaciones(jugadores[0]);
 		if (esq == NULL) return;
 		const Articulacion * art = esq->getArticulacion(NiTEEsqueleto::MANO_DER);
-		g = ((float)255/(float)1600)*(art->getPosicion()->X()+800);
+		b = ((float)255/(float)1600)*(art->getPosicion()->X()+800);
+		g = 0;
 		r = 0;
-		b = 0;
 	} else {
 		r = 0;
 		g = 0;

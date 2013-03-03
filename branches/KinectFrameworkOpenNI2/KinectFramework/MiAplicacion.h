@@ -2,6 +2,7 @@
 #include "Aplicacion.h"
 #include "Kinect.h"
 #include "Sensor.h"
+#include "Rendering.h"
 
 class MiAplicacion :
 	public Aplicacion
@@ -15,6 +16,8 @@ private:
 	bool initComponentes();
 
 	void draw();
+
+	Rendering * rendering;
 
 };
 

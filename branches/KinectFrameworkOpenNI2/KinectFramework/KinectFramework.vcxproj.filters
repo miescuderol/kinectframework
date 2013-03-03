@@ -87,6 +87,18 @@
     <ClInclude Include="ListenerJugadorNuevo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="NivelPrueba3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SubsistemaPrueba.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderizable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ReconocedorBasico.cpp">
@@ -126,6 +138,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GrafoEscenas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NivelPrueba3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SubsistemaPrueba.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

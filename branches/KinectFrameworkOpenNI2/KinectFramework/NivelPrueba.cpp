@@ -3,13 +3,9 @@
 #include <iostream>
 
 
-NivelPrueba::NivelPrueba(Sensor * kinect) {
+NivelPrueba::NivelPrueba(Sensor * kinect, Rendering * rendering) {
 	this->kinect = kinect;
-	ciclos = 0;
-	ciclosGesto = 0;
-	cantGestos = 0;
-	jugadorActivo = 100000000;
-	gestoDetectado = false;
+	this->rendering = rendering;
 }
 
 
@@ -18,16 +14,25 @@ NivelPrueba::~NivelPrueba(void) {
 }
 
 void NivelPrueba::cargar(Escena * nivelAnt) {
+	ciclos = 0;
+	ciclosGesto = 0;
+	cantGestos = 0;
+	jugadorActivo = 100000000;
+	gestoDetectado = false;
 	std::cout << "Cargando NivelPrueba" << std::endl;
 	float i = 0;
 	kinect->addListenerJugadorNuevo(this);
 	kinect->addListenerJugadorPerdido(this);
 	kinect->addListenerJugadorCalibrado(this);
+	std::vector<JugadorID> jugadoresActivos = kinect->getJugadoresActivos();
+	for (int i = 0; i < jugadoresActivos.size(); i++)
+		updateJugadorCalibrado(jugadoresActivos[i]);
 	while (i < 30000) i++;
+	rendering->setEscena(this);
 }
 
 bool NivelPrueba::isTerminada() {
-	return cantGestos > 10;
+	return cantGestos > 10 || cantGestos < -5;
 }
 
 void NivelPrueba::update() {
@@ -35,7 +40,7 @@ void NivelPrueba::update() {
 	if (gestoDetectado)
 		ciclosGesto++;
 	system("cls");
-	std::cout << "Nivel 1 - (" << cantGestos << "/10) gestos detectados." << std::endl;
+	std::cout << "Nivel 1 - " << cantGestos << " puntos." << std::endl;
 	std::cout << "Jugadores: ";
 	for (int i = 0; i < jugadores.size(); i++)
 		std::cout << jugadores[i] << " ";
@@ -69,7 +74,10 @@ void NivelPrueba::updateJugadorNuevo(JugadorID user) {
 }
 
 Estado NivelPrueba::getEstadoFinal() {
-	return 1;
+	if (cantGestos > 10)
+		return 1;
+	else 
+		return 2;
 }
 
 void NivelPrueba::descargar() {
@@ -121,13 +129,31 @@ void NivelPrueba::updateJugadorCalibrado( JugadorID user ) {
 	izquierda.setDireccionY(Movimiento::NO_IMPORTA);
 	izquierda.setDireccionZ(Movimiento::NO_IMPORTA);
 	ele->addMovement(izquierda);
-	idRec2 = kinect->startReconocedor(user, NiTEEsqueleto::MANO_IZQ, ele);
+	idRec2 = kinect->startReconocedor(user, NiTEEsqueleto::MANO_IZQ, gesto);
 	kinect->addListenerGesto(this, idRec2);
 }
 
 void NivelPrueba::updateGesto( Gesto * m ) {
 	std::cout << " Notificado." << std::endl;
 	gestoDetectado = true;
-	cantGestos++;
+	if (m->getNombre() == "ELE")
+		cantGestos--;
+	else
+		cantGestos++;
 	gesto = m;
+}
+
+void NivelPrueba::getColorFondo( int& r, int& g, int& b ) {
+	if (jugadores.size() > 0) {
+		const Esqueleto * esq = kinect->getArticulaciones(jugadores[0]);
+		if (esq == NULL) return;
+		const Articulacion * art = esq->getArticulacion(NiTEEsqueleto::MANO_DER);
+		r = ((float)255/(float)1600)*(art->getPosicion()->X()+800);
+		g = 0;
+		b = 0;
+	} else {
+		r = 0;
+		g = 0;
+		b = 0;
+	}
 }
