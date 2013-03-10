@@ -1,4 +1,5 @@
 #include "MiAplicacion.h"
+#include "MenuPrincipal.h"
 #include "NivelPrueba.h"
 #include "NivelPrueba2.h"
 #include "NivelPrueba3.h"
@@ -15,9 +16,14 @@ MiAplicacion::MiAplicacion() {
 
 bool MiAplicacion::initComponentes() {
 
-	if(!getSensor()->enableGenerator(Kinect::TipoGenerador::USER_GENERATOR)) {
-		cout << "error al inicializar el generador" << endl;
-		return false;
+	/*if(!getSensor()->enableGenerator(Kinect::TipoGenerador::USER_GENERATOR)) {
+	cout << "error al inicializar el generador de usuarios" << endl;
+	return false;
+	}*/
+
+	if(!getSensor()->enableGenerator(Kinect::TipoGenerador::HAND_GENERATOR)) {
+	cout << "error al inicializar el generador de manos" << endl;
+	return false;
 	}
 
 	rendering = new Rendering();
@@ -25,6 +31,7 @@ bool MiAplicacion::initComponentes() {
 
 	// Crear niveles
 	cout << "Creando Niveles... ";
+	Escena * menuPrincipal = new MenuPrincipal(getSensor(), rendering);
 	Escena * nivelPrueba = new NivelPrueba(getSensor(), rendering);
 	Escena * nivelPrueba2 = new NivelPrueba2(getSensor(), rendering);
 	Escena * nivelPrueba3 = new NivelPrueba3(getSensor(), rendering);
@@ -33,6 +40,8 @@ bool MiAplicacion::initComponentes() {
 	// Crear grafo de niveles y llenarlo
 	cout << "Creando Grafo de Niveles" << endl;
 	GrafoEscenas * grafoNiveles = new GrafoEscenas();
+	grafoNiveles->addEscena(menuPrincipal);
+	grafoNiveles->addArco(menuPrincipal, 1, nivelPrueba);
 	grafoNiveles->addEscena(nivelPrueba);
 	cout << "Agregado nivelPrueba";
 	grafoNiveles->addEscena(nivelPrueba2);
@@ -42,7 +51,7 @@ bool MiAplicacion::initComponentes() {
 	grafoNiveles->addArco(nivelPrueba, 2, nivelPrueba3);
 	grafoNiveles->addArco(nivelPrueba2, 1, nivelPrueba);
 	cout << "Hecho el arco entre niveles." << endl;
-	grafoNiveles->setInicio(nivelPrueba);
+	grafoNiveles->setInicio(menuPrincipal);
 	grafoNiveles->setFinal(nivelPrueba3);
 
 	// Agregarle el grafo de niveles

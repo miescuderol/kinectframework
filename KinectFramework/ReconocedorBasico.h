@@ -45,6 +45,11 @@ public:
 	/*!<
 	 * Suscribe listener a los eventos de deteccion de [Movimientos](@ref Movimiento).
 	 */
+
+	void removeListener(ListenerMovimiento * listener);
+	/*!<
+	 * Elimina listener de los objetos suscriptos mediante addMovimiento(ListenerMovimiento* listener).
+	 */
 	
 private:
 

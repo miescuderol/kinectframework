@@ -35,6 +35,8 @@ public:
 
 	void getColorFondo( int& r, int& g, int& b );
 
+	void renderizar();
+
 private:
 
 	Sensor * kinect;

@@ -254,31 +254,35 @@ bool Sensor::isJugadorPerdido(JugadorID &player) {
 			jugadores.erase(jugadores.find(player));
 		m_jugadores.unlock();
 
-		//Borra los reconocedores basicos asociados al jugador
-		m_reconocedoresBasicos.lock();
-		for(std::map<std::string, ReconocedorBasico*>::iterator it = reconocedoresBasicos.begin(); it != reconocedoresBasicos.end();) {
-			std::string id_art = it->first;
-			JugadorID id = atoi(id_art.substr(0, id_art.find_first_of('_')).c_str());
-			if (id == player) {
-				reconocedoresBasicos.erase(it++);
-			} else {
-				++it;
-			}
-		}
-		m_reconocedoresBasicos.unlock();
-
 		//Borra los reconocedores asociados al jugador
 		m_reconocedores.lock();
 		for (std::map<int, Reconocedor*>::iterator it = reconocedores.begin(); it != reconocedores.end();) {
 			std::string id_art = it->second->getIDJugador_Art();
 			JugadorID id = atoi(id_art.substr(0, id_art.find_first_of('_')).c_str());
 			if (id == player) {
-				reconocedores.erase(it++);
+				Reconocedor * r = it->second;
+				delete r;
+				it = reconocedores.erase(it);
 			} else {
 				++it;
 			}
 		}
 		m_reconocedores.unlock();
+
+		//Borra los reconocedores basicos asociados al jugador
+		m_reconocedoresBasicos.lock();
+		for(std::map<std::string, ReconocedorBasico*>::iterator it = reconocedoresBasicos.begin(); it != reconocedoresBasicos.end();) {
+			std::string id_art = it->first;
+			JugadorID id = atoi(id_art.substr(0, id_art.find_first_of('_')).c_str());
+			if (id == player) {
+				ReconocedorBasico * rb = it->second;
+				delete rb;
+				it = reconocedoresBasicos.erase(it);
+			} else {
+				++it;
+			}
+		}
+		m_reconocedoresBasicos.unlock();
 
 		return true;
 	}

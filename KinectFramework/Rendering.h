@@ -15,9 +15,18 @@ public:
 
 	void setEscena(Renderizable * escena);
 
+	float screenToWorldX(int x);
+
+	float screenToWorldY(int y);
+
+	void setWorldX(int xRes);
+
+	void setWorldY(int yRes);
+
 private:
 	int estadoOK;
 	Renderizable * escena;
+	int width, height;
 
 };
 

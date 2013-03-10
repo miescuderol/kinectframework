@@ -12,7 +12,10 @@ Rendering::~Rendering(void) {
 void Rendering::setup() {
 	std::cout << "Inicializando el subsistema de rendering...";
 	estadoOK = glfwInit();
-	estadoOK = glfwOpenWindow( 300,300, 0,0,0,0,0,0, GLFW_WINDOW );
+	width = 640;
+	height = 480;
+	estadoOK = glfwOpenWindow( width, height, 0,0,0,0,0,0, GLFW_WINDOW );
+	glDisable(GL_LIGHTING);
 	if (!estadoOK)
 		glfwTerminate();
 	std::cout << " inicializado." << std::endl;
@@ -20,25 +23,7 @@ void Rendering::setup() {
 
 bool Rendering::update() {
 	if (estadoOK) {
-		// OpenGL rendering goes here...
-		glClear( GL_COLOR_BUFFER_BIT );
-		int r, g, b;
-		escena->getColorFondo(r, g, b);
-		std::cout << "      Rendering, RGB: " << r << "," << g << "," << b << std::endl;
-		glColor3f(((float)r/255), ((float)g/255), ((float)b/255));
-		glBegin(GL_QUADS); // Start drawing a quad primitive  
-
-		glVertex3f(-1.0f, -1.0f, 0.0f); // The bottom left corner  
-		glVertex3f(-1.0f, 1.0f, 0.0f); // The top left corner  
-		glVertex3f(1.0f, 1.0f, 0.0f); // The top right corner  
-		glVertex3f(1.0f, -1.0f, 0.0f); // The bottom right corner  
-
-		glEnd();  
-		// Swap front and back rendering buffers
-		glfwSwapBuffers();
-		// Check if ESC key was pressed or window was closed
-		estadoOK = !glfwGetKey( GLFW_KEY_ESC ) &&
-			glfwGetWindowParam( GLFW_OPENED );
+		escena->renderizar();
 		return true;
 	} else {
 		return false;
@@ -54,3 +39,13 @@ void Rendering::shutdown() {
 void Rendering::setEscena( Renderizable * escena ) {
 	this->escena = escena;
 }
+
+float Rendering::screenToWorldX( int x ) {
+	return (float)(x-(width/2))/(float)width;
+}
+
+float Rendering::screenToWorldY( int y ) {
+	return (float)(y-height/2)/(float)height;
+}
+
+
