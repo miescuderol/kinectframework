@@ -13,7 +13,7 @@ Reconocedor::Reconocedor(GestoPatron * gestoPatron, std::string idJugador_Art, R
 }
 
 Reconocedor::~Reconocedor(void) {
-
+	this->recBasicos->removeListener(this);
 }
 
 const Gesto * Reconocedor::getUltimoGesto()

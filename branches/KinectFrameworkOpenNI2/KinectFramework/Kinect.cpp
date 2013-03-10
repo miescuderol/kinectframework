@@ -43,6 +43,8 @@ JugadorID Kinect::jugadorPerdido()
 
 JugadorID Kinect::manoNueva( Punto3f *& mano )
 {
+	if (_manoNueva == NULL)
+		return -1;
 	JugadorID aux = _manoNueva->getId();
 	mano = new Punto3f(_manoNueva->getPosition().x, _manoNueva->getPosition().y, _manoNueva->getPosition().z);
 	_manoNueva = NULL;
@@ -51,6 +53,8 @@ JugadorID Kinect::manoNueva( Punto3f *& mano )
 
 JugadorID Kinect::manoActualizada( Punto3f *& mano )
 {
+	if (_manoActualizada == NULL)
+		return -1;
 	JugadorID aux = _manoActualizada->getId();
 	mano = new Punto3f(_manoActualizada->getPosition().x, _manoActualizada->getPosition().y, _manoActualizada->getPosition().z);
 	_manoActualizada = NULL;
@@ -59,6 +63,8 @@ JugadorID Kinect::manoActualizada( Punto3f *& mano )
 
 JugadorID Kinect::manoPerdida()
 {
+	if (_manoPerdida == NULL)
+		return -1;
 	JugadorID aux = _manoPerdida->getId();
 	_manoPerdida = NULL;
 	return aux;
@@ -108,10 +114,20 @@ void Kinect::update()
 				jugadoresTrackeados.push_back(usuario.getId());
 			}
 		}
-
 	}
+
 	if (handTracker.isValid()) {
 		handTracker.readFrame(mapaManos);
+
+		const nite::Array<nite::GestureData>& gestures = mapaManos->getGestures();
+		for (int i = 0; i < gestures.getSize(); ++i)
+		{
+			if (gestures[i].isComplete())
+			{
+				nite::HandId newId;
+				handTracker.startHandTracking(gestures[i].getCurrentPosition(), &newId);
+			}
+		}
 
 		const nite::Array<nite::HandData>& manos = mapaManos->getHands();
 		for (int i = 0; i < manos.getSize(); ++i) {
@@ -139,6 +155,11 @@ void Kinect::stop() {
 }
 
 Kinect::Kinect():Sensor(){
+	_manoActualizada = NULL;
+	_manoNueva = NULL;
+	_manoPerdida = NULL;
+	_jugadorPerdido = -1;
+	_jugadorNuevo = -1;
 }
 
 bool Kinect::enableGenerator( TipoGenerador tipo ) {
@@ -180,6 +201,7 @@ bool Kinect::enableGenerator( TipoGenerador tipo ) {
 		break;
 	case Sensor::HAND_GENERATOR:
 		if (handTracker.create(&dispositivo) == nite::STATUS_OK) {
+			handTracker.startGestureDetection(nite::GESTURE_WAVE);
 			generadoresActivos.push_back(Sensor::HAND_GENERATOR);
 			return true;
 		}

@@ -69,3 +69,13 @@ Movimiento * ReconocedorBasico::lastMove() {
 void ReconocedorBasico::addListener(ListenerMovimiento * listener) {
 	listeners.push_back(listener);
 }
+
+void ReconocedorBasico::removeListener( ListenerMovimiento * listener ) {
+	std::vector<ListenerMovimiento*>::iterator it;
+	for (it = listeners.begin(); it != listeners.end();) {
+		if (*it == listener) {
+			listeners.erase(it);
+			break;
+		}
+	}
+}

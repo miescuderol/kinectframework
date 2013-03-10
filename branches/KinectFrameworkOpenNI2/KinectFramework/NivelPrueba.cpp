@@ -1,5 +1,6 @@
 #include "NivelPrueba.h"
 #include "MiAplicacion.h"
+#include <GL/glfw.h>
 #include <iostream>
 
 
@@ -19,6 +20,7 @@ void NivelPrueba::cargar(Escena * nivelAnt) {
 	cantGestos = 0;
 	jugadorActivo = 100000000;
 	gestoDetectado = false;
+	kinect->enableGenerator(Sensor::USER_GENERATOR);
 	std::cout << "Cargando NivelPrueba" << std::endl;
 	float i = 0;
 	kinect->addListenerJugadorNuevo(this);
@@ -156,4 +158,24 @@ void NivelPrueba::getColorFondo( int& r, int& g, int& b ) {
 		g = 0;
 		b = 0;
 	}
+}
+
+void NivelPrueba::renderizar()
+{
+	// OpenGL rendering goes here...
+	glClear( GL_COLOR_BUFFER_BIT );
+	int r, g, b;
+	getColorFondo(r, g, b);
+	std::cout << "      Rendering, RGB: " << r << "," << g << "," << b << std::endl;
+	glColor3f(((float)r/255), ((float)g/255), ((float)b/255));
+	glBegin(GL_QUADS); // Start drawing a quad primitive  
+
+	glVertex3f(-1.0f, -1.0f, 0.0f); // The bottom left corner  
+	glVertex3f(-1.0f, 1.0f, 0.0f); // The top left corner  
+	glVertex3f(1.0f, 1.0f, 0.0f); // The top right corner  
+	glVertex3f(1.0f, -1.0f, 0.0f); // The bottom right corner  
+
+	glEnd();  
+	// Swap front and back rendering buffers
+	glfwSwapBuffers();
 }

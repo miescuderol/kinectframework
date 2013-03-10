@@ -1,4 +1,5 @@
 #include "NivelPrueba2.h"
+#include <GL/glfw.h>
 #include <iostream>
 
 NivelPrueba2::NivelPrueba2(Sensor * kinect, Rendering * rendering) {
@@ -158,4 +159,24 @@ void NivelPrueba2::getColorFondo( int& r, int& g, int& b ) {
 		g = 0;
 		b = 0;
 	}
+}
+
+void NivelPrueba2::renderizar()
+{
+	// OpenGL rendering goes here...
+	glClear( GL_COLOR_BUFFER_BIT );
+	int r, g, b;
+	getColorFondo(r, g, b);
+	std::cout << "      Rendering, RGB: " << r << "," << g << "," << b << std::endl;
+	glColor3f(((float)r/255), ((float)g/255), ((float)b/255));
+	glBegin(GL_QUADS); // Start drawing a quad primitive  
+
+	glVertex3f(-1.0f, -1.0f, 0.0f); // The bottom left corner  
+	glVertex3f(-1.0f, 1.0f, 0.0f); // The top left corner  
+	glVertex3f(1.0f, 1.0f, 0.0f); // The top right corner  
+	glVertex3f(1.0f, -1.0f, 0.0f); // The bottom right corner  
+
+	glEnd();  
+	// Swap front and back rendering buffers
+	glfwSwapBuffers();
 }

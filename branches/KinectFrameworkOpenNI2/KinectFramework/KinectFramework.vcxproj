@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Aplicacion.h" />
+    <ClInclude Include="MenuPrincipal.h" />
     <ClInclude Include="NivelPrueba3.h" />
     <ClInclude Include="OpenNINiTEWrappers.h" />
     <ClInclude Include="Rendering.h" />
@@ -50,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Aplicacion.cpp" />
+    <ClCompile Include="MenuPrincipal.cpp" />
     <ClCompile Include="NivelPrueba3.cpp" />
     <ClCompile Include="Rendering.cpp" />
     <ClCompile Include="Sensor.cpp" />
