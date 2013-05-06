@@ -1,9 +1,11 @@
 #include "MiAplicacion.h"
+#include <GL/glfw.h>
 #include "MenuPrincipal.h"
 #include "NivelPrueba.h"
 #include "NivelPrueba2.h"
 #include "NivelPrueba3.h"
 #include "Rendering.h"
+#include "World.h"
 
 using namespace std;
 
@@ -16,48 +18,47 @@ MiAplicacion::MiAplicacion() {
 
 bool MiAplicacion::initComponentes() {
 
-	/*if(!getSensor()->enableGenerator(Kinect::TipoGenerador::USER_GENERATOR)) {
-	cout << "error al inicializar el generador de usuarios" << endl;
-	return false;
-	}*/
+	if(!getSensor()->enableGenerator(Kinect::TipoGenerador::USER_GENERATOR)) {
+		cout << "MiAplicacion::initComponentes error al inicializar el generador de usuarios" << endl;
+		return false;
+	}
 
-	if(!getSensor()->enableGenerator(Kinect::TipoGenerador::HAND_GENERATOR)) {
+	/*if(!getSensor()->enableGenerator(Kinect::TipoGenerador::HAND_GENERATOR)) {
 	cout << "error al inicializar el generador de manos" << endl;
 	return false;
-	}
+	}*/
 
 	rendering = new Rendering();
 	rendering->setup();
 
 	// Crear niveles
-	cout << "Creando Niveles... ";
+	cout << "MiAplicacion::initComponentes Creando Niveles... ";
 	Escena * menuPrincipal = new MenuPrincipal(getSensor(), rendering);
 	Escena * nivelPrueba = new NivelPrueba(getSensor(), rendering);
-	Escena * nivelPrueba2 = new NivelPrueba2(getSensor(), rendering);
-	Escena * nivelPrueba3 = new NivelPrueba3(getSensor(), rendering);
 	cout << "creados." << endl;
 
 	// Crear grafo de niveles y llenarlo
-	cout << "Creando Grafo de Niveles" << endl;
+	cout << "MiAplicacion::initComponentes Creando Grafo de Niveles" << endl;
 	GrafoEscenas * grafoNiveles = new GrafoEscenas();
-	grafoNiveles->addEscena(menuPrincipal);
-	grafoNiveles->addArco(menuPrincipal, 1, nivelPrueba);
+//	grafoNiveles->addEscena(menuPrincipal);
 	grafoNiveles->addEscena(nivelPrueba);
+//	grafoNiveles->addArco(menuPrincipal, 1, nivelPrueba);
 	cout << "Agregado nivelPrueba";
-	grafoNiveles->addEscena(nivelPrueba2);
-	cout << ", nivelPrueba2";
-	grafoNiveles->addEscena(nivelPrueba3);
-	grafoNiveles->addArco(nivelPrueba, 1, nivelPrueba2);
-	grafoNiveles->addArco(nivelPrueba, 2, nivelPrueba3);
-	grafoNiveles->addArco(nivelPrueba2, 1, nivelPrueba);
 	cout << "Hecho el arco entre niveles." << endl;
-	grafoNiveles->setInicio(menuPrincipal);
-	grafoNiveles->setFinal(nivelPrueba3);
+	grafoNiveles->setInicio(nivelPrueba);
+	grafoNiveles->setFinal(nivelPrueba);
 
 	// Agregarle el grafo de niveles
-	cout << "Agregando el grafo de niveles... ";
+	cout << "MiAplicacion::initComponentes Agregando el grafo de niveles... ";
 	setGrafoJuego(grafoNiveles);
 	cout << "agregado." << endl;
+
+	mundo = new World(rendering->getYRes(), rendering->getXRes(), rendering);
+	mundo->setup();
+	addSubsistemaPostEscena(mundo);
+
+
+	((NivelPrueba*)nivelPrueba)->setWorld(mundo);
 
 	return true;
 }

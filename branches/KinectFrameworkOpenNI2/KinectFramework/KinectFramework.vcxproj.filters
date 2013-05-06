@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="MSA">
+      <UniqueIdentifier>{dbc32c48-bcc1-4180-af55-3e6d6d15f72e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MSA\Include">
+      <UniqueIdentifier>{943f30ca-6a58-4fa2-9fd1-c4b8b837a240}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MSA\src">
+      <UniqueIdentifier>{7822a19b-f39f-45a9-af91-c3a0a3577c56}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ReconocedorBasico.h">
@@ -102,6 +111,72 @@
     <ClInclude Include="MenuPrincipal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSACore-master\src\MSACore.h">
+      <Filter>MSA\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSACore-master\src\MSACore-Cinder.h">
+      <Filter>MSA\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSACore-master\src\MSACoreCommon.h">
+      <Filter>MSA\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSACore-master\src\MSACoreGL.h">
+      <Filter>MSA\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSACore-master\src\MSACoreMath.h">
+      <Filter>MSA\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSACore-master\src\MSACore-OF.h">
+      <Filter>MSA\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAObjCPointer-master\src\MSAObjCPointer.h">
+      <Filter>MSA\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysics.h">
+      <Filter>MSA\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysics2D.h">
+      <Filter>MSA\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysics3D.h">
+      <Filter>MSA\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysicsAttraction.h">
+      <Filter>MSA\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysicsCallbacks.h">
+      <Filter>MSA\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysicsConstraint.h">
+      <Filter>MSA\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysicsDataRecorder.h">
+      <Filter>MSA\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysicsParams.h">
+      <Filter>MSA\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysicsParticle.h">
+      <Filter>MSA\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysicsParticleDrawer.h">
+      <Filter>MSA\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysicsParticleUpdater.h">
+      <Filter>MSA\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysicsSector.h">
+      <Filter>MSA\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysicsSpring.h">
+      <Filter>MSA\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysicsWorld.h">
+      <Filter>MSA\Include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ReconocedorBasico.cpp">
@@ -154,6 +229,15 @@
     </ClCompile>
     <ClCompile Include="MenuPrincipal.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAObjCPointer-master\src\MSAObjCPointer.cpp">
+      <Filter>MSA\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSACore-master\src\MSACoreGL.cpp">
+      <Filter>MSA\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

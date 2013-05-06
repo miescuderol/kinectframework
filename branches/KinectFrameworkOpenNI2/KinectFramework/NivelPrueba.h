@@ -3,12 +3,12 @@
 #include "Kinect.h"
 #include "Rendering.h"
 #include "Renderizable.h"
+#include "World.h"
 
 class NivelPrueba : public Escena, 
 					public ListenerJugadorNuevo, 
 					public ListenerJugadorPerdido, 
 					public ListenerJugadorCalibrado,
-					public ListenerGesto,
 					public Renderizable
 {
 public:
@@ -25,27 +25,26 @@ public:
 
 	Estado getEstadoFinal();
 
-	virtual void descargar();
+	void descargar();
 
 	void updateJugadorPerdido( JugadorID user );
 
 	void updateJugadorCalibrado( JugadorID user );
 
-	void updateGesto( Gesto * m );
-
-	void getColorFondo( int& r, int& g, int& b );
+	void setWorld(World * mundo);
 
 	void renderizar();
+
+	void cargarGL();
 
 private:
 
 	Sensor * kinect;
-	long int ciclos, ciclosGesto;
+	long int ciclos;
 	JugadorID jugadorActivo;
 	std::vector<JugadorID> jugadores;
-	bool gestoDetectado;
-	Gesto * gesto;
-	int idRec, idRec2, cantGestos;
+	bool jugadorCalibrado;
 	Rendering * rendering;
-
+	World * mundo;
+	int ancho, alto;
 };

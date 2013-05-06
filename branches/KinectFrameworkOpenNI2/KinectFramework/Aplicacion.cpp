@@ -14,10 +14,13 @@ void Aplicacion::setup() {
 	for (unsigned int i = 0; i < subsistemasPreEscena.size(); i++) {
 		subsistemasPreEscena[i]->setup();
 	}
+	std::cout << "Aplicacion::setup setup subsistemas pre escena." << std::endl;
 	escenaActiva->cargar(NULL);
+	std::cout << "setup escena." << std::endl;
 	for (unsigned int i = 0; i < subsistemasPostEscena.size(); i++) {
 		subsistemasPostEscena[i]->setup();
 	}
+	std::cout << "Aplicacion::setup setup subsistemas post escena." << std::endl;
 
 }
 
@@ -45,18 +48,18 @@ void Aplicacion::update() {
 void Aplicacion::exit() {
 	std::cout << "exit()... " << std::endl;
 	for (int i = subsistemasPostEscena.size() - 1; i >= 0 ; i--) {
-		std::cout << "cerrando subsistemas post escena" << std::endl;
+		std::cout << "Aplicacion::exit cerrando subsistemas post escena" << std::endl;
 		subsistemasPostEscena[i]->shutdown();
 	}
 	
 	for (int i = subsistemasPreEscena.size() - 1; i >= 0 ; i--) {
-		std::cout << "cerrando subsistemas pre escena" << std::endl;
+		std::cout << "Aplicacion::exit cerrando subsistemas pre escena" << std::endl;
 		subsistemasPreEscena[i]->shutdown();
 	}
 	
 
 	if (sensor != NULL){
-		std::cout << "Cerrando aplicacion." << std::endl;
+		std::cout << "Aplicacion::exit Cerrando aplicacion." << std::endl;
 		sensor->shutdown();
 		//sensor->~Sensor();
 	}
@@ -73,20 +76,26 @@ void Aplicacion::run() {
 
 	if (grafoEscenas == NULL) return;
 
-	std::cout << "Iniciando setup... " << std::endl;
+	std::cout << "Aplicacion::run Iniciando setup... " << std::endl;
 	if(initComponentes()) {
-		std::cout << "componentes inicializados" << std::endl;
+		std::cout << "Aplicacion::run componentes inicializados" << std::endl;
 			
 		setup();
 		std::cout << "hecho." << std::endl;
-		if(escenaActiva == NULL) std::cout << "escena activa es null" << std::endl;
-		std::cout << "Iniciando Game Loop... " << std::endl;
+		if(escenaActiva == NULL) std::cout << "Aplicacion::run escena activa es null" << std::endl;
+		std::cout << "Aplicacion::run Iniciando Game Loop... " << std::endl;
+		double tiempo1, tiempo2;
 		while (!grafoEscenas->isFinal(escenaActiva) || !escenaActiva->isTerminada()) {
+			tiempo1 = glfwGetTime();
 			update();
+			tiempo2 = glfwGetTime();
+			std::cout << "update: "<< (tiempo2 - tiempo1)*1000;
 			draw();
+			tiempo1 = glfwGetTime();
+			std::cout << "	" << (tiempo1 - tiempo2)*1000 << std::endl;
 		}
 	} else
-		std::cout << "error en initComponentes() " << std::endl;
+		std::cout << "Aplicacion::run error en initComponentes() " << std::endl;
 	exit();
 }
 

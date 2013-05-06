@@ -1,4 +1,6 @@
 #include "Sensor.h"
+#include <fstream>
+#include <GL/glfw.h>
 
 /*
  *	PROTECTED
@@ -64,7 +66,7 @@ void Sensor::updateReconocedoresBasicos() {
 			it->second->setNewPosition(esqueleto->getArticulacion(joint)->getPosicion()->X(),
 			esqueleto->getArticulacion(joint)->getPosicion()->Y(),
 			esqueleto->getArticulacion(joint)->getPosicion()->Z());
-		else std::cout << "esqueleto == NULL, id =" << id << ", clave = " << clave << std::endl;
+		else std::cout << "Sensor::updateReconocedoresBasicos esqueleto == NULL, id =" << id << ", clave = " << clave << std::endl;
 	}
 	m_jugadores.unlock();
 	m_reconocedoresBasicos.unlock();
@@ -77,19 +79,19 @@ void Sensor::updateJugadores() {
 
 	JugadorID jugadorNuevo;
 	if(isNuevoJugador(jugadorNuevo)) {
-		std::cout << "nuevo jugador encontrado"<< jugadorNuevo << std::endl;
+		std::cout << "sensor::updateJugadores nuevo jugador encontrado"<< jugadorNuevo << std::endl;
 		notifyAllJugadorNuevo(jugadorNuevo);
 	}
 
 	JugadorID jugadorCalibrado;
 	if(isJugadorCalibrado(jugadorCalibrado)) {
-		std::cout << "nuevo jugador calibrado"<< jugadorCalibrado << std::endl;
+		std::cout << "sensor::updateJugadores nuevo jugador calibrado"<< jugadorCalibrado << std::endl;
 		notifyAllJugadorCalibrado(jugadorCalibrado);
 	}
 
 	JugadorID jugadorPerdido;
 	if(isJugadorPerdido(jugadorPerdido)) {
-		std::cout << "jugador perdido"<< jugadorPerdido << std::endl;
+		std::cout << "sensor::updateJugadores jugador perdido"<< jugadorPerdido << std::endl;
 		notifyAllJugadorPerdido(jugadorPerdido);
 	}
 
@@ -105,11 +107,11 @@ void Sensor::updateManos() {
 
 	JugadorID idManoAux;
 	if (isNuevaMano(idManoAux)) {
-		std::cout << "mano nueva encontrada" << idManoAux << std::endl;
+		std::cout << "sensor::updateManos mano nueva encontrada" << idManoAux << std::endl;
 		notifyAllManoNueva(idManoAux);
 	}
 	if(isManoPerdida(idManoAux)) {
-		std::cout << "mano nueva perdida" << idManoAux << std::endl;
+		std::cout << "sensor::updateManos mano nueva perdida" << idManoAux << std::endl;
 		notifyAllManoPerdida(idManoAux);
 	}
 
@@ -124,11 +126,18 @@ void Sensor::updateManos() {
 
 void Sensor::run() {
 	setup();
+	std::cout << "Sensor::run setup kinect terminado" << std::endl;
 	m_isStarted.lock();
 	started = true;
 	m_isStarted.unlock();
+
+	
+	double tiempo1, tiempo2;
 	while (true) {
+		tiempo1 = glfwGetTime();
 		update();
+		tiempo2 = glfwGetTime();
+		std::cout << "kinect: " << (tiempo2 - tiempo1)*1000 << std::endl;
 		try {
 			boost::this_thread::interruption_point();
 		} catch (boost::thread_interrupted) {
@@ -245,7 +254,7 @@ bool Sensor::isJugadorPerdido(JugadorID &player) {
 	JugadorID jugadorPerdidoID = jugadorPerdido();
 
 	if(jugadorPerdidoID != -1) {
-		std::cout << "ID Jugador Perdido: " << jugadorPerdidoID << std::endl;
+		std::cout << "Sensor::isJugadorPerdido ID Jugador Perdido: " << jugadorPerdidoID << std::endl;
 		player = jugadorPerdidoID;
 
 		//Borra el jugador

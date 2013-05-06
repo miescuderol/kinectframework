@@ -3,6 +3,7 @@
 #include "Kinect.h"
 #include "Sensor.h"
 #include "Rendering.h"
+#include "World.h"
 
 class MiAplicacion :
 	public Aplicacion
@@ -18,6 +19,7 @@ private:
 	void draw();
 
 	Rendering * rendering;
+	World * mundo;
 
 };
 
