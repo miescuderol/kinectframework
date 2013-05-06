@@ -77,9 +77,9 @@ void Kinect::setup()
 
 	Status st = OpenNI::initialize();
 	if(st != openni::STATUS_OK)
-		std::cout << "Error al inicializar OpenNI: " << st << OpenNI::getExtendedError() << std::endl;
+		std::cout << "Kinect::setup Error al inicializar OpenNI: " << st << OpenNI::getExtendedError() << std::endl;
 	if(nite::NiTE::initialize() != nite::STATUS_OK)
-		std::cout << "Error al inicializar NiTE" << std::endl;
+		std::cout << "Kinect::setup Error al inicializar NiTE" << std::endl;
 
 	dispositivo.open(openni::ANY_DEVICE);
 
@@ -163,6 +163,7 @@ Kinect::Kinect():Sensor(){
 }
 
 bool Kinect::enableGenerator( TipoGenerador tipo ) {
+	std::cout << "principio antes del switch enable generator" << std::endl;
 	switch (tipo) {
 	case Sensor::DEPTH_GENERATOR:
 		if(dispositivo.isValid() && dispositivo.hasSensor(SENSOR_DEPTH)) {
@@ -172,7 +173,9 @@ bool Kinect::enableGenerator( TipoGenerador tipo ) {
 				return true;
 			}
 			else {
+				std::cout << "por destruir el dispositivo enable generator" << std::endl;
 				camaraProfundidad.destroy();
+				std::cout << "dispositivo destruido enable generator" << std::endl;
 				return false;
 			}
 		} else
@@ -193,14 +196,16 @@ bool Kinect::enableGenerator( TipoGenerador tipo ) {
 			return false;
 		break;
 	case Sensor::USER_GENERATOR:
+		std::cout << "principio enable generator" << std::endl;
 		if (userTracker.create() == nite::STATUS_OK) {
+			std::cout << "creado el dispositivo sensor_depth en enable generator" << std::endl;
 			generadoresActivos.push_back(Sensor::USER_GENERATOR);
 			return true;
 		}
 		else return false;
 		break;
 	case Sensor::HAND_GENERATOR:
-		if (handTracker.create(&dispositivo) == nite::STATUS_OK) {
+		if (dispositivo.isValid() && handTracker.create(&dispositivo) == nite::STATUS_OK) {
 			handTracker.startGestureDetection(nite::GESTURE_WAVE);
 			generadoresActivos.push_back(Sensor::HAND_GENERATOR);
 			return true;

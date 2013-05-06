@@ -1,6 +1,8 @@
 #pragma once
 #include "subsistema.h"
 #include "Renderizable.h"
+#include <GL/glfw.h>
+#include <string>
 class Rendering
 {
 public:
@@ -23,10 +25,19 @@ public:
 
 	void setWorldY(int yRes);
 
+	GLuint LoadTexture(const char* TextureName);
+
+	int getXRes();
+
+	int getYRes();
+
+	double calcFPS(double theTimeInterval = 1.0, std::string theWindowTitle = "NONE");
+
 private:
 	int estadoOK;
 	Renderizable * escena;
 	int width, height;
 
+	std::string tituloVentana;
 };
 

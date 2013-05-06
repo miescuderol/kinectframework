@@ -1,4 +1,5 @@
 #pragma once
+#include "World.h"
 
 /*! \typedef int Estado 
 * Utilizar int o Estado es indistinto, y fue diseñado de esta manera para agregar semántica a los encabezados de función. 
@@ -69,5 +70,6 @@ public:
 	* realizar la carga (cargar()) de la escena siguiente. También se debe tener en cuenta que es posible que dicha escena necesite de 
 	* algunas de las estructuras del objeto a descargar. Esta responsabilidad es delegada al programador.
 	*/
+
 };
 

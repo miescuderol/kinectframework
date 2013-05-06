@@ -19,6 +19,27 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSACore-master\src\MSACore-Cinder.h" />
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSACore-master\src\MSACore-OF.h" />
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSACore-master\src\MSACore.h" />
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSACore-master\src\MSACoreCommon.h" />
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSACore-master\src\MSACoreGL.h" />
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSACore-master\src\MSACoreMath.h" />
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAObjCPointer-master\src\MSAObjCPointer.h" />
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysics.h" />
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysics2D.h" />
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysics3D.h" />
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysicsAttraction.h" />
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysicsCallbacks.h" />
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysicsConstraint.h" />
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysicsDataRecorder.h" />
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysicsParams.h" />
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysicsParticle.h" />
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysicsParticleDrawer.h" />
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysicsParticleUpdater.h" />
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysicsSector.h" />
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysicsSpring.h" />
+    <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysicsWorld.h" />
     <ClInclude Include="Aplicacion.h" />
     <ClInclude Include="MenuPrincipal.h" />
     <ClInclude Include="NivelPrueba3.h" />
@@ -47,9 +68,12 @@
     <ClInclude Include="ReconocedorBasico.h" />
     <ClInclude Include="Subsistema.h" />
     <ClInclude Include="SubsistemaPrueba.h" />
+    <ClInclude Include="World.h" />
     <ClInclude Include="Wrappers.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSACore-master\src\MSACoreGL.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAObjCPointer-master\src\MSAObjCPointer.cpp" />
     <ClCompile Include="Aplicacion.cpp" />
     <ClCompile Include="MenuPrincipal.cpp" />
     <ClCompile Include="NivelPrueba3.cpp" />
@@ -67,6 +91,7 @@
     <ClCompile Include="Reconocedor.cpp" />
     <ClCompile Include="ReconocedorBasico.cpp" />
     <ClCompile Include="SubsistemaPrueba.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TODO List.txt" />
@@ -119,12 +144,17 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(BOOST_ROOT);$(OPENNI2_INCLUDE);$(NITE2_INCLUDE);E:\Tesis\GLFW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(BOOST_ROOT);$(OPENNI2_INCLUDE);$(NITE2_INCLUDE);E:\Tesis\GLFW\include;$(OF_LIB)\libs\openFrameworks;$(OF_LIB)\libs\openFrameworks\graphics;$(OF_LIB)\libs\openFrameworks\app;$(OF_LIB)\libs\openFrameworks\sound;$(OF_LIB)\libs\openFrameworks\utils;$(OF_LIB)\libs\openFrameworks\communication;$(OF_LIB)\libs\openFrameworks\video;$(OF_LIB)\libs\openFrameworks\types;$(OF_LIB)\libs\openFrameworks\math;$(OF_LIB)\libs\openFrameworks\3d;$(OF_LIB)\libs\openFrameworks\gl;$(OF_LIB)\libs\openFrameworks\events;$(OF_LIB)\libs\glut\include;$(OF_LIB)\libs\rtAudio\include;$(OF_LIB)\libs\quicktime\include;$(OF_LIB)\libs\freetype\include;$(OF_LIB)\libs\freetype\include\freetype2;$(OF_LIB)\libs\freeImage\include;$(OF_LIB)\libs\fmodex\include;$(OF_LIB)\libs\videoInput\include;$(OF_LIB)\libs\glew\include\;$(OF_LIB)\libs\glu\include;$(OF_LIB)\libs\tess2\include;$(OF_LIB)\libs\cairo\include\cairo;$(OF_LIB)\libs\poco\include;C:\OpenFrameworks\addons\ofxMSAObjCPointer-master\src;C:\OpenFrameworks\addons\ofxMSACore-master\src;C:\OpenFrameworks\addons\ofxMSAPhysics-master\src</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Program Files\boost\boost_1_51\lib;$(OPENNI2_LIB);$(NITE2_LIB);E:\Tesis\GLFW\lib-msvc100</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Program Files\boost\boost_1_51\lib;$(OPENNI2_LIB);$(NITE2_LIB);E:\Tesis\GLFW\lib-msvc100;C:\OpenFrameworks\libs\poco\lib\vs2010;C:\OpenFrameworks\libs\openFrameworksCompiled\lib\vs2010;C:\OpenFrameworks\libs\glut\lib\vs2010</AdditionalLibraryDirectories>
       <AdditionalDependencies>GLFW.lib;opengl32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;OpenNI2.lib;NiTE2.lib;libboost_thread-vc100-mt-gd-1_51.lib</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>
+      </IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -145,14 +175,14 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(BOOST_ROOT);$(OPENNI2_INCLUDE);$(NITE2_INCLUDE)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OF_LIB)\addons\ofxMSAObjCPointer-master\src;$(OF_LIB)\addons\ofxMSACore-master\src;$(OF_LIB)\addons\ofxMSAPhysics-master\src;$(BOOST_ROOT);$(OPENNI2_INCLUDE);$(NITE2_INCLUDE);E:\Tesis\GLFW\include;$(OF_LIB)\libs\openFrameworks;$(OF_LIB)\libs\openFrameworks\graphics;$(OF_LIB)\libs\openFrameworks\app;$(OF_LIB)\libs\openFrameworks\sound;$(OF_LIB)\libs\openFrameworks\utils;$(OF_LIB)\libs\openFrameworks\communication;$(OF_LIB)\libs\openFrameworks\video;$(OF_LIB)\libs\openFrameworks\types;$(OF_LIB)\libs\openFrameworks\math;$(OF_LIB)\libs\openFrameworks\3d;$(OF_LIB)\libs\openFrameworks\gl;$(OF_LIB)\libs\openFrameworks\events;$(OF_LIB)\libs\glut\include;$(OF_LIB)\libs\rtAudio\include;$(OF_LIB)\libs\quicktime\include;$(OF_LIB)\libs\freetype\include;$(OF_LIB)\libs\freetype\include\freetype2;$(OF_LIB)\libs\freeImage\include;$(OF_LIB)\libs\fmodex\include;$(OF_LIB)\libs\videoInput\include;$(OF_LIB)\libs\glew\include\;$(OF_LIB)\libs\glu\include;$(OF_LIB)\libs\tess2\include;$(OF_LIB)\libs\cairo\include\cairo;$(OF_LIB)\libs\poco\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(BOOST_ROOT);$(OPENNI2_LIB);$(NITE2_LIB)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;OpenNI2.lib;NiTE2.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files\boost\boost_1_51\lib;$(OPENNI2_LIB);$(NITE2_LIB);E:\Tesis\GLFW\lib-msvc100;C:\OpenFrameworks\libs\poco\lib\vs2010;C:\OpenFrameworks\libs\glut\lib\vs2010</AdditionalLibraryDirectories>
+      <AdditionalDependencies>GLFW.lib;opengl32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;OpenNI2.lib;NiTE2.lib;libboost_thread-vc100-mt-gd-1_51.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
