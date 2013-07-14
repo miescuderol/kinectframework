@@ -19,7 +19,7 @@ void Rendering::setup() {
 	glClearColor( 0.0f, 0.0f, 0.0f, 0.0f ); //clear background screen to black
 
 
-	width = 1024;
+	width = 512;
 	height = 512;
 	estadoOK = glfwOpenWindow( width, height, 0,0,0,0,0,0, GLFW_WINDOW );
 	glfwSetWindowTitle(tituloVentana.c_str());

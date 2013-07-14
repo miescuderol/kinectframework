@@ -137,7 +137,7 @@ void Sensor::run() {
 		tiempo1 = glfwGetTime();
 		update();
 		tiempo2 = glfwGetTime();
-		std::cout << "kinect: " << (tiempo2 - tiempo1)*1000 << std::endl;
+//		std::cout << "kinect: " << (tiempo2 - tiempo1)*1000 << std::endl;
 		try {
 			boost::this_thread::interruption_point();
 		} catch (boost::thread_interrupted) {

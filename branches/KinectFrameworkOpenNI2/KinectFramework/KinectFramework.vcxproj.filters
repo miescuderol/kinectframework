@@ -177,6 +177,15 @@
     <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysicsWorld.h">
       <Filter>MSA\Include</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Prototipo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NivelPercusion1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ReconocedorBasico.cpp">
@@ -239,8 +248,19 @@
     <ClCompile Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSACore-master\src\MSACoreGL.cpp">
       <Filter>MSA\src</Filter>
     </ClCompile>
+    <ClCompile Include="Prototipo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NivelPercusion1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="TODO List.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="KinectFramework.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
