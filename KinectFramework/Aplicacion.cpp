@@ -89,10 +89,10 @@ void Aplicacion::run() {
 			tiempo1 = glfwGetTime();
 			update();
 			tiempo2 = glfwGetTime();
-			std::cout << "update: "<< (tiempo2 - tiempo1)*1000;
+			//std::cout << "update: "<< (tiempo2 - tiempo1)*1000;
 			draw();
 			tiempo1 = glfwGetTime();
-			std::cout << "	" << (tiempo1 - tiempo2)*1000 << std::endl;
+			//std::cout << "	" << (tiempo1 - tiempo2)*1000 << std::endl;
 		}
 	} else
 		std::cout << "Aplicacion::run error en initComponentes() " << std::endl;

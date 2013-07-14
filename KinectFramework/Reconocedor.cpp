@@ -63,7 +63,7 @@ void Reconocedor::updateMovimiento(Movimiento * m) {
 		ultimoMovimiento++;
 		if (ultimoMovimiento == gestoPatron->length()) {
 			std::cout << "Se detecto un Gesto! Notificando... ";
-			ultimoGesto = new Gesto(); // falta setearlo (acordarse de pasarle el idJugador_art)
+			ultimoGesto = new Gesto();
 			ultimoGesto->setNombre(gestoPatron->getNombre());
 			ultimoGesto->setArticulacion(idJugador_Art);
 			ultimoGesto->setTiempo(m->getTiempo());

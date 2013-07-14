@@ -42,10 +42,13 @@
     <ClInclude Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAPhysics-master\src\MSAPhysicsWorld.h" />
     <ClInclude Include="Aplicacion.h" />
     <ClInclude Include="MenuPrincipal.h" />
+    <ClInclude Include="NivelPercusion1.h" />
     <ClInclude Include="NivelPrueba3.h" />
     <ClInclude Include="OpenNINiTEWrappers.h" />
+    <ClInclude Include="Prototipo.h" />
     <ClInclude Include="Rendering.h" />
     <ClInclude Include="Renderizable.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Sensor.h" />
     <ClInclude Include="Gesto.h" />
     <ClInclude Include="GestoPatron.h" />
@@ -76,7 +79,9 @@
     <ClCompile Include="..\..\..\..\..\..\OpenFrameworks\addons\ofxMSAObjCPointer-master\src\MSAObjCPointer.cpp" />
     <ClCompile Include="Aplicacion.cpp" />
     <ClCompile Include="MenuPrincipal.cpp" />
+    <ClCompile Include="NivelPercusion1.cpp" />
     <ClCompile Include="NivelPrueba3.cpp" />
+    <ClCompile Include="Prototipo.cpp" />
     <ClCompile Include="Rendering.cpp" />
     <ClCompile Include="Sensor.cpp" />
     <ClCompile Include="Gesto.cpp" />
@@ -95,6 +100,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="TODO List.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="KinectFramework.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{446AADD9-1DF5-4555-8434-BE7D7D49E540}</ProjectGuid>
