@@ -1,0 +1,1 @@
+Small framework to aid programmers develop games that make use of Kinect.
